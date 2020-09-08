@@ -72,6 +72,30 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
+
+  {
+    path: '/screen',
+    component: Layout,
+    redirect: 'noredirect',
+    alwaysShow: true,
+    name: 'screenManage',
+    meta: {
+      title: '屏幕管理',
+      icon: 'chart'
+    },
+    children: [
+      {
+        path: 'source',
+        component: () => import('@/views/screen/source'),
+        name: 'source',
+        meta: {
+          perms: ['GET /admin/source/list', 'POST /admin/source/create', 'GET /admin/source/read', 'POST /admin/source/update', 'POST /admin/source/delete'],
+          title: '媒体资源',
+          noCache: true
+        }
+      }
+    ]
+  },
   {
     path: '/user',
     component: Layout,
