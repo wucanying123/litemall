@@ -89,7 +89,7 @@ export const asyncRoutes = [
         component: () => import('@/views/screen/source'),
         name: 'source',
         meta: {
-          perms: ['GET /admin/source/list', 'POST /admin/source/create', 'GET /admin/source/read', 'POST /admin/source/update', 'POST /admin/source/delete'],
+          perms: ['GET /admin/screen/source/list', 'POST /admin/screen/source/create', 'GET /admin/screen/source/read', 'POST /admin/screen/source/update', 'POST /admin/screen/source/delete'],
           title: '媒体资源',
           noCache: true
         }

@@ -1,6 +1,7 @@
 package org.linlinjava.litemall.core.util;
 
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,16 @@ public class ResponseUtil {
             data.put("pages", 1);
         }
 
+        return ok(data);
+    }
+
+    public static Object okPage(PageInfo page) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("list", page.getList());
+        data.put("total", page.getTotal());
+        data.put("page", page.getPageNum());
+        data.put("limit", page.getPageSize());
+        data.put("pages", page.getPages());
         return ok(data);
     }
 

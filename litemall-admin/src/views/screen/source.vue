@@ -3,94 +3,86 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-button v-permission="['POST /admin/source/create']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入广告标题" />
+      <el-input v-model="listQuery.content" clearable class="filter-item" style="width: 200px;" placeholder="请输入广告内容" />
+      <el-button v-permission="['GET /admin/screen/source/selectSourcePage']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
+      <el-button v-permission="['POST /admin/screen/source/insertSource']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
     <!-- 查询结果 -->
-    <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row row-key="id">
+    <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="类目ID" prop="id" />
+      <el-table-column align="center" label="广告ID" prop="id" sortable />
 
-      <el-table-column align="center" label="类目名" prop="name" />
+      <el-table-column align="center" label="广告标题" prop="name" />
 
-      <el-table-column align="center" property="iconUrl" label="类目图标">
+      <el-table-column align="center" label="广告内容" prop="content" />
+
+      <el-table-column align="center" label="广告图片" prop="url">
         <template slot-scope="scope">
-          <img v-if="scope.row.iconUrl" :src="scope.row.iconUrl" width="40">
+          <img v-if="scope.row.url" :src="scope.row.url" width="80">
         </template>
       </el-table-column>
 
-      <el-table-column align="center" property="picUrl" label="类目图片">
+      <el-table-column align="center" label="广告位置" prop="position" />
+
+      <el-table-column align="center" label="活动链接" prop="link" />
+
+      <el-table-column align="center" label="是否启用" prop="enabled">
         <template slot-scope="scope">
-          <img v-if="scope.row.picUrl" :src="scope.row.picUrl" width="80">
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="关键字" prop="keywords" />
-
-      <el-table-column align="center" min-width="100" label="简介" prop="desc" />
-
-      <el-table-column align="center" label="级别" prop="level">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.level === 'L1' ? 'primary' : 'info' ">{{ scope.row.level === 'L1' ? '一级类目' : '二级类目' }}</el-tag>
+          <el-tag :type="scope.row.enabled ? 'success' : 'error' ">{{ scope.row.enabled ? '启用' : '不启用' }}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/source/update']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="['POST /admin/source/delete']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleDetail(scope.row)">详情</el-button>
+          <el-button v-permission="['POST /admin/screen/source/updateSourceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="['POST /admin/screen/source/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="类目名称" prop="name">
+        <el-form-item label="广告标题" prop="name">
           <el-input v-model="dataForm.name" />
         </el-form-item>
-        <el-form-item label="关键字" prop="keywords">
-          <el-input v-model="dataForm.keywords" />
+        <el-form-item label="广告内容" prop="content">
+          <el-input v-model="dataForm.content" />
         </el-form-item>
-        <el-form-item label="级别" prop="level">
-          <el-select v-model="dataForm.level" @change="onLevelChange">
-            <el-option label="一级类目" value="L1" />
-            <el-option label="二级类目" value="L2" />
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="dataForm.level === 'L2'" label="父类目" prop="pid">
-          <el-select v-model="dataForm.pid">
-            <el-option v-for="item in catL1" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="类目图标" prop="iconUrl">
+        <el-form-item label="广告图片" prop="url">
           <el-upload
             :headers="headers"
             :action="uploadPath"
             :show-file-list="false"
-            :on-success="uploadIconUrl"
+            :on-success="uploadUrl"
+            :before-upload="checkFileSize"
             class="avatar-uploader"
             accept=".jpg,.jpeg,.png,.gif"
           >
-            <img v-if="dataForm.iconUrl" :src="dataForm.iconUrl" class="avatar">
+            <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1024kb</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="类目图片" prop="picUrl">
-          <el-upload
-            :headers="headers"
-            :action="uploadPath"
-            :show-file-list="false"
-            :on-success="uploadPicUrl"
-            class="avatar-uploader"
-            accept=".jpg,.jpeg,.png,.gif"
-          >
-            <img v-if="dataForm.picUrl" :src="dataForm.picUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-          </el-upload>
+        <el-form-item label="广告位置" prop="position">
+          <el-select v-model="dataForm.position" placeholder="请选择">
+            <el-option :value="1" label="首页" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="类目简介" prop="desc">
-          <el-input v-model="dataForm.desc" />
+        <el-form-item label="活动链接" prop="link">
+          <el-input v-model="dataForm.link" />
+        </el-form-item>
+        <el-form-item label="是否启用" prop="enabled">
+          <el-select v-model="dataForm.enabled" placeholder="请选择">
+            <el-option :value="true" label="启用" />
+            <el-option :value="false" label="不启用" />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -103,10 +95,7 @@
   </div>
 </template>
 
-<style scoped>
-.filter-item{
-  margin-left: 100px;
-}
+<style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -133,27 +122,36 @@
 </style>
 
 <script>
-import { listSource, listCatL1, createSource, updateSource, deleteSource } from '@/api/source'
+import { listSource, createSource, updateSource, deleteSource } from '@/api/source'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'Source',
+  components: { Pagination },
   data() {
     return {
       uploadPath,
       list: [],
+      total: 0,
       listLoading: true,
-      catL1: {},
+      listQuery: {
+        page: 1,
+        limit: 20,
+        name: undefined,
+        content: undefined,
+        sort: 'add_time',
+        order: 'desc'
+      },
       dataForm: {
         id: undefined,
-        name: '',
-        keywords: '',
-        level: 'L2',
-        pid: 0,
-        desc: '',
-        iconUrl: '',
-        picUrl: ''
+        name: undefined,
+        content: undefined,
+        url: undefined,
+        link: undefined,
+        position: 1,
+        enabled: true
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -162,8 +160,15 @@ export default {
         create: '创建'
       },
       rules: {
-        name: [{ required: true, message: '类目名不能为空', trigger: 'blur' }]
-      }
+        name: [
+          { required: true, message: '广告标题不能为空', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '广告内容不能为空', trigger: 'blur' }
+        ],
+        url: [{ required: true, message: '广告链接不能为空', trigger: 'blur' }]
+      },
+      downloadLoading: false
     }
   },
   computed: {
@@ -175,41 +180,35 @@ export default {
   },
   created() {
     this.getList()
-    this.getCatL1()
   },
   methods: {
     getList() {
       this.listLoading = true
-      listSource()
+      listSource(this.listQuery)
         .then(response => {
           this.list = response.data.data.list
+          this.total = response.data.data.total
           this.listLoading = false
         })
         .catch(() => {
           this.list = []
+          this.total = 0
           this.listLoading = false
         })
     },
-    getCatL1() {
-      listCatL1().then(response => {
-        this.catL1 = response.data.data.list
-      })
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     resetForm() {
       this.dataForm = {
         id: undefined,
-        name: '',
-        keywords: '',
-        level: 'L2',
-        pid: 0,
-        desc: '',
-        iconUrl: '',
-        picUrl: ''
-      }
-    },
-    onLevelChange: function(value) {
-      if (value === 'L1') {
-        this.dataForm.pid = 0
+        name: undefined,
+        content: undefined,
+        url: undefined,
+        link: undefined,
+        position: 1,
+        enabled: true
       }
     },
     handleCreate() {
@@ -220,20 +219,22 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    uploadIconUrl: function(response) {
-      this.dataForm.iconUrl = response.data.url
+    uploadUrl: function(response) {
+      this.dataForm.url = response.data.url
     },
-    uploadPicUrl: function(response) {
-      this.dataForm.picUrl = response.data.url
+    checkFileSize: function(file) {
+      if (file.size > 1048576) {
+        this.$message.error(`${file.name}文件大于1024KB，请选择小于1024KB大小的图片`)
+        return false
+      }
+      return true
     },
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           createSource(this.dataForm)
             .then(response => {
-              this.getList()
-              // 更新L1目录
-              this.getCatL1()
+              this.list.unshift(response.data.data)
               this.dialogFormVisible = false
               this.$notify.success({
                 title: '成功',
@@ -249,6 +250,10 @@ export default {
         }
       })
     },
+    handleDetail(row) {
+      this.userDetail = row
+      this.userDialogVisible = true
+    },
     handleUpdate(row) {
       this.dataForm = Object.assign({}, row)
       this.dialogStatus = 'update'
@@ -262,13 +267,17 @@ export default {
         if (valid) {
           updateSource(this.dataForm)
             .then(() => {
-              this.getList()
-              // 更新L1目录
-              this.getCatL1()
+              for (const v of this.list) {
+                if (v.id === this.dataForm.id) {
+                  const index = this.list.indexOf(v)
+                  this.list.splice(index, 1, this.dataForm)
+                  break
+                }
+              }
               this.dialogFormVisible = false
               this.$notify.success({
                 title: '成功',
-                message: '更新成功'
+                message: '更新广告成功'
               })
             })
             .catch(response => {
@@ -281,15 +290,13 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteSource(row)
+      deleteSource(row.id)
         .then(response => {
-          this.getList()
-          // 更新L1目录
-          this.getCatL1()
           this.$notify.success({
             title: '成功',
             message: '删除成功'
           })
+          this.getList()
         })
         .catch(response => {
           this.$notify.error({
@@ -297,6 +304,31 @@ export default {
             message: response.data.errmsg
           })
         })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = [
+          '广告ID',
+          '广告标题1',
+          '广告内容',
+          '广告图片',
+          '广告位置',
+          '活动链接',
+          '是否启用'
+        ]
+        const filterVal = [
+          'id',
+          'name',
+          'content',
+          'url',
+          'postion',
+          'link',
+          'enabled'
+        ]
+        excel.export_json_to_excel2(tHeader, this.list, filterVal, '广告信息')
+        this.downloadLoading = false
+      })
     }
   }
 }
