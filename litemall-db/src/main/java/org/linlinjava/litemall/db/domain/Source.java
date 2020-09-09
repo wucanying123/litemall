@@ -14,7 +14,7 @@ public class Source implements Serializable {
     Integer maxPlayTime;//素材时长，可忽略，播放程序不使用该值
 
     /*
-    * 素材类型:Video视频，AnalogClock时钟类型，DigitalClock数字时钟，
+    * 素材类型:Video视频，Image图片，AnalogClock时钟，DigitalClock数字时钟，
     *        Countdown倒计时，Flash，Weather天气预报，MultiText多行文本
     */
     String _type;

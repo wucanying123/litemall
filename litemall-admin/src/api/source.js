@@ -41,3 +41,6 @@ export function deleteSource(id) {
     }
   })
 }
+
+const uploadFunction = process.env.VUE_APP_BASE_API + '/storage/create1'
+export { uploadFunction }

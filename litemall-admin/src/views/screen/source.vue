@@ -9,7 +9,6 @@
       </el-select>
       <el-button v-permission="['GET /admin/screen/source/selectSourcePage']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button v-permission="['POST /admin/screen/source/insertSource']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -54,40 +53,48 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="媒体资源名称" prop="name">
+      <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" />
         </el-form-item>
-        <el-form-item label="内容" prop="url">
-          <el-upload
-            :headers="headers"
-            :action="uploadPath"
-            :show-file-list="false"
-            :on-success="uploadUrl"
-            :before-upload="checkFileSize"
-            class="avatar-uploader"
-            accept=".jpg,.jpeg,.png,.gif,.mp4"
-          >
-            <div v-if="dataForm._type === 'Image'">
-              <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
-            </div>
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-            <div slot="tip" class="el-upload__tip">只能上传mp4/jpg/jpeg/png/gif文件，且不超过500M</div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="广告位置" prop="position">
-          <el-select v-model="dataForm.position" placeholder="请选择">
-            <el-option :value="1" label="首页" />
+        <el-form-item label="类型" prop="_type">
+          <el-select v-model="dataForm._type" placeholder="请选择">
+            <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="活动链接" prop="link">
-          <el-input v-model="dataForm.link" />
-        </el-form-item>
-        <el-form-item label="是否启用" prop="enabled">
-          <el-select v-model="dataForm.enabled" placeholder="请选择">
-            <el-option :value="true" label="启用" />
-            <el-option :value="false" label="不启用" />
-          </el-select>
+        <div v-if="dataForm._type === 'Video' || dataForm._type === 'Image'">
+          <el-form-item label="内容" prop="url">
+            <el-upload
+              :headers="headers"
+              :action="uploadFunction"
+              :show-file-list="false"
+              :on-success="uploadUrl"
+              :before-upload="checkFileSize"
+              class="avatar-uploader"
+              accept=".jpg,.jpeg,.png,.gif,.mp4"
+            >
+              <div v-if="dataForm.url && dataForm._type === 'Video'">
+                <video :src="dataForm.url" controls="controls" width="200" />
+              </div>
+              <div v-if="dataForm.url && dataForm._type === 'Image'">
+                <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
+              </div>
+
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+              <div slot="tip" class="el-upload__tip">只能上传mp4/jpg/jpeg/png/gif文件，且不超过500M</div>
+            </el-upload>
+          </el-form-item>
+        </div>
+        <el-form-item label="播放时长(秒)" prop="playTime">
+          <el-input
+            v-model="dataForm.playTime"
+            type="number"
+            min="0"
+            max="60"
+            step="1"
+            size="2"
+            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -127,14 +134,14 @@
 </style>
 
 <script>
-import { listSource, createSource, updateSource, deleteSource } from '@/api/source'
+import { listSource, createSource, updateSource, deleteSource, uploadFunction } from '@/api/source'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultTypeOptions = [
   {
-    label: '未选择类型',
+    label: '',
     value: ''
   },
   {
@@ -212,6 +219,7 @@ export default {
     return {
       typeOptions: Object.assign({}, defaultTypeOptions),
       uploadPath,
+      uploadFunction,
       list: [],
       total: 0,
       listLoading: true,
@@ -224,11 +232,9 @@ export default {
       dataForm: {
         id: undefined,
         name: undefined,
-        content: undefined,
+        _type: undefined,
         url: undefined,
-        link: undefined,
-        position: 1,
-        enabled: true
+        playTime: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -238,12 +244,14 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '广告标题不能为空', trigger: 'blur' }
+          { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
-        content: [
-          { required: true, message: '广告内容不能为空', trigger: 'blur' }
+        _type: [
+          { required: true, message: '类型不能为空', trigger: 'blur' }
         ],
-        url: [{ required: true, message: '广告链接不能为空', trigger: 'blur' }]
+        playTime: [
+          { required: true, message: '播放时长不能为空', trigger: 'blur' }
+        ]
       },
       downloadLoading: false
     }
@@ -281,11 +289,9 @@ export default {
       this.dataForm = {
         id: undefined,
         name: undefined,
-        content: undefined,
+        _type: '',
         url: undefined,
-        link: undefined,
-        position: 1,
-        enabled: true
+        playTime: undefined
       }
     },
     handleCreate() {
@@ -381,31 +387,6 @@ export default {
             message: response.data.errmsg
           })
         })
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '广告ID',
-          '广告标题1',
-          '广告内容',
-          '广告图片',
-          '广告位置',
-          '活动链接',
-          '是否启用'
-        ]
-        const filterVal = [
-          'id',
-          'name',
-          'content',
-          'url',
-          'postion',
-          'link',
-          'enabled'
-        ]
-        excel.export_json_to_excel2(tHeader, this.list, filterVal, '媒体资源')
-        this.downloadLoading = false
-      })
     }
   }
 }
