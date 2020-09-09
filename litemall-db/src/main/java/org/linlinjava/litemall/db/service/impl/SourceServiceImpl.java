@@ -3,17 +3,13 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
 import org.linlinjava.litemall.db.dao.SourceMapper;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
-import org.linlinjava.litemall.db.util.BaseResp;
-import org.linlinjava.litemall.db.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +18,6 @@ public class SourceServiceImpl implements SourceService {
 
     @Autowired
     public SourceMapper sourceMapper;
-
 
     private static Logger logger = LoggerFactory.getLogger(SourceServiceImpl.class);
 
@@ -39,7 +34,7 @@ public class SourceServiceImpl implements SourceService {
                     source1.setLeft(source1.getTheLeft());
                 }
             }
-            String jsonString = JSON.toJSONString(list);
+//            String jsonString = JSON.toJSONString(list);
         } catch (Exception e) {
             logger.error("selectSourcePage error and msg={}", e);
         }
@@ -47,16 +42,9 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public BaseResp<Source> selectSourceById(String sourceId) {
-        BaseResp<Source> baseResp = new BaseResp<Source>();
-        try {
-            Source source = sourceMapper.selectByPrimaryKey(sourceId);
-            baseResp.setData(source);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-        } catch (Exception e) {
-            logger.error("selectSourceById error and msg={}", e);
-        }
-        return baseResp;
+    public Source selectSourceById(String sourceId) {
+        Source source = sourceMapper.selectByPrimaryKey(sourceId);
+        return source;
     }
 
     @Override

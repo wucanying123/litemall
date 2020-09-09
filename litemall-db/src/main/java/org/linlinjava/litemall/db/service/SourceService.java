@@ -2,7 +2,6 @@ package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Source;
-import org.linlinjava.litemall.db.util.BaseResp;
 
 public interface SourceService {
 
@@ -23,7 +22,7 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Source> selectSourceById(String sourceId);
+    Source selectSourceById(String sourceId);
 
     /**
      * @Description: 添加资源

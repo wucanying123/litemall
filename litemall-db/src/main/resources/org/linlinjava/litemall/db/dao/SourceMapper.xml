@@ -564,5 +564,11 @@
     select
     <include refid="Base_Column_List" />
     from source where 1=1
+    <if test="source._type != null and source._type != '' " >
+      and _type = #{source._type}
+    </if>
+    <if test="source.name != null and source.name != '' " >
+      and name LIKE concat(concat('%',#{source.name}),'%')
+    </if>
   </select>
 </mapper>

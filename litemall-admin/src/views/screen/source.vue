@@ -3,8 +3,10 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入广告标题" />
-      <el-input v-model="listQuery.content" clearable class="filter-item" style="width: 200px;" placeholder="请输入广告内容" />
+      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入媒体名称" />
+      <el-select v-model="listQuery._type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
+        <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
+      </el-select>
       <el-button v-permission="['GET /admin/screen/source/selectSourcePage']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button v-permission="['POST /admin/screen/source/insertSource']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
       <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
@@ -13,31 +15,35 @@
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="广告ID" prop="id" sortable />
+      <el-table-column align="center" label="名称" prop="name" />
 
-      <el-table-column align="center" label="广告标题" prop="name" />
-
-      <el-table-column align="center" label="广告内容" prop="content" />
-
-      <el-table-column align="center" label="广告图片" prop="url">
+      <el-table-column align="center" label="内容" prop="url">
         <template slot-scope="scope">
-          <img v-if="scope.row.url" :src="scope.row.url" width="80">
+          <div v-if="scope.row._type === 'Video'">
+            <video :src="scope.row.url" controls="controls" width="200" />
+          </div>
+          <div v-if="scope.row._type === 'Image'">
+            <img v-if="scope.row.url" :src="scope.row.url" width="100">
+          </div>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="广告位置" prop="position" />
-
-      <el-table-column align="center" label="活动链接" prop="link" />
-
-      <el-table-column align="center" label="是否启用" prop="enabled">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.enabled ? 'success' : 'error' ">{{ scope.row.enabled ? '启用' : '不启用' }}</el-tag>
-        </template>
+      <el-table-column align="center" label="播放时长" prop="playTime">
+        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>
       </el-table-column>
+
+      <el-table-column align="center" label="素材时长" prop="maxPlayTime">
+        <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
+      </el-table-column>
+
+      <el-table-column align="center" label="类型" prop="_type">
+        <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
+      </el-table-column>
+
+      <el-table-column align="center" label="格式" prop="fileExt" />
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleDetail(scope.row)">详情</el-button>
           <el-button v-permission="['POST /admin/screen/source/updateSourceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button v-permission="['POST /admin/screen/source/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -49,13 +55,10 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="广告标题" prop="name">
+        <el-form-item label="媒体资源名称" prop="name">
           <el-input v-model="dataForm.name" />
         </el-form-item>
-        <el-form-item label="广告内容" prop="content">
-          <el-input v-model="dataForm.content" />
-        </el-form-item>
-        <el-form-item label="广告图片" prop="url">
+        <el-form-item label="内容" prop="url">
           <el-upload
             :headers="headers"
             :action="uploadPath"
@@ -63,11 +66,13 @@
             :on-success="uploadUrl"
             :before-upload="checkFileSize"
             class="avatar-uploader"
-            accept=".jpg,.jpeg,.png,.gif"
+            accept=".jpg,.jpeg,.png,.gif,.mp4"
           >
-            <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
+            <div v-if="dataForm._type === 'Image'">
+              <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
+            </div>
             <i v-else class="el-icon-plus avatar-uploader-icon" />
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1024kb</div>
+            <div slot="tip" class="el-upload__tip">只能上传mp4/jpg/jpeg/png/gif文件，且不超过500M</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="广告位置" prop="position">
@@ -127,11 +132,85 @@ import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
+const defaultTypeOptions = [
+  {
+    label: '未选择类型',
+    value: ''
+  },
+  {
+    label: '视频',
+    value: 'Video'
+  },
+  {
+    label: '图片',
+    value: 'Image'
+  },
+  {
+    label: '时钟',
+    value: 'AnalogClock'
+  },
+  {
+    label: '数字时钟',
+    value: 'DigitalClock'
+  },
+  {
+    label: '倒计时',
+    value: 'Countdown'
+  },
+  {
+    label: 'Flash',
+    value: 'Flash'
+  },
+  {
+    label: '天气预报',
+    value: 'Weather'
+  },
+  {
+    label: '多行文本',
+    value: 'MultiText'
+  }
+]
+
 export default {
   name: 'Source',
   components: { Pagination },
+  filters: {
+    formatType(_type) {
+      for (let i = 0; i < defaultTypeOptions.length; i++) {
+        if (_type === defaultTypeOptions[i].value) {
+          return defaultTypeOptions[i].label
+        }
+      }
+      return ''
+    },
+    secondToDate(msd) {
+      var time = msd
+      // eslint-disable-next-line eqeqeq
+      if (time != null && time != '') {
+        if (time > 60 && time < 60 * 60) {
+          time = parseInt(time / 60.0) + '分钟' + parseInt((parseFloat(time / 60.0) -
+            parseInt(time / 60.0)) * 60) + '秒'
+        } else if (time >= 60 * 60 && time < 60 * 60 * 24) {
+          time = parseInt(time / 3600.0) + '小时' + parseInt((parseFloat(time / 3600.0) -
+            parseInt(time / 3600.0)) * 60) + '分钟' +
+            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
+        } else if (time >= 60 * 60 * 24) {
+          time = parseInt(time / 3600.0 / 24) + '天' + parseInt((parseFloat(time / 3600.0 / 24) -
+            parseInt(time / 3600.0 / 24)) * 24) + '小时' + parseInt((parseFloat(time / 3600.0) -
+            parseInt(time / 3600.0)) * 60) + '分钟' +
+            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
+        } else {
+          time = parseInt(time) + '秒'
+        }
+      }
+      return time
+    }
+  },
   data() {
     return {
+      typeOptions: Object.assign({}, defaultTypeOptions),
       uploadPath,
       list: [],
       total: 0,
@@ -140,9 +219,7 @@ export default {
         page: 1,
         limit: 20,
         name: undefined,
-        content: undefined,
-        sort: 'add_time',
-        order: 'desc'
+        _type: undefined
       },
       dataForm: {
         id: undefined,
@@ -223,8 +300,8 @@ export default {
       this.dataForm.url = response.data.url
     },
     checkFileSize: function(file) {
-      if (file.size > 1048576) {
-        this.$message.error(`${file.name}文件大于1024KB，请选择小于1024KB大小的图片`)
+      if (file.size > 524288000) {
+        this.$message.error(`${file.name}文件大于500M，请选择小于500M的文件`)
         return false
       }
       return true
@@ -326,7 +403,7 @@ export default {
           'link',
           'enabled'
         ]
-        excel.export_json_to_excel2(tHeader, this.list, filterVal, '广告信息')
+        excel.export_json_to_excel2(tHeader, this.list, filterVal, '媒体资源')
         this.downloadLoading = false
       })
     }

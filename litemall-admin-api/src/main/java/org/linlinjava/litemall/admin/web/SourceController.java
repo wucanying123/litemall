@@ -4,41 +4,26 @@ import com.alibaba.fastjson.JSON;
 
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.linlinjava.litemall.admin.annotation.RequiresPermissionsDesc;
-import org.linlinjava.litemall.admin.vo.CategoryVo;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.core.util.StringUtilsXD;
-import org.linlinjava.litemall.db.dao.SourceMapper;
-import org.linlinjava.litemall.db.domain.LitemallCategory;
 import org.linlinjava.litemall.db.domain.Source;
-import org.linlinjava.litemall.db.service.LitemallCategoryService;
 import org.linlinjava.litemall.db.service.SourceService;
-import org.linlinjava.litemall.db.util.BaseResp;
-import org.linlinjava.litemall.db.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin/screen/source")
 public class SourceController {
     @Autowired
     private SourceService sourceService;
-    @Autowired
-    private SourceMapper sourceMapper;
-    @Autowired
-    LitemallCategoryService categoryService;
 
     private static Logger logger = LoggerFactory.getLogger(SourceController.class);
 
     /**
-     * @param pageNum  开始页数
-     * @param pageSize 每页条数
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取资源列表
      * @title selectSourcePage
      * @auther IngaWu
@@ -46,16 +31,19 @@ public class SourceController {
      */
     @ApiOperation(value = "获取资源列表")
     @GetMapping("/selectSourcePage")
-    public Object selectSourcePage(@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        logger.info("selectSourcePage and pageNum={},pageSize", pageNum, pageSize);
-        Source source = null;
-        PageInfo<Source> page = null;
+    public Object selectSourcePage(String name, String _type, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        Source source = new Source();
+        source.setName(name);
+        source.set_type(_type);
+        logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
+        PageInfo<Source> pageList = null;
         try {
-            page = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
+            pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            return ResponseUtil.okPage(pageList);
         } catch (Exception e) {
-            logger.error("selectSourcePage and source={},pageNum={},pageSize", JSON.toJSONString(source), pageNum, pageSize, e);
+            logger.error("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit, e);
         }
-        return ResponseUtil.okPage(page);
+        return ResponseUtil.fail();
     }
 
     /**
@@ -67,18 +55,15 @@ public class SourceController {
      */
     @ApiOperation(value = "通过资源id查看资源详情")
     @GetMapping(value = "/selectSourceById")
-    public BaseResp<Source> selectSourceById(@RequestParam(value = "sourceId") String sourceId) {
+    public Object selectSourceById(@RequestParam(value = "sourceId") String sourceId) {
         logger.info("selectSourceById and sourceId={}", sourceId);
-        BaseResp<Source> baseResp = new BaseResp<>();
-        if (StringUtilsXD.isBlank(sourceId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
-        }
         try {
-            baseResp = sourceService.selectSourceById(sourceId);
+            Source source = sourceService.selectSourceById(sourceId);
+            return ResponseUtil.ok(source);
         } catch (Exception e) {
             logger.error("selectSourceById and sourceId={}", sourceId, e);
         }
-        return baseResp;
+        return ResponseUtil.fail();
     }
 
     /**
