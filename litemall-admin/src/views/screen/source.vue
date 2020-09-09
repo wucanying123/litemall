@@ -66,7 +66,7 @@
           <el-form-item label="内容" prop="url">
             <el-upload
               :headers="headers"
-              :action="uploadFunction"
+              :action="uploadPath"
               :show-file-list="false"
               :on-success="uploadUrl"
               :before-upload="checkFileSize"
@@ -134,7 +134,7 @@
 </style>
 
 <script>
-import { listSource, createSource, updateSource, deleteSource, uploadFunction } from '@/api/source'
+import { listSource, createSource, updateSource, deleteSource } from '@/api/source'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -219,7 +219,6 @@ export default {
     return {
       typeOptions: Object.assign({}, defaultTypeOptions),
       uploadPath,
-      uploadFunction,
       list: [],
       total: 0,
       listLoading: true,
