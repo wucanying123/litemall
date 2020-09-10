@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.SourceMapper;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class SourceServiceImpl implements SourceService {
         if(null == source.getMaxPlayTime()){
             source.setMaxPlayTime(10);
         }
+        source.setCreateTime(DateUtil.getDateline());
         int n = sourceMapper.insertSelective(source);
         return n;
     }
@@ -61,6 +63,7 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public int updateSourceById(Source source) {
         source.setTheLeft(source.getLeft());
+        source.setUpdateTime(DateUtil.getDateline());
         int n = sourceMapper.updateByPrimaryKeySelective(source);
         return n;
     }

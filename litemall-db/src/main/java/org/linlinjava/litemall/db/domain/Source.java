@@ -78,4 +78,6 @@ public class Source implements Serializable {
     Integer sInterval;//可忽略，播放器不使用
     String city;//城市名称，支持国内主要城市
     Long code;//城市代码
+    Long createTime;//创建时间
+    Long updateTime;//修改时间
 }

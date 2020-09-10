@@ -19,10 +19,10 @@
       <el-table-column align="center" label="内容" prop="url">
         <template slot-scope="scope">
           <div v-if="scope.row._type === 'Video'">
-            <video :src="scope.row.url" controls="controls" width="200" />
+            <video :src="scope.row.url" controls="controls" width="200" height="90" />
           </div>
           <div v-if="scope.row._type === 'Image'">
-            <img v-if="scope.row.url" :src="scope.row.url" width="100">
+            <img v-if="scope.row.url" :src="scope.row.url" width="100" height="90">
           </div>
         </template>
       </el-table-column>
@@ -322,6 +322,7 @@ export default {
                 title: '成功',
                 message: '创建成功'
               })
+              this.getList()
             })
             .catch(response => {
               this.$notify.error({
@@ -359,8 +360,9 @@ export default {
               this.dialogFormVisible = false
               this.$notify.success({
                 title: '成功',
-                message: '更新广告成功'
+                message: '更新成功'
               })
+              this.getList()
             })
             .catch(response => {
               this.$notify.error({
