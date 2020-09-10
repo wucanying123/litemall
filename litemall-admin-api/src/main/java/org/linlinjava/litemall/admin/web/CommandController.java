@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/screen/command")
+@RequestMapping(value = "/admin/screen/command")
 public class CommandController {
     @Autowired
     private CommandService commandService;
@@ -24,24 +24,24 @@ public class CommandController {
     /**
      * @Description: 获取命令列表
      * @title selectCommandPage
-     * @param pageNum 开始页数
-     * @param pageSize 每页条数
+     * @param page 开始页数
+     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "获取命令列表")
     @GetMapping("/selectCommandPage")
-    public ResponseUtil<PageInfo<Command>> selectCommandPage(@RequestBody Command command, @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        logger.info("selectCommandPage and command={}, pageNum={},pageSize",JSON.toJSONString(command), pageNum, pageSize);
-        ResponseUtil<PageInfo<Command>> responseUtil = new ResponseUtil<>();
+    public Object selectCommandPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        Command command = null;
+        logger.info("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit);
+        PageInfo<Command> pageList = null;
         try {
-            PageInfo<Command> page = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            responseUtil.setData(page);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            pageList = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            return ResponseUtil.okPage(pageList);
         } catch (Exception e) {
-            logger.error("selectCommandPage and command={},pageNum={},pageSize", JSON.toJSONString(command), pageNum, pageSize, e);
+            logger.error("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit, e);
         }
-        return responseUtil;
+        return ResponseUtil.fail();
     }
 
     /**

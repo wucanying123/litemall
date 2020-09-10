@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/admin/screen/source")
+
 public class SourceController {
     @Autowired
     private SourceService sourceService;
@@ -37,9 +38,8 @@ public class SourceController {
         source.setName(name);
         source.set_type(_type);
         logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
-        PageInfo<Source> pageList = null;
         try {
-            pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            PageInfo<Source> pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return ResponseUtil.okPage(pageList);
         } catch (Exception e) {
             logger.error("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit, e);

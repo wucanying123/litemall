@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/screen/layer")
+@RequestMapping(value = "/admin/screen/layer")
 public class LayerController {
     @Autowired
     private LayerService layerService;
@@ -25,24 +25,23 @@ public class LayerController {
     /**
      * @Description: 获取层列表
      * @title selectLayerPage
-     * @param pageNum 开始页数
-     * @param pageSize 每页条数
+     * @param page 开始页数
+     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "获取层列表")
     @GetMapping("/selectLayerPage")
-    public ResponseUtil<PageInfo<Layer>> selectLayerPage(@RequestBody Layer layer, @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        logger.info("selectLayerPage and layer={}, pageNum={},pageSize",JSON.toJSONString(layer), pageNum, pageSize);
-        ResponseUtil<PageInfo<Layer>> responseUtil = new ResponseUtil<>();
+    public Object selectLayerPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        Layer layer = null;
+        logger.info("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit);
         try {
-            PageInfo<Layer> page = layerService.selectLayerPage(layer, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            responseUtil.setData(page);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            PageInfo<Layer> pageList = layerService.selectLayerPage(layer, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            return ResponseUtil.okPage(pageList);
         } catch (Exception e) {
-            logger.error("selectLayerPage and layer={},pageNum={},pageSize", JSON.toJSONString(layer), pageNum, pageSize, e);
+            logger.error("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit, e);
         }
-        return responseUtil;
+        return ResponseUtil.fail();
     }
 
     /**

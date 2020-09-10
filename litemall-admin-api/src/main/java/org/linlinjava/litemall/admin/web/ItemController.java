@@ -2,9 +2,9 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
-import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.service.ItemService;
 import io.swagger.annotations.ApiOperation;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/screen/item")
+@RequestMapping(value = "/admin/screen/item")
 public class ItemController {
     @Autowired
     private ItemService itemService;
@@ -24,24 +24,23 @@ public class ItemController {
     /**
      * @Description: 获取项目列表
      * @title selectItemPage
-     * @param pageNum 开始页数
-     * @param pageSize 每页条数
+     * @param page 开始页数
+     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "获取项目列表")
     @GetMapping("/selectItemPage")
-    public ResponseUtil<PageInfo<Item>> selectItemPage(@RequestBody Item item,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        logger.info("selectItemPage and item={}, pageNum={},pageSize",JSON.toJSONString(item), pageNum, pageSize);
-        ResponseUtil<PageInfo<Item>> responseUtil = new ResponseUtil<>();
+    public Object selectItemPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        Item item = null;
+        logger.info("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit);
         try {
-            PageInfo<Item> page = itemService.selectItemPage(item, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            responseUtil.setData(page);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            PageInfo<Item> pageList = itemService.selectItemPage(item, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            return ResponseUtil.okPage(pageList);
         } catch (Exception e) {
-            logger.error("selectItemPage and item={},pageNum={},pageSize", JSON.toJSONString(item), pageNum, pageSize, e);
+            logger.error("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit, e);
         }
-        return responseUtil;
+        return ResponseUtil.fail();
     }
 
     /**
