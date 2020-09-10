@@ -2,11 +2,11 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.model.entity.Task;
-import com.xinda.screen.service.TaskService;
-import com.xinda.util.StringUtilsXD;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.domain.Task;
+import org.linlinjava.litemall.db.service.TaskService;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +31,17 @@ public class TaskController {
      */
     @ApiOperation(value = "获取任务列表")
     @GetMapping("/selectTaskPage")
-    public BaseResp<PageInfo<Task>> selectTaskPage(@RequestBody Task task,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseUtil<PageInfo<Task>> selectTaskPage(@RequestBody Task task,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         logger.info("selectTaskPage and task={}, pageNum={},pageSize",JSON.toJSONString(task), pageNum, pageSize);
-        BaseResp<PageInfo<Task>> baseResp = new BaseResp<>();
+        ResponseUtil<PageInfo<Task>> responseUtil = new ResponseUtil<>();
         try {
             PageInfo<Task> page = taskService.selectTaskPage(task, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            baseResp.setData(page);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(page);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectTaskPage and task={},pageNum={},pageSize", JSON.toJSONString(task), pageNum, pageSize, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -53,18 +53,18 @@ public class TaskController {
      */
     @ApiOperation(value = "通过任务id查看任务详情")
     @GetMapping(value = "/selectTaskById")
-    public BaseResp<Task> selectTaskById(@RequestParam(value = "taskId") String taskId) {
+    public ResponseUtil<Task> selectTaskById(@RequestParam(value = "taskId") String taskId) {
         logger.info("selectTaskById and taskId={}", taskId);
-        BaseResp<Task> baseResp = new BaseResp<>();
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(taskId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = taskService.selectTaskById(taskId);
+            responseUtil = taskService.selectTaskById(taskId);
         } catch (Exception e) {
             logger.error("selectTaskById and taskId={}", taskId, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -75,15 +75,15 @@ public class TaskController {
      */
     @ApiOperation(value = "添加任务")
     @PostMapping(value = "/insertTask")
-    public BaseResp<Task> insertTask(@RequestBody Task task) {
+    public ResponseUtil<Task> insertTask(@RequestBody Task task) {
         logger.info("insertTask and task:{}", JSON.toJSONString(task));
-        BaseResp<Task> baseResp = new BaseResp<>();
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = taskService.insertTask(task);
+            responseUtil = taskService.insertTask(task);
         } catch (Exception e) {
             logger.error("insertTask and task:{}", JSON.toJSONString(task), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -94,19 +94,19 @@ public class TaskController {
      */
     @ApiOperation(value = "编辑任务")
     @PostMapping(value = "/updateTaskById")
-    public BaseResp<Task> updateTaskById(@RequestBody Task task) {
+    public ResponseUtil<Task> updateTaskById(@RequestBody Task task) {
         logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
-        BaseResp<Task> baseResp = new BaseResp<>();
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(task.get_id())) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = taskService.updateTaskById(task);
+            responseUtil = taskService.updateTaskById(task);
         } catch (Exception e) {
             logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
 
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -118,14 +118,14 @@ public class TaskController {
      */
     @ApiOperation(value = "删除任务")
     @PostMapping(value = "/deleteByIdBatch")
-    public BaseResp<Task> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
+    public ResponseUtil<Task> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
         logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
-        BaseResp<Task> baseResp = new BaseResp<>();
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = taskService.deleteByIdBatch(ids);
+            responseUtil = taskService.deleteByIdBatch(ids);
         } catch (Exception e) {
             logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

@@ -1,8 +1,8 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.screen.model.entity.Program;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.domain.Program;
 
 public interface ProgramService {
 
@@ -23,7 +23,7 @@ public interface ProgramService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Program> selectProgramById(String programId);
+    ResponseUtil<Program> selectProgramById(String programId);
 
     /**
      * @Description: 添加命令
@@ -31,7 +31,7 @@ public interface ProgramService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Program> insertProgram(Program program);
+    ResponseUtil<Program> insertProgram(Program program);
 
     /**
      * @Description: 编辑命令
@@ -39,7 +39,7 @@ public interface ProgramService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Program> updateProgramById(Program program);
+    ResponseUtil<Program> updateProgramById(Program program);
 
     /**
      * @Description: 删除命令
@@ -48,5 +48,5 @@ public interface ProgramService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Program> deleteByIdBatch(String[] ids);
+    ResponseUtil<Program> deleteByIdBatch(String[] ids);
 }

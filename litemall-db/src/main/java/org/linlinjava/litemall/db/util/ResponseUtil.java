@@ -1,8 +1,10 @@
-package org.linlinjava.litemall.core.util;
+package org.linlinjava.litemall.db.util;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
+import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,30 @@ import java.util.Map;
  * 具体见litemall-wx-api模块的WxResponseCode。
  * </ul>
  */
-public class ResponseUtil {
+@Data
+public class ResponseUtil <T extends Object> implements Serializable {
+
+    private int errno;//状态码
+    private String errmsg;//返回信息
+    private T data;//数据
+    private Map<String, Object> expandData = new HashMap<>();//拓展数据
+    
+    public ResponseUtil() {
+        this.errno = Constant.STATUS_SYS_01;
+        this.errmsg = Constant.RTNINFO_SYS_01;
+    }
+
+    public ResponseUtil(int errno, String errmsg) {
+        this.errno = errno;
+        this.errmsg = errmsg;
+    }
+
+    public ResponseUtil initCodeAndDesp(int errno,String errmsg){
+        this.errno = errno;
+        this.errmsg = errmsg;
+        return this;
+    }
+    
     public static Object ok() {
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put("errno", 0);

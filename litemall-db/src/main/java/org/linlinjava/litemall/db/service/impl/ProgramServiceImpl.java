@@ -3,12 +3,12 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.dao.ProgramMapper;
-import com.xinda.screen.model.entity.Program;
-import com.xinda.screen.service.ProgramService;
-import com.xinda.util.DateUtil;
+import org.linlinjava.litemall.db.dao.ProgramMapper;
+import org.linlinjava.litemall.db.service.ProgramService;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.DateUtil;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.domain.Program;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,59 +41,59 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public BaseResp<Program> selectProgramById(String programId) {
-        BaseResp<Program> baseResp = new BaseResp<Program>();
+    public ResponseUtil<Program> selectProgramById(String programId) {
+        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
             Program program = programMapper.selectByPrimaryKey(programId);
-            baseResp.setData(program);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(program);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectProgramById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Program> insertProgram(Program program) {
-        BaseResp<Program> baseResp = new BaseResp<Program>();
+    public ResponseUtil<Program> insertProgram(Program program) {
+        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         program.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
             program.setCreateTime(DateUtil.getDateline());
             int n = programMapper.insertSelective(program);
             if (n == 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertProgram error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Program> updateProgramById(Program program) {
-        BaseResp<Program> baseResp = new BaseResp<Program>();
+    public ResponseUtil<Program> updateProgramById(Program program) {
+        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
             int n = programMapper.updateByPrimaryKeySelective(program);
             if (n >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateProgramById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Program> deleteByIdBatch(String[] ids) {
-        BaseResp<Program> baseResp = new BaseResp<Program>();
+    public ResponseUtil<Program> deleteByIdBatch(String[] ids) {
+        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
             int m = programMapper.deleteByIdBatch(ids);
             if (m >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteByIdBatch error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

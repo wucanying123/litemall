@@ -27,9 +27,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="播放时长" prop="playTime">
-        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>
-      </el-table-column>
+      <!--      <el-table-column align="center" label="播放时长" prop="playTime">-->
+      <!--        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>-->
+      <!--      </el-table-column>-->
 
       <el-table-column align="center" label="素材时长" prop="maxPlayTime">
         <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
@@ -85,17 +85,17 @@
             </el-upload>
           </el-form-item>
         </div>
-        <el-form-item label="播放时长(秒)" prop="playTime">
-          <el-input
-            v-model="dataForm.playTime"
-            type="number"
-            min="0"
-            max="60"
-            step="1"
-            size="2"
-            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
-          />
-        </el-form-item>
+        <!--        <el-form-item label="播放时长(秒)" prop="playTime">-->
+        <!--          <el-input-->
+        <!--            v-model="dataForm.playTime"-->
+        <!--            type="number"-->
+        <!--            min="0"-->
+        <!--            max="60"-->
+        <!--            step="1"-->
+        <!--            size="2"-->
+        <!--            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"-->
+        <!--          />-->
+        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -232,8 +232,8 @@ export default {
         id: undefined,
         name: undefined,
         _type: undefined,
-        url: undefined,
-        playTime: undefined
+        url: undefined
+        // playTime: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -247,10 +247,11 @@ export default {
         ],
         _type: [
           { required: true, message: '类型不能为空', trigger: 'blur' }
-        ],
-        playTime: [
-          { required: true, message: '播放时长不能为空', trigger: 'blur' }
         ]
+        // ,
+        // playTime: [
+        //   { required: true, message: '播放时长不能为空', trigger: 'blur' }
+        // ]
       },
       downloadLoading: false
     }
@@ -289,8 +290,8 @@ export default {
         id: undefined,
         name: undefined,
         _type: '',
-        url: undefined,
-        playTime: undefined
+        url: undefined
+        // playTime: undefined
       }
     },
     handleCreate() {

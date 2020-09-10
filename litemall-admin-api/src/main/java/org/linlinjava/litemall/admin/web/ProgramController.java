@@ -2,12 +2,12 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.model.entity.Program;
-import com.xinda.screen.service.ProgramService;
-import com.xinda.util.StringUtilsXD;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.domain.Program;
+import org.linlinjava.litemall.db.service.ProgramService;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +31,17 @@ public class ProgramController {
      */
     @ApiOperation(value = "获取节目列表")
     @GetMapping("/selectProgramPage")
-    public BaseResp<PageInfo<Program>> selectProgramPage(@RequestBody Program program,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseUtil<PageInfo<Program>> selectProgramPage(@RequestBody Program program,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         logger.info("selectProgramPage and program={}, pageNum={},pageSize",JSON.toJSONString(program), pageNum, pageSize);
-        BaseResp<PageInfo<Program>> baseResp = new BaseResp<>();
+        ResponseUtil<PageInfo<Program>> responseUtil = new ResponseUtil<>();
         try {
             PageInfo<Program> page = programService.selectProgramPage(program, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            baseResp.setData(page);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(page);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectProgramPage and program={},pageNum={},pageSize", JSON.toJSONString(program), pageNum, pageSize, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -53,18 +53,18 @@ public class ProgramController {
      */
     @ApiOperation(value = "通过节目id查看节目详情")
     @GetMapping(value = "/selectProgramById")
-    public BaseResp<Program> selectProgramById(@RequestParam(value = "programId") String programId) {
+    public ResponseUtil<Program> selectProgramById(@RequestParam(value = "programId") String programId) {
         logger.info("selectProgramById and programId={}", programId);
-        BaseResp<Program> baseResp = new BaseResp<>();
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(programId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = programService.selectProgramById(programId);
+            responseUtil = programService.selectProgramById(programId);
         } catch (Exception e) {
             logger.error("selectProgramById and programId={}", programId, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -75,15 +75,15 @@ public class ProgramController {
      */
     @ApiOperation(value = "添加节目")
     @PostMapping(value = "/insertProgram")
-    public BaseResp<Program> insertProgram(@RequestBody Program program) {
+    public ResponseUtil<Program> insertProgram(@RequestBody Program program) {
         logger.info("insertProgram and program:{}", JSON.toJSONString(program));
-        BaseResp<Program> baseResp = new BaseResp<>();
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = programService.insertProgram(program);
+            responseUtil = programService.insertProgram(program);
         } catch (Exception e) {
             logger.error("insertProgram and program:{}", JSON.toJSONString(program), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -94,19 +94,19 @@ public class ProgramController {
      */
     @ApiOperation(value = "编辑节目")
     @PostMapping(value = "/updateProgramById")
-    public BaseResp<Program> updateProgramById(@RequestBody Program program) {
+    public ResponseUtil<Program> updateProgramById(@RequestBody Program program) {
         logger.info("updateProgramById and program:{}", JSON.toJSONString(program));
-        BaseResp<Program> baseResp = new BaseResp<>();
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(program.get_id())) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = programService.updateProgramById(program);
+            responseUtil = programService.updateProgramById(program);
         } catch (Exception e) {
             logger.error("updateProgramById and program:{}", JSON.toJSONString(program), e);
 
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -118,14 +118,14 @@ public class ProgramController {
      */
     @ApiOperation(value = "删除节目")
     @PostMapping(value = "/deleteByIdBatch")
-    public BaseResp<Program> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
+    public ResponseUtil<Program> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
         logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
-        BaseResp<Program> baseResp = new BaseResp<>();
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = programService.deleteByIdBatch(ids);
+            responseUtil = programService.deleteByIdBatch(ids);
         } catch (Exception e) {
             logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

@@ -3,11 +3,11 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.dao.ScheduleMapper;
-import com.xinda.screen.model.entity.Schedule;
-import com.xinda.screen.service.ScheduleService;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.dao.ScheduleMapper;
+import org.linlinjava.litemall.db.domain.Schedule;
+import org.linlinjava.litemall.db.service.ScheduleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,58 +40,58 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public BaseResp<Schedule> selectScheduleById(String scheduleId) {
-        BaseResp<Schedule> baseResp = new BaseResp<Schedule>();
+    public ResponseUtil<Schedule> selectScheduleById(String scheduleId) {
+        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         try {
             Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
-            baseResp.setData(schedule);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(schedule);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectScheduleById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Schedule> insertSchedule(Schedule schedule) {
-        BaseResp<Schedule> baseResp = new BaseResp<Schedule>();
+    public ResponseUtil<Schedule> insertSchedule(Schedule schedule) {
+        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         schedule.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             int n = scheduleMapper.insertSelective(schedule);
             if (n == 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertSchedule error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Schedule> updateScheduleById(Schedule schedule) {
-        BaseResp<Schedule> baseResp = new BaseResp<Schedule>();
+    public ResponseUtil<Schedule> updateScheduleById(Schedule schedule) {
+        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         try {
             int n = scheduleMapper.updateByPrimaryKeySelective(schedule);
             if (n >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateScheduleById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Schedule> deleteByIdBatch(String[] ids) {
-        BaseResp<Schedule> baseResp = new BaseResp<Schedule>();
+    public ResponseUtil<Schedule> deleteByIdBatch(String[] ids) {
+        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         try {
             int m = scheduleMapper.deleteByIdBatch(ids);
             if (m >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteByIdBatch error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

@@ -1,13 +1,14 @@
 package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
+
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.model.entity.Layer;
-import com.xinda.screen.service.LayerService;
-import com.xinda.util.StringUtilsXD;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.db.domain.Layer;
+import org.linlinjava.litemall.db.service.LayerService;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +32,17 @@ public class LayerController {
      */
     @ApiOperation(value = "获取层列表")
     @GetMapping("/selectLayerPage")
-    public BaseResp<PageInfo<Layer>> selectLayerPage(@RequestBody Layer layer, @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseUtil<PageInfo<Layer>> selectLayerPage(@RequestBody Layer layer, @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         logger.info("selectLayerPage and layer={}, pageNum={},pageSize",JSON.toJSONString(layer), pageNum, pageSize);
-        BaseResp<PageInfo<Layer>> baseResp = new BaseResp<>();
+        ResponseUtil<PageInfo<Layer>> responseUtil = new ResponseUtil<>();
         try {
             PageInfo<Layer> page = layerService.selectLayerPage(layer, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            baseResp.setData(page);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(page);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectLayerPage and layer={},pageNum={},pageSize", JSON.toJSONString(layer), pageNum, pageSize, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -53,18 +54,18 @@ public class LayerController {
      */
     @ApiOperation(value = "通过层id查看层详情")
     @GetMapping(value = "/selectLayerById")
-    public BaseResp<Layer> selectLayerById(@RequestParam(value = "layerId") String layerId) {
+    public ResponseUtil<Layer> selectLayerById(@RequestParam(value = "layerId") String layerId) {
         logger.info("selectLayerById and layerId={}", layerId);
-        BaseResp<Layer> baseResp = new BaseResp<>();
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(layerId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = layerService.selectLayerById(layerId);
+            responseUtil = layerService.selectLayerById(layerId);
         } catch (Exception e) {
             logger.error("selectLayerById and layerId={}", layerId, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -75,15 +76,15 @@ public class LayerController {
      */
     @ApiOperation(value = "添加层")
     @PostMapping(value = "/insertLayer")
-    public BaseResp<Layer> insertLayer(@RequestBody Layer layer) {
+    public ResponseUtil<Layer> insertLayer(@RequestBody Layer layer) {
         logger.info("insertLayer and layer:{}", JSON.toJSONString(layer));
-        BaseResp<Layer> baseResp = new BaseResp<>();
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = layerService.insertLayer(layer);
+            responseUtil = layerService.insertLayer(layer);
         } catch (Exception e) {
             logger.error("insertLayer and layer:{}", JSON.toJSONString(layer), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -94,19 +95,19 @@ public class LayerController {
      */
     @ApiOperation(value = "编辑层")
     @PostMapping(value = "/updateLayerById")
-    public BaseResp<Layer> updateLayerById(@RequestBody Layer layer) {
+    public ResponseUtil<Layer> updateLayerById(@RequestBody Layer layer) {
         logger.info("updateLayerById and layer:{}", JSON.toJSONString(layer));
-        BaseResp<Layer> baseResp = new BaseResp<>();
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(layer.getId())) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = layerService.updateLayerById(layer);
+            responseUtil = layerService.updateLayerById(layer);
         } catch (Exception e) {
             logger.error("updateLayerById and layer:{}", JSON.toJSONString(layer), e);
 
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -118,14 +119,14 @@ public class LayerController {
      */
     @ApiOperation(value = "删除层")
     @PostMapping(value = "/deleteByIdBatch")
-    public BaseResp<Layer> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
+    public ResponseUtil<Layer> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
         logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
-        BaseResp<Layer> baseResp = new BaseResp<>();
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = layerService.deleteByIdBatch(ids);
+            responseUtil = layerService.deleteByIdBatch(ids);
         } catch (Exception e) {
             logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

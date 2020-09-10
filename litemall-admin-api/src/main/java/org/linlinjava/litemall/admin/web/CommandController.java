@@ -2,12 +2,12 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.model.entity.Command;
-import com.xinda.screen.service.CommandService;
-import com.xinda.util.StringUtilsXD;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.db.domain.Command;
+import org.linlinjava.litemall.db.service.CommandService;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +31,17 @@ public class CommandController {
      */
     @ApiOperation(value = "获取命令列表")
     @GetMapping("/selectCommandPage")
-    public BaseResp<PageInfo<Command>> selectCommandPage(@RequestBody Command command,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseUtil<PageInfo<Command>> selectCommandPage(@RequestBody Command command, @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         logger.info("selectCommandPage and command={}, pageNum={},pageSize",JSON.toJSONString(command), pageNum, pageSize);
-        BaseResp<PageInfo<Command>> baseResp = new BaseResp<>();
+        ResponseUtil<PageInfo<Command>> responseUtil = new ResponseUtil<>();
         try {
             PageInfo<Command> page = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            baseResp.setData(page);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(page);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectCommandPage and command={},pageNum={},pageSize", JSON.toJSONString(command), pageNum, pageSize, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -53,18 +53,18 @@ public class CommandController {
      */
     @ApiOperation(value = "通过命令id查看命令详情")
     @GetMapping(value = "/selectCommandById")
-    public BaseResp<Command> selectCommandById(@RequestParam(value = "commandId") String commandId) {
+    public ResponseUtil<Command> selectCommandById(@RequestParam(value = "commandId") String commandId) {
         logger.info("selectCommandById and commandId={}", commandId);
-        BaseResp<Command> baseResp = new BaseResp<>();
+        ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(commandId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = commandService.selectCommandById(commandId);
+            responseUtil = commandService.selectCommandById(commandId);
         } catch (Exception e) {
             logger.error("selectCommandById and commandId={}", commandId, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -75,15 +75,15 @@ public class CommandController {
      */
     @ApiOperation(value = "添加命令")
     @PostMapping(value = "/insertCommand")
-    public BaseResp<Command> insertCommand(@RequestBody Command command) {
+    public ResponseUtil<Command> insertCommand(@RequestBody Command command) {
         logger.info("insertCommand and command:{}", JSON.toJSONString(command));
-        BaseResp<Command> baseResp = new BaseResp<>();
+        ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = commandService.insertCommand(command);
+            responseUtil = commandService.insertCommand(command);
         } catch (Exception e) {
             logger.error("insertCommand and command:{}", JSON.toJSONString(command), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -94,18 +94,18 @@ public class CommandController {
      */
     @ApiOperation(value = "编辑命令")
     @PostMapping(value = "/updateCommandById")
-    public BaseResp<Command> updateCommandById(@RequestBody Command command) {
+    public ResponseUtil<Command> updateCommandById(@RequestBody Command command) {
         logger.info("updateCommandById and command:{}", JSON.toJSONString(command));
-        BaseResp<Command> baseResp = new BaseResp<>();
+        ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(command.getId())) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = commandService.updateCommandById(command);
+            responseUtil = commandService.updateCommandById(command);
         } catch (Exception e) {
             logger.error("updateCommandById and command:{}", JSON.toJSONString(command), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -117,14 +117,14 @@ public class CommandController {
      */
     @ApiOperation(value = "删除命令")
     @PostMapping(value = "/deleteByIdBatch")
-    public BaseResp<Command> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
+    public ResponseUtil<Command> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
         logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
-        BaseResp<Command> baseResp = new BaseResp<>();
+        ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = commandService.deleteByIdBatch(ids);
+            responseUtil = commandService.deleteByIdBatch(ids);
         } catch (Exception e) {
             logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

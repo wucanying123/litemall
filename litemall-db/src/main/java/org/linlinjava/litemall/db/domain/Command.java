@@ -21,7 +21,7 @@ public class Command implements Serializable {
      */
     String notificationURL;
 
-    com.xinda.screen.model.entity.Task task;//节目任务数据
+    org.linlinjava.litemall.db.domain.Task task;//节目任务数据
 
     //----------------扩展字段----------------
     String taskId; //节目任务id

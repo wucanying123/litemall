@@ -1,6 +1,5 @@
 package org.linlinjava.litemall.db.domain;
 
-import com.xinda.screen.model.vo.ScheduleVO;
 import lombok.Data;
 
 import java.io.Serializable;

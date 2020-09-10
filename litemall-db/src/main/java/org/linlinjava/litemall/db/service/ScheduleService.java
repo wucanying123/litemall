@@ -1,8 +1,8 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.screen.model.entity.Schedule;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.domain.Schedule;
 
 public interface ScheduleService {
 
@@ -23,7 +23,7 @@ public interface ScheduleService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Schedule> selectScheduleById(String scheduleId);
+    ResponseUtil<Schedule> selectScheduleById(String scheduleId);
 
     /**
      * @Description: 添加定时
@@ -31,7 +31,7 @@ public interface ScheduleService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Schedule> insertSchedule(Schedule schedule);
+    ResponseUtil<Schedule> insertSchedule(Schedule schedule);
 
     /**
      * @Description: 编辑定时
@@ -39,7 +39,7 @@ public interface ScheduleService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Schedule> updateScheduleById(Schedule schedule);
+    ResponseUtil<Schedule> updateScheduleById(Schedule schedule);
 
     /**
      * @Description: 删除定时
@@ -48,5 +48,5 @@ public interface ScheduleService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Schedule> deleteByIdBatch(String[] ids);
+    ResponseUtil<Schedule> deleteByIdBatch(String[] ids);
 }

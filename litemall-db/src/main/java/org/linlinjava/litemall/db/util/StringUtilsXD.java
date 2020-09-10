@@ -1,6 +1,5 @@
 package org.linlinjava.litemall.db.util;
 
-import com.xinda.common.BaseResp;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.codec.binary.Base64;
@@ -10,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -152,21 +150,6 @@ public class StringUtilsXD extends StringUtils {
 		return toLong(val).intValue();
 	}
 
-
-	/**
-	 * 获得用户远程地址
-	 */
-	public static String getRemoteAddr(HttpServletRequest request) {
-		String remoteAddr = request.getHeader("X-Real-IP");
-		if (isNotBlank(remoteAddr)) {
-			remoteAddr = request.getHeader("X-Forwarded-For");
-		} else if (isNotBlank(remoteAddr)) {
-			remoteAddr = request.getHeader("Proxy-Client-IP");
-		} else if (isNotBlank(remoteAddr)) {
-			remoteAddr = request.getHeader("WL-Proxy-Client-IP");
-		}
-		return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
-	}
 
 	/**
 	 * 是否有效手机号码，可以更改参数以只检查特定运营商的号段
@@ -559,21 +542,21 @@ public class StringUtilsXD extends StringUtils {
 	}
 
 
-	public static BaseResp<Object> setBaseResp(BaseResp<Object> baseResp, String result){
+	public static ResponseUtil<Object> setResponseUtil(ResponseUtil<Object> responseUtil, String result){
 		try {
 			result = replaceBlank(result);
 			JSONObject jsonObject = JSONObject.fromObject(result);
-			baseResp.setData(jsonObject);
+			responseUtil.setData(jsonObject);
 			if (null != jsonObject.get("_type")) {
 				String _type = jsonObject.get("_type").toString();
 				if (_type.equals("success")) {
-					baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+					responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
 				}
 			}
 		} catch (Exception e) {
-			logger.error("setBaseResp error", e);
+			logger.error("setResponseUtil error", e);
 		}
-		return baseResp;
+		return responseUtil;
 	}
 
 	public static int checkPageNumParam(Integer pageNumParam) {

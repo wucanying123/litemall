@@ -2,12 +2,12 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.model.entity.Item;
-import com.xinda.screen.service.ItemService;
-import com.xinda.util.StringUtilsXD;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.domain.Item;
+import org.linlinjava.litemall.db.service.ItemService;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +31,17 @@ public class ItemController {
      */
     @ApiOperation(value = "获取项目列表")
     @GetMapping("/selectItemPage")
-    public BaseResp<PageInfo<Item>> selectItemPage(@RequestBody Item item,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseUtil<PageInfo<Item>> selectItemPage(@RequestBody Item item,@RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         logger.info("selectItemPage and item={}, pageNum={},pageSize",JSON.toJSONString(item), pageNum, pageSize);
-        BaseResp<PageInfo<Item>> baseResp = new BaseResp<>();
+        ResponseUtil<PageInfo<Item>> responseUtil = new ResponseUtil<>();
         try {
             PageInfo<Item> page = itemService.selectItemPage(item, StringUtilsXD.checkPageNumParam(pageNum), StringUtilsXD.checkPageSizeParam(pageSize));
-            baseResp.setData(page);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(page);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectItemPage and item={},pageNum={},pageSize", JSON.toJSONString(item), pageNum, pageSize, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -53,18 +53,18 @@ public class ItemController {
      */
     @ApiOperation(value = "通过项目id查看项目详情")
     @GetMapping(value = "/selectItemById")
-    public BaseResp<Item> selectItemById(@RequestParam(value = "itemId") String itemId) {
+    public ResponseUtil<Item> selectItemById(@RequestParam(value = "itemId") String itemId) {
         logger.info("selectItemById and itemId={}", itemId);
-        BaseResp<Item> baseResp = new BaseResp<>();
+        ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(itemId)) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = itemService.selectItemById(itemId);
+            responseUtil = itemService.selectItemById(itemId);
         } catch (Exception e) {
             logger.error("selectItemById and itemId={}", itemId, e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -75,15 +75,15 @@ public class ItemController {
      */
     @ApiOperation(value = "添加项目")
     @PostMapping(value = "/insertItem")
-    public BaseResp<Item> insertItem(@RequestBody Item item) {
+    public ResponseUtil<Item> insertItem(@RequestBody Item item) {
         logger.info("insertItem and item:{}", JSON.toJSONString(item));
-        BaseResp<Item> baseResp = new BaseResp<>();
+        ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = itemService.insertItem(item);
+            responseUtil = itemService.insertItem(item);
         } catch (Exception e) {
             logger.error("insertItem and item:{}", JSON.toJSONString(item), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -94,19 +94,19 @@ public class ItemController {
      */
     @ApiOperation(value = "编辑项目")
     @PostMapping(value = "/updateItemById")
-    public BaseResp<Item> updateItemById(@RequestBody Item item) {
+    public ResponseUtil<Item> updateItemById(@RequestBody Item item) {
         logger.info("updateItemById and item:{}", JSON.toJSONString(item));
-        BaseResp<Item> baseResp = new BaseResp<>();
+        ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(item.get_id())) {
-            return baseResp.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            baseResp = itemService.updateItemById(item);
+            responseUtil = itemService.updateItemById(item);
         } catch (Exception e) {
             logger.error("updateItemById and item:{}", JSON.toJSONString(item), e);
 
         }
-        return baseResp;
+        return responseUtil;
     }
 
     /**
@@ -118,14 +118,14 @@ public class ItemController {
      */
     @ApiOperation(value = "删除项目")
     @PostMapping(value = "/deleteByIdBatch")
-    public BaseResp<Item> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
+    public ResponseUtil<Item> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
         logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
-        BaseResp<Item> baseResp = new BaseResp<>();
+        ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
-            baseResp = itemService.deleteByIdBatch(ids);
+            responseUtil = itemService.deleteByIdBatch(ids);
         } catch (Exception e) {
             logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

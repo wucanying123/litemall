@@ -3,11 +3,11 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.dao.TaskMapper;
-import com.xinda.screen.model.entity.Task;
-import com.xinda.screen.service.TaskService;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.dao.TaskMapper;
+import org.linlinjava.litemall.db.domain.Task;
+import org.linlinjava.litemall.db.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,58 +40,58 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public BaseResp<Task> selectTaskById(String taskId) {
-        BaseResp<Task> baseResp = new BaseResp<Task>();
+    public ResponseUtil<Task> selectTaskById(String taskId) {
+        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
             Task task = taskMapper.selectByPrimaryKey(taskId);
-            baseResp.setData(task);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(task);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectTaskById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Task> insertTask(Task task) {
-        BaseResp<Task> baseResp = new BaseResp<Task>();
+    public ResponseUtil<Task> insertTask(Task task) {
+        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         task.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
             int n = taskMapper.insertSelective(task);
             if (n == 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertTask error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Task> updateTaskById(Task task) {
-        BaseResp<Task> baseResp = new BaseResp<Task>();
+    public ResponseUtil<Task> updateTaskById(Task task) {
+        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
             int n = taskMapper.updateByPrimaryKeySelective(task);
             if (n >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateTaskById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Task> deleteByIdBatch(String[] ids) {
-        BaseResp<Task> baseResp = new BaseResp<Task>();
+    public ResponseUtil<Task> deleteByIdBatch(String[] ids) {
+        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
             int m = taskMapper.deleteByIdBatch(ids);
             if (m >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteByIdBatch error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

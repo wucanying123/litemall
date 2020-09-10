@@ -3,11 +3,12 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.dao.LayerMapper;
-import com.xinda.screen.model.entity.Layer;
-import com.xinda.screen.service.LayerService;
+
+import org.linlinjava.litemall.db.dao.LayerMapper;
+import org.linlinjava.litemall.db.domain.Layer;
+import org.linlinjava.litemall.db.service.LayerService;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,60 +46,60 @@ public class LayerServiceImpl implements LayerService {
     }
 
     @Override
-    public BaseResp<Layer> selectLayerById(String layerId) {
-        BaseResp<Layer> baseResp = new BaseResp<Layer>();
+    public ResponseUtil<Layer> selectLayerById(String layerId) {
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
             Layer layer = layerMapper.selectByPrimaryKey(layerId);
-            baseResp.setData(layer);
-            baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.setData(layer);
+            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectLayerById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Layer> insertLayer(Layer layer) {
-        BaseResp<Layer> baseResp = new BaseResp<Layer>();
+    public ResponseUtil<Layer> insertLayer(Layer layer) {
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         layer.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             layer.setIsRepeat(layer.getRepeat());
             int n = layerMapper.insertSelective(layer);
             if (n == 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertLayer error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Layer> updateLayerById(Layer layer) {
-        BaseResp<Layer> baseResp = new BaseResp<Layer>();
+    public ResponseUtil<Layer> updateLayerById(Layer layer) {
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
             layer.setIsRepeat(layer.getRepeat());
             int n = layerMapper.updateByPrimaryKeySelective(layer);
             if (n >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateLayerById error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 
     @Override
-    public BaseResp<Layer> deleteByIdBatch(String[] ids) {
-        BaseResp<Layer> baseResp = new BaseResp<Layer>();
+    public ResponseUtil<Layer> deleteByIdBatch(String[] ids) {
+        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
             int m = layerMapper.deleteByIdBatch(ids);
             if (m >= 1) {
-                baseResp.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteByIdBatch error and msg={}", e);
         }
-        return baseResp;
+        return responseUtil;
     }
 }

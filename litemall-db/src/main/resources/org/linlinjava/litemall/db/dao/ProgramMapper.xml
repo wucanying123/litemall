@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xinda.screen.dao.ProgramMapper">
-  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Program">
+<mapper namespace="org.linlinjava.litemall.db.dao.ProgramMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Program">
     <id column="_id" jdbcType="VARCHAR" property="_id" />
     <result column="totalSize" jdbcType="BIGINT" property="totalSize" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -28,7 +28,7 @@
     delete from program
     where _id = #{_id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Program">
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Program">
     insert into program
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="_id != null">
@@ -107,7 +107,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Program">
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Program">
     update program
     <set>
       <if test="totalSize != null">
@@ -154,7 +154,7 @@
       #{item}
     </foreach>
   </delete>
-  <select id="selectProgramPage" parameterType="com.xinda.screen.model.entity.Program" resultMap="BaseResultMap" >
+  <select id="selectProgramPage" parameterType="org.linlinjava.litemall.db.domain.Program" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from program where 1=1

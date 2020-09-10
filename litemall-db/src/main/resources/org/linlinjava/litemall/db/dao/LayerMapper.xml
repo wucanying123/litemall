@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xinda.screen.dao.LayerMapper">
-  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Layer">
+<mapper namespace="org.linlinjava.litemall.db.dao.LayerMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Layer">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="isRepeat" jdbcType="BIT" property="isRepeat" />
     <result column="sourcesIds" jdbcType="VARCHAR" property="sourcesIds" />
@@ -19,7 +19,7 @@
     delete from layer
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Layer">
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Layer">
     insert into layer
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -44,7 +44,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Layer">
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Layer">
     update layer
     <set>
       <if test="isRepeat != null">
@@ -64,7 +64,7 @@
       #{item}
     </foreach>
   </delete>
-  <select id="selectLayerPage" parameterType="com.xinda.screen.model.entity.Layer" resultMap="BaseResultMap" >
+  <select id="selectLayerPage" parameterType="org.linlinjava.litemall.db.domain.Layer" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from layer where 1=1

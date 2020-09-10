@@ -1,6 +1,6 @@
 package org.linlinjava.litemall.db.dao;
 
-import com.xinda.screen.model.entity.Command;
+import org.linlinjava.litemall.db.domain.Command;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

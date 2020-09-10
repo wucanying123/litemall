@@ -1,8 +1,9 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.screen.model.entity.Layer;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.domain.Layer;
+import org.linlinjava.litemall.db.domain.Layer;
 
 public interface LayerService {
 
@@ -23,7 +24,7 @@ public interface LayerService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Layer> selectLayerById(String layerId);
+    ResponseUtil<Layer> selectLayerById(String layerId);
 
     /**
      * @Description: 添加层
@@ -31,7 +32,7 @@ public interface LayerService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Layer> insertLayer(Layer layer);
+    ResponseUtil<Layer> insertLayer(Layer layer);
 
     /**
      * @Description: 编辑层
@@ -39,7 +40,7 @@ public interface LayerService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Layer> updateLayerById(Layer layer);
+    ResponseUtil<Layer> updateLayerById(Layer layer);
 
     /**
      * @Description: 删除层
@@ -48,5 +49,5 @@ public interface LayerService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Layer> deleteByIdBatch(String[] ids);
+    ResponseUtil<Layer> deleteByIdBatch(String[] ids);
 }

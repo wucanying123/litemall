@@ -1,15 +1,10 @@
-package org.linlinjava.litemall.db.service.impl;//package com.xinda.screen.service.impl;
+package org.linlinjava.litemall.db.service.impl;//package org.linlinjava.litemall.db.service.impl;
 
-import com.xinda.common.BaseResp;
-import com.xinda.common.Constant;
-import com.xinda.screen.dao.*;
-import com.xinda.screen.model.entity.*;
-import com.xinda.screen.model.vo.ScheduleVO;
-import com.xinda.screen.service.*;
-import com.xinda.util.DateUtil;
-import com.xinda.util.HttpUtil;
-import com.xinda.util.StringUtilsXD;
 import net.sf.json.JSONObject;
+import org.linlinjava.litemall.db.dao.*;
+import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.ScreenService;
+import org.linlinjava.litemall.db.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +38,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 加载顶层网页 （显示在其他界面之上，默认是透明的）
      */
-    public BaseResp<Object> updateTopWeb(String weburl) {
+    public ResponseUtil<Object> updateTopWeb(String weburl) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "loadUrl");
         if (StringUtils.isEmpty(weburl)) {
@@ -52,9 +47,9 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("url", weburl);
         params.put("persistent", "true");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
@@ -65,14 +60,14 @@ public class ScreenServiceImpl implements ScreenService {
      * console.log(data)
      * })
      */
-    public BaseResp<Object> updateTopWebJS() {
+    public ResponseUtil<Object> updateTopWebJS() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "invokeJs");
         params.put("js", "handleData({id:'m2',content:'how/<br>are/<br>you2222/<br>?',direction:'down'})");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
@@ -86,7 +81,7 @@ public class ScreenServiceImpl implements ScreenService {
      * @param direction 往左滚动，可填值left、 right
      * @param align     在上方显示，可填值top、center、bottom
      */
-    public BaseResp<Object> scrollingText(Integer num, String text, String color, Integer interval, Integer step, String direction, String align) {
+    public ResponseUtil<Object> scrollingText(Integer num, String text, String color, Integer interval, Integer step, String direction, String align) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "invokeBuildInJs");
         params.put("method", "scrollMarquee");
@@ -118,34 +113,34 @@ public class ScreenServiceImpl implements ScreenService {
         }
         params.put("align", align);
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 清屏
      */
-    public BaseResp<Object> clearScreen() {
+    public ResponseUtil<Object> clearScreen() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "clear");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 启动xwalk （需要先在www.m2mled.net上安装xwalk，xwalk是一个支持html5的浏览器）
      */
-    public BaseResp<Object> startActivity() {
+    public ResponseUtil<Object> startActivity() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "startActivity");
         params.put("apk", "com.xixun.xy.xwalk");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
@@ -153,7 +148,7 @@ public class ScreenServiceImpl implements ScreenService {
      * (第一次使用xwalk加载网页时，务必先用《启动xwalk》命令打开xwalk才能继续使用xwalk加载网页。若persistent（持久化）为true，之后无需再次调用《启动xwalk》命令，重启控制卡后，系统会自动加载上一次的url；若为false，每次重启，开机后需再次调用《启动xwalk》命令才能继续使用xwalk加载网页。
      * 注意：js里面请不要添加alert这一类需要鼠标操作的代码，否则会卡住。郑重声明：请不要使用在网页中使用video标签，经测试长时间使用video标签播放视频会导致画面卡住！）
      */
-    public BaseResp<Object> loadWebByActivity() {
+    public ResponseUtil<Object> loadWebByActivity() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callXwalkFn");
         params.put("fn", "loadUrl");
@@ -168,15 +163,15 @@ public class ScreenServiceImpl implements ScreenService {
                 "\t\t} \n" +
                 "\t} ");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 调用xwalk加载的网页里的js方法
      */
-    public BaseResp<Object> updateWebJSByActivity() {
+    public ResponseUtil<Object> updateWebJSByActivity() {
         String json = "{\n" +
                 "\t\"type\": \"callXwalkFn\",\n" +
                 "\t\"fn\": \"loadUrl\",\n" +
@@ -192,16 +187,16 @@ public class ScreenServiceImpl implements ScreenService {
                 "\t}\n" +
                 "}";
         String result = HttpUtil.postJsonString(Constant.URL, json);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 设置xwalk背景
      * (注意：当前加载的页面必须已经定义过showHtml方法)
      */
-    public BaseResp<Object> setBackgroundColor(String color) {
+    public ResponseUtil<Object> setBackgroundColor(String color) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callXwalkFn");
         params.put("fn", "setBackgroundColor");
@@ -210,15 +205,15 @@ public class ScreenServiceImpl implements ScreenService {
         }
         params.put("arg", color);
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 播放AIPS里下载的节目
      */
-    public BaseResp<Object> playXixunProgramZip() {
+    public ResponseUtil<Object> playXixunProgramZip() {
         RequestData3 requestData = new RequestData3();
         requestData.setType("commandXixunPlayer");
         Command2 command = new Command2();
@@ -227,15 +222,15 @@ public class ScreenServiceImpl implements ScreenService {
         command.setPassword("abc");
         requestData.setCommand(command);
         String result = HttpUtil.postJsonObject(Constant.URL, requestData);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 播放直播
      */
-    public BaseResp<Object> playLiveVideo() {
+    public ResponseUtil<Object> playLiveVideo() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
         params.put("_type", "StartLiveVideo");
@@ -243,28 +238,28 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("width", "128");
         params.put("height", "320");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 播放直播
      */
-    public BaseResp<Object> stopLiveVideo() {
+    public ResponseUtil<Object> stopLiveVideo() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
         params.put("_type", "StopLiveVideo");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 以字符串形式上传并保存html、图片等文件到sd卡
      */
-    public BaseResp<Object> saveSDStringFile() {
+    public ResponseUtil<Object> saveSDStringFile() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "saveSDStringFile");
 //        params.put("fileName","https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598440556009&di=658c561ef1daf8c80c9b2eb1a3d55804&imgtype=0&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201407%2F31%2F182726essfa0380ygmly3h.jpg");
@@ -272,30 +267,30 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("content", "base64Data");
         params.put("base64", "true");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 删除以字符串形式上传的文件
      */
-    public BaseResp<Object> deleteSDFile() {
+    public ResponseUtil<Object> deleteSDFile() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "deleteFile");
         params.put("fileName", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598440556009&di=658c" +
                 "561ef1daf8c80c9b2eb1a3d55804&imgtype=0&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201407%2F31%2F182726essfa0380ygmly3h.jpg");
 //        params.put("deleteAll","true");//如果要删除所有保存的文件，请取消对此的注释
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 下载文件到SD卡（图片、视频等任意文件）
      */
-    public BaseResp<Object> downloadFileToSD() {
+    public ResponseUtil<Object> downloadFileToSD() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "downloadFileToSD");
         String fileName = "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4";
@@ -303,95 +298,95 @@ public class ScreenServiceImpl implements ScreenService {
 //        Date date = new Date();
         params.put("path", "/abc/1.mp4");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 删除SD上的文件
      */
-    public BaseResp<Object> deleteFileFromSD() {
+    public ResponseUtil<Object> deleteFileFromSD() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "downloadFileToSD");
         params.put("path", "/201505/download.html");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取SD卡上文件的大小
      */
-    public BaseResp<Object> getSDFileLength() {
+    public ResponseUtil<Object> getSDFileLength() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getFileLength");
         params.put("path", "/201505/download.html");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 停止默认播放器
      */
-    public BaseResp<Object> stopPlayer() {
+    public ResponseUtil<Object> stopPlayer() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "stopPlayer");
         params.put("stop", "true");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 下载文件到内部存储（图片、视频等任意文件）
      */
-    public BaseResp<Object> downloadFileToLocal() {
+    public ResponseUtil<Object> downloadFileToLocal() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "downloadFileToLocal");
         params.put("url", "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4");
         params.put("path", "/abc/2.mp4");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 删除内部存储里的文件夹
      */
-    public BaseResp<Object> deleteFileFromLocal() {
+    public ResponseUtil<Object> deleteFileFromLocal() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "deleteFileFromLocal");
         params.put("path", "/abc");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查看内部存储里的文件大小
      */
-    public BaseResp<Object> getLocalFileLength() {
+    public ResponseUtil<Object> getLocalFileLength() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getLocalFileLength");
         params.put("path", "/abc/demo.html");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取截图
      * （返回截图为base64编码的字符串（字符串中含有较多的\n换行符，需要用正则去掉才能正常显示，格式为png）
      */
-    public BaseResp<Object> getScreenshot() {
+    public ResponseUtil<Object> getScreenshot() {
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("callCardService");
         requestData2.setFn("screenshot");
@@ -406,55 +401,55 @@ public class ScreenServiceImpl implements ScreenService {
             jsonObject.put("result", imgString);
             result = jsonObject.toString();
         }
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取GPS坐标
      */
-    public BaseResp<Object> getGpsLocation() {
+    public ResponseUtil<Object> getGpsLocation() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getGpsLocation");
         params.put("fn", "screenshot");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 开关屏幕
      */
-    public BaseResp<Object> setScreenOpen(boolean isopen) {
+    public ResponseUtil<Object> setScreenOpen(boolean isopen) {
         RequestData2 requestData = new RequestData2();
         requestData.setType("callCardService");
         requestData.setFn("setScreenOpen");
         requestData.setArg1(isopen);
         String result = HttpUtil.postJsonObject(Constant.URL, requestData);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取屏幕是否打开
      */
-    public BaseResp<Object> getScreenOpenStutus() {
+    public ResponseUtil<Object> getScreenOpenStutus() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "isScreenOpen");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 设置亮度
      */
-    public BaseResp<Object> setBrightness(String brightNum) {
+    public ResponseUtil<Object> setBrightness(String brightNum) {
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("callCardService");
         requestData2.setFn("setBrightness");
@@ -466,16 +461,16 @@ public class ScreenServiceImpl implements ScreenService {
 //        params.put("fn", "setBrightness");
 //        params.put("arg1",Integer.parseInt(brightNum));
 //        String result = HttpUtil.postMapObject(URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 
     /**
      * 提交JsonString
      */
-    public BaseResp<Object> postJsonString(String jsonString) {
+    public ResponseUtil<Object> postJsonString(String jsonString) {
         if (StringUtils.isEmpty(jsonString)) {
             jsonString = "{ \n" +
                     "\t\"type\": \"clear\"\n" +
@@ -483,20 +478,20 @@ public class ScreenServiceImpl implements ScreenService {
         }
         jsonString = StringUtilsXD.replaceBlank(jsonString);
         String result = HttpUtil.postJsonString(Constant.URL, jsonString);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 播放熙讯任务
      */
-    public BaseResp<Object> playXixunTask(String taskId) {
-        BaseResp<Object> baseResp = new BaseResp<>();
+    public ResponseUtil<Object> playXixunTask(String taskId) {
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
 
         Task task = taskMapper.selectByPrimaryKey(taskId);
         if(null == task){
-            return baseResp;
+            return responseUtil;
         }
         RequestData requestData = new RequestData();
         requestData.setType("commandXixunPlayer");
@@ -583,8 +578,8 @@ public class ScreenServiceImpl implements ScreenService {
         command.setTaskId(taskId);
         requestData.setCommand(command);
         String result = HttpUtil.postJsonObject(Constant.URL, requestData);
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 
@@ -671,20 +666,20 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 获取亮度
      */
-    public BaseResp<Object> getBrightness() {
+    public ResponseUtil<Object> getBrightness() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getBrightness");
         String result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 设置音量
      */
-    public BaseResp<Object> setVolume(Integer volumeNum) {
+    public ResponseUtil<Object> setVolume(Integer volumeNum) {
         String result = "";
         try {
             RequestData2 requestData2 = new RequestData2();
@@ -695,72 +690,72 @@ public class ScreenServiceImpl implements ScreenService {
         } catch (Exception e) {
             logger.error("setVolume error and volumeNum = {}", volumeNum, e);
         }
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取音量
      */
-    public BaseResp<Object> getVolume() {
+    public ResponseUtil<Object> getVolume() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getVolume");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取屏宽
      */
-    public BaseResp<Object> getScreenWidth() {
+    public ResponseUtil<Object> getScreenWidth() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getScreenWidth");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取屏高
      */
-    public BaseResp<Object> getScreenHeight() {
+    public ResponseUtil<Object> getScreenHeight() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getScreenHeight");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取网络类型
      */
-    public BaseResp<Object> getNetworkType() {
+    public ResponseUtil<Object> getNetworkType() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getNetworkType");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 
     /**
      * 设置NTP服务器或时区
      */
-    public BaseResp<Object> setTimeSync(String ntpServer, String timezone) {
+    public ResponseUtil<Object> setTimeSync(String ntpServer, String timezone) {
         String result = "";
         try {
             RequestData2 requestData2 = new RequestData2();
@@ -772,100 +767,100 @@ public class ScreenServiceImpl implements ScreenService {
         } catch (Exception e) {
             logger.error("setTimeSync error and ntpServer = {},timezone = {}", ntpServer, timezone, e);
         }
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取NTP服务器
      */
-    public BaseResp<Object> getNtpServer() {
+    public ResponseUtil<Object> getNtpServer() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getNtpServer");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取时区
      */
-    public BaseResp<Object> getTimezone() {
+    public ResponseUtil<Object> getTimezone() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getTimezone");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 重启
      */
-    public BaseResp<Object> reboot() {
+    public ResponseUtil<Object> reboot() {
         String result = "";
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("callCardService");
         requestData2.setFn("reboot");
         requestData2.setArg1(1);
         result = HttpUtil.postJsonObject(Constant.URL, requestData2);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取apk信息
      */
-    public BaseResp<Object> getPackageVersion() {
+    public ResponseUtil<Object> getPackageVersion() {
         String result = "";
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("getPackageVersion");
         requestData2.setApk("com.xixun.xixunplayer");
         result = HttpUtil.postJsonObject(Constant.URL, requestData2);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取硬件状态
      */
-    public BaseResp<Object> getFpgaInfomation() {
+    public ResponseUtil<Object> getFpgaInfomation() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getFpgaInfomation");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 在线更新app接口
      */
-    public BaseResp<Object> updateAPP() {
+    public ResponseUtil<Object> updateAPP() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "updateAPP");
         params.put("appUrl", "https://m2mled.net/file/download?id=5c13839da62960b53cb07b42");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 高级参数设置接口
      */
-    public BaseResp<Object> advancedConfig() {
+    public ResponseUtil<Object> advancedConfig() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "advancedConfig");
@@ -874,16 +869,16 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("realtimeURL", Constant.LOCALHOST + ":" + Constant.WEBPORT);
         params.put("usbProgramPwd", null);
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 
     /**
      * 同步时间设置接口
      */
-    public BaseResp<Object> setTimeSync2() {
+    public ResponseUtil<Object> setTimeSync2() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "serial");
@@ -895,37 +890,37 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("delaySync", "1");
         params.put("checkNtpTime", null);
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 设置自动亮度，亮度根据传感器数据变化自动调整
      */
-    public BaseResp<Object> setAutoBrightness(String sensitivity, String minBrightness) {
+    public ResponseUtil<Object> setAutoBrightness(String sensitivity, String minBrightness) {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "setAutoBrightness");
         params.put("sensitivity", sensitivity);
         params.put("minBrightness", minBrightness);
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询自动亮度
      */
-    public BaseResp<Object> getAutoBrightness() {
+    public ResponseUtil<Object> getAutoBrightness() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getAutoBrightness");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 //        3.3.42、定时亮度，不同时段切换对应亮度值(conn10.0.5T或以上版本支持)
@@ -988,14 +983,14 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 查询定时亮度接口
      */
-    public BaseResp<Object> getTimedBrightness() {
+    public ResponseUtil<Object> getTimedBrightness() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedBrightness");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
 //
@@ -1043,60 +1038,60 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 查询定时开关屏
      */
-    public BaseResp<Object> getTimedScreening() {
+    public ResponseUtil<Object> getTimedScreening() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedScreening");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 定时重启接口
      */
-    public BaseResp<Object> timedReboot(String time) {
+    public ResponseUtil<Object> timedReboot(String time) {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "timedReboot");
         params.put("time", time);
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询定时重启时间
      */
-    public BaseResp<Object> getTimedReboot() {
+    public ResponseUtil<Object> getTimedReboot() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedReboot");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 清除播放器节目数据和文件
      */
-    public BaseResp<Object> clearPlayerTask() {
+    public ResponseUtil<Object> clearPlayerTask() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "clearPlayerTask");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取传感器数据接口
      */
-    public BaseResp<Object> getSensor() {
+    public ResponseUtil<Object> getSensor() {
         String result = "";
         Sensor sensor = new Sensor();
         sensor.setType("callCardService");
@@ -1104,88 +1099,88 @@ public class ScreenServiceImpl implements ScreenService {
         sensor.setCallbackURL(null);
         sensor.setSubscribe(true);
         result = HttpUtil.postJsonObject(Constant.URL, sensor);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询设备当前时间
      */
-    public BaseResp<Object> getControllerDate() {
+    public ResponseUtil<Object> getControllerDate() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getControllerDate");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询设备磁盘空间
      */
-    public BaseResp<Object> getDiskSpace() {
+    public ResponseUtil<Object> getDiskSpace() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getDiskSpace");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询播放器当前存储的节目JSON
      */
-    public BaseResp<Object> getProgramTask() {
+    public ResponseUtil<Object> getProgramTask() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getProgramTask");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 查询播放器当前正在播放的节目名
      */
-    public BaseResp<Object> getPlayingProgram() {
+    public ResponseUtil<Object> getPlayingProgram() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getPlayingProgram");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 获取服务器地址和公司id接口
      */
-    public BaseResp<Object> getServerAddress() {
+    public ResponseUtil<Object> getServerAddress() {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getServerAddress");
         result = HttpUtil.postMap(Constant.URL, params);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 
     /**
      * 开关WiFi/AP接口
      */
-    public BaseResp<Object> switchWiFi(boolean on) {
+    public ResponseUtil<Object> switchWiFi(boolean on) {
         String result = "";
         SwitchWiFi switchWiFi = new SwitchWiFi();
         switchWiFi.set_id("f237643d-c35c");
         switchWiFi.setType("switchWiFi");
         switchWiFi.setOn(on);
         result = HttpUtil.postJsonObject(Constant.URL, switchWiFi);
-        BaseResp<Object> baseResp = new BaseResp<>();
-        baseResp = StringUtilsXD.setBaseResp(baseResp, result);
-        return baseResp;
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
     }
 }

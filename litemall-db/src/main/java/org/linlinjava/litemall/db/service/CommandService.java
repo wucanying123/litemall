@@ -1,8 +1,8 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import com.xinda.common.BaseResp;
-import com.xinda.screen.model.entity.Command;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.domain.Command;
 
 public interface CommandService {
 
@@ -23,7 +23,7 @@ public interface CommandService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Command> selectCommandById(String commandId);
+    ResponseUtil<Command> selectCommandById(String commandId);
 
     /**
      * @Description: 添加命令
@@ -31,7 +31,7 @@ public interface CommandService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Command> insertCommand(Command command);
+    ResponseUtil<Command> insertCommand(Command command);
 
     /**
      * @Description: 编辑命令
@@ -39,7 +39,7 @@ public interface CommandService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Command> updateCommandById(Command command);
+    ResponseUtil<Command> updateCommandById(Command command);
 
     /**
      * @Description: 删除命令
@@ -48,5 +48,5 @@ public interface CommandService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    BaseResp<Command> deleteByIdBatch(String[] ids);
+    ResponseUtil<Command> deleteByIdBatch(String[] ids);
 }

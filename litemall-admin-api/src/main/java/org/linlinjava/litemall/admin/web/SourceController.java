@@ -4,10 +4,11 @@ import com.alibaba.fastjson.JSON;
 
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
-import org.linlinjava.litemall.core.util.ResponseUtil;
-import org.linlinjava.litemall.core.util.StringUtilsXD;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,17 +75,31 @@ public class SourceController {
      */
     @ApiOperation(value = "添加资源")
     @PostMapping(value = "/insertSource")
-    public Object insertSource(@RequestBody Source source) {
+//    public Object insertSource(@RequestBody Source source) {
+//        logger.info("insertSource and source:{}", JSON.toJSONString(source));
+//        try {
+//            int n = sourceService.insertSource(source);
+//            if (n == 1) {
+//                return ResponseUtil.ok();
+//            }
+//        } catch (Exception e) {
+//            logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
+//        }
+//        return ResponseUtil.fail();
+//    }
+
+    public ResponseUtil<Source> insertSource(@RequestBody Source source) {
         logger.info("insertSource and source:{}", JSON.toJSONString(source));
+        ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
             int n = sourceService.insertSource(source);
             if (n == 1) {
-                return ResponseUtil.ok();
+                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xinda.screen.dao.ScheduleMapper">
-  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Schedule">
+<mapper namespace="org.linlinjava.litemall.db.dao.ScheduleMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Schedule">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="dateType" jdbcType="VARCHAR" property="dateType" />
     <result column="startDate" jdbcType="BIGINT" property="startDate" />
@@ -27,7 +27,7 @@
     delete from schedule
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Schedule">
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Schedule">
     insert into schedule
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -94,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Schedule">
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Schedule">
     update schedule
     <set>
       <if test="dateType != null">
@@ -135,7 +135,7 @@
       #{item}
     </foreach>
   </delete>
-  <select id="selectSchedulePage" parameterType="com.xinda.screen.model.entity.Schedule" resultMap="BaseResultMap" >
+  <select id="selectSchedulePage" parameterType="org.linlinjava.litemall.db.domain.Schedule" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from schedule where 1=1
