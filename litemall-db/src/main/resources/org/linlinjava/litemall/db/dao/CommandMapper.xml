@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.linlinjava.litemall.db.dao.CommandMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Command">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="_type" jdbcType="VARCHAR" property="_type" />
+    <result column="preDownloadURL" jdbcType="VARCHAR" property="preDownloadURL" />
+    <result column="notificationURL" jdbcType="VARCHAR" property="notificationURL" />
+    <result column="taskId" jdbcType="VARCHAR" property="taskId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, _type, preDownloadURL, notificationURL, taskId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from command
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from command
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Command">
+    insert into command
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="_type != null">
+        _type,
+      </if>
+      <if test="preDownloadURL != null">
+        preDownloadURL,
+      </if>
+      <if test="notificationURL != null">
+        notificationURL,
+      </if>
+      <if test="taskId != null">
+        taskId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="_type != null">
+        #{_type,jdbcType=VARCHAR},
+      </if>
+      <if test="preDownloadURL != null">
+        #{preDownloadURL,jdbcType=VARCHAR},
+      </if>
+      <if test="notificationURL != null">
+        #{notificationURL,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Command">
+    update command
+    <set>
+      <if test="_type != null">
+        _type = #{_type,jdbcType=VARCHAR},
+      </if>
+      <if test="preDownloadURL != null">
+        preDownloadURL = #{preDownloadURL,jdbcType=VARCHAR},
+      </if>
+      <if test="notificationURL != null">
+        notificationURL = #{notificationURL,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        taskId = #{taskId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByIdBatch" parameterType="String">
+    delete from command
+    where
+    id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectCommandPage" parameterType="org.linlinjava.litemall.db.domain.Command" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from command where 1=1
+    <if test="command != null and command.taskId != null" >
+      and taskId = #{command.taskId}
+    </if>
+  </select>
+</mapper>
