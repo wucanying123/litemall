@@ -111,20 +111,20 @@ public class ScheduleController {
 
     /**
      * @Description: 删除定时
-     * @Title: deleteByIdBatch
-     * @param ids 定时id集合
+     * @Title: deleteById
+     * @param id 定时id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除定时")
-    @PostMapping(value = "/deleteByIdBatch")
-    public ResponseUtil<Schedule> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
-        logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
+    @PostMapping(value = "/deleteById")
+    public ResponseUtil<Schedule> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = scheduleService.deleteByIdBatch(ids);
+            responseUtil = scheduleService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
     }

@@ -43,10 +43,10 @@ public interface TaskService {
 
     /**
      * @Description: 删除任务
-     * @Title: deleteByIdBatch
-     * @param ids 任务id集合
+     * @Title: deleteById
+     * @param id 任务id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Task> deleteByIdBatch(String[] ids);
+    ResponseUtil<Task> deleteById(String id);
 }

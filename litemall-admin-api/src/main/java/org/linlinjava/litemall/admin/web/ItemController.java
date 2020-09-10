@@ -110,20 +110,20 @@ public class ItemController {
 
     /**
      * @Description: 删除项目
-     * @Title: deleteByIdBatch
-     * @param ids 项目id集合
+     * @Title: deleteById
+     * @param id 项目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除项目")
-    @PostMapping(value = "/deleteByIdBatch")
-    public ResponseUtil<Item> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
-        logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
+    @PostMapping(value = "/deleteById")
+    public ResponseUtil<Item> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = itemService.deleteByIdBatch(ids);
+            responseUtil = itemService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
     }

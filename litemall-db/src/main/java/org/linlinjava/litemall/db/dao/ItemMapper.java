@@ -18,7 +18,7 @@ public interface ItemMapper {
 
     int updateByPrimaryKeySelective(Item item);
 
-    int deleteByIdBatch(String[] ids);
+    int deleteById(String ids);
 
     int deleteByPrimaryKey(String id);
 }

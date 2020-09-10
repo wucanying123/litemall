@@ -44,10 +44,10 @@ public interface LayerService {
 
     /**
      * @Description: 删除层
-     * @Title: deleteByIdBatch
-     * @param ids 层id集合
+     * @Title: deleteById
+     * @param id 层id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Layer> deleteByIdBatch(String[] ids);
+    ResponseUtil<Layer> deleteById(String id);
 }

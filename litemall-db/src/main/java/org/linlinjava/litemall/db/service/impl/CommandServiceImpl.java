@@ -81,15 +81,15 @@ public class CommandServiceImpl implements CommandService {
     }
 
     @Override
-    public ResponseUtil<Command> deleteByIdBatch(String[] ids) {
+    public ResponseUtil<Command> deleteById(String id) {
         ResponseUtil<Command> responseUtil = new ResponseUtil<Command>();
         try {
-            int m = commandMapper.deleteByIdBatch(ids);
+            int m = commandMapper.deleteById(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteByIdBatch error and msg={}", e);
+            logger.error("deleteById error and msg={}", e);
         }
         return responseUtil;
     }

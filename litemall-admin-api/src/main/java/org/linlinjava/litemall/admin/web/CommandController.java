@@ -110,20 +110,20 @@ public class CommandController {
 
     /**
      * @Description: 删除命令
-     * @Title: deleteByIdBatch
-     * @param ids 命令id集合
+     * @Title: deleteById
+     * @param id 命令id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除命令")
-    @PostMapping(value = "/deleteByIdBatch")
-    public ResponseUtil<Command> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
-        logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
+    @PostMapping(value = "/deleteById")
+    public ResponseUtil<Command> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = commandService.deleteByIdBatch(ids);
+            responseUtil = commandService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
     }

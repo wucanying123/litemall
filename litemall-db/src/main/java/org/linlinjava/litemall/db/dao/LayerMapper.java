@@ -17,7 +17,7 @@ public interface LayerMapper {
 
     int updateByPrimaryKeySelective(Layer layer);
 
-    int deleteByIdBatch(String[] ids);
+    int deleteById(String ids);
 
     int deleteByPrimaryKey(String id);
 }

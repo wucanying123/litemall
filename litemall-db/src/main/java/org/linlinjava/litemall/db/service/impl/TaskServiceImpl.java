@@ -82,15 +82,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseUtil<Task> deleteByIdBatch(String[] ids) {
+    public ResponseUtil<Task> deleteById(String id) {
         ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
-            int m = taskMapper.deleteByIdBatch(ids);
+            int m = taskMapper.deleteById(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteByIdBatch error and msg={}", e);
+            logger.error("deleteById error and msg={}", e);
         }
         return responseUtil;
     }

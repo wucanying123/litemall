@@ -90,15 +90,15 @@ public class LayerServiceImpl implements LayerService {
     }
 
     @Override
-    public ResponseUtil<Layer> deleteByIdBatch(String[] ids) {
+    public ResponseUtil<Layer> deleteById(String id) {
         ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
-            int m = layerMapper.deleteByIdBatch(ids);
+            int m = layerMapper.deleteById(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteByIdBatch error and msg={}", e);
+            logger.error("deleteById error and msg={}", e);
         }
         return responseUtil;
     }

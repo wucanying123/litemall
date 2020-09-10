@@ -84,15 +84,15 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public ResponseUtil<Program> deleteByIdBatch(String[] ids) {
+    public ResponseUtil<Program> deleteById(String id) {
         ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
-            int m = programMapper.deleteByIdBatch(ids);
+            int m = programMapper.deleteById(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteByIdBatch error and msg={}", e);
+            logger.error("deleteById error and msg={}", e);
         }
         return responseUtil;
     }

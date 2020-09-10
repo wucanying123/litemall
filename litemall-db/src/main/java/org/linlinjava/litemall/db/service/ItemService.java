@@ -43,10 +43,10 @@ public interface ItemService {
 
     /**
      * @Description: 删除项目
-     * @Title: deleteByIdBatch
-     * @param ids 项目id集合
+     * @Title: deleteById
+     * @param id 项目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Item> deleteByIdBatch(String[] ids);
+    ResponseUtil<Item> deleteById(String id);
 }

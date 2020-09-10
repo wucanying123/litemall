@@ -17,7 +17,7 @@ public interface CommandMapper {
 
     int updateByPrimaryKeySelective(Command command);
 
-    int deleteByIdBatch(String[] ids);
+    int deleteById(String ids);
 
     int deleteByPrimaryKey(String id);
 }

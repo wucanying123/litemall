@@ -111,20 +111,20 @@ public class LayerController {
 
     /**
      * @Description: 删除层
-     * @Title: deleteByIdBatch
-     * @param ids 层id集合
+     * @Title: deleteById
+     * @param id 层id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除层")
-    @PostMapping(value = "/deleteByIdBatch")
-    public ResponseUtil<Layer> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
-        logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
+    @PostMapping(value = "/deleteById")
+    public ResponseUtil<Layer> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = layerService.deleteByIdBatch(ids);
+            responseUtil = layerService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
     }

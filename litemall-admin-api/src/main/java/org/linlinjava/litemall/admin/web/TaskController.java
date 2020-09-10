@@ -110,20 +110,20 @@ public class TaskController {
 
     /**
      * @Description: 删除任务
-     * @Title: deleteByIdBatch
-     * @param ids 任务id集合
+     * @Title: deleteById
+     * @param id 任务id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除任务")
-    @PostMapping(value = "/deleteByIdBatch")
-    public ResponseUtil<Task> deleteByIdBatch(@RequestParam(value = "ids") String[] ids) {
-        logger.info("deleteByIdBatch and ids={}", JSON.toJSONString(ids));
+    @PostMapping(value = "/deleteById")
+    public ResponseUtil<Task> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = taskService.deleteByIdBatch(ids);
+            responseUtil = taskService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteByIdBatch and ids={}", JSON.toJSONString(ids), e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
     }

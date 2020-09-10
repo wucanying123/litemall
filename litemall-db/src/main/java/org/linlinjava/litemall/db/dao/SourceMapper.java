@@ -17,7 +17,7 @@ public interface SourceMapper {
 
     int updateByPrimaryKeySelective(Source source);
 
-    int deleteById(String[] ids);
+    int deleteById(String ids);
 
     int deleteByPrimaryKey(String id);
 }

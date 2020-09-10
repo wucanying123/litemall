@@ -43,10 +43,10 @@ public interface CommandService {
 
     /**
      * @Description: 删除命令
-     * @Title: deleteByIdBatch
-     * @param ids 命令id集合
+     * @Title: deleteById
+     * @param id 命令id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Command> deleteByIdBatch(String[] ids);
+    ResponseUtil<Command> deleteById(String id);
 }

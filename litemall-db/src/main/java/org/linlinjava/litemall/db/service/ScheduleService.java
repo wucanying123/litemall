@@ -43,10 +43,10 @@ public interface ScheduleService {
 
     /**
      * @Description: 删除定时
-     * @Title: deleteByIdBatch
-     * @param ids 定时id集合
+     * @Title: deleteById
+     * @param id 定时id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Schedule> deleteByIdBatch(String[] ids);
+    ResponseUtil<Schedule> deleteById(String id);
 }
