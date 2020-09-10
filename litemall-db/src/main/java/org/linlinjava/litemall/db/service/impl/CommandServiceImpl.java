@@ -84,7 +84,7 @@ public class CommandServiceImpl implements CommandService {
     public ResponseUtil<Command> deleteById(String id) {
         ResponseUtil<Command> responseUtil = new ResponseUtil<Command>();
         try {
-            int m = commandMapper.deleteById(id);
+            int m = commandMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

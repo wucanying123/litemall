@@ -85,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
     public ResponseUtil<Item> deleteById(String id) {
         ResponseUtil<Item> responseUtil = new ResponseUtil<Item>();
         try {
-            int m = itemMapper.deleteById(id);
+            int m = itemMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

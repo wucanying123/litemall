@@ -93,7 +93,7 @@ public class LayerServiceImpl implements LayerService {
     public ResponseUtil<Layer> deleteById(String id) {
         ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
-            int m = layerMapper.deleteById(id);
+            int m = layerMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

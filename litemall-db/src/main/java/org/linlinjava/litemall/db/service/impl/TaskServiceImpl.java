@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
     public ResponseUtil<Task> deleteById(String id) {
         ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
-            int m = taskMapper.deleteById(id);
+            int m = taskMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

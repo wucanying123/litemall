@@ -85,7 +85,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ResponseUtil<Schedule> deleteById(String id) {
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         try {
-            int m = scheduleMapper.deleteById(id);
+            int m = scheduleMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

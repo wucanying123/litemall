@@ -87,7 +87,7 @@ public class ProgramServiceImpl implements ProgramService {
     public ResponseUtil<Program> deleteById(String id) {
         ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
-            int m = programMapper.deleteById(id);
+            int m = programMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
