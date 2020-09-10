@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinda.screen.dao.ScheduleMapper">
+  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Schedule">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="dateType" jdbcType="VARCHAR" property="dateType" />
+    <result column="startDate" jdbcType="BIGINT" property="startDate" />
+    <result column="endDate" jdbcType="BIGINT" property="endDate" />
+    <result column="timeType" jdbcType="VARCHAR" property="timeType" />
+    <result column="startTime" jdbcType="BIGINT" property="startTime" />
+    <result column="endTime" jdbcType="BIGINT" property="endTime" />
+    <result column="filterType" jdbcType="VARCHAR" property="filterType" />
+    <result column="weekFilter" jdbcType="VARCHAR" property="weekFilter" />
+    <result column="monthFilter" jdbcType="VARCHAR" property="monthFilter" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dateType, startDate, endDate, timeType, startTime, endTime, filterType, weekFilter, 
+    monthFilter
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from schedule
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from schedule
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Schedule">
+    insert into schedule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="dateType != null">
+        dateType,
+      </if>
+      <if test="startDate != null">
+        startDate,
+      </if>
+      <if test="endDate != null">
+        endDate,
+      </if>
+      <if test="timeType != null">
+        timeType,
+      </if>
+      <if test="startTime != null">
+        startTime,
+      </if>
+      <if test="endTime != null">
+        endTime,
+      </if>
+      <if test="filterType != null">
+        filterType,
+      </if>
+      <if test="weekFilter != null">
+        weekFilter,
+      </if>
+      <if test="monthFilter != null">
+        monthFilter,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="dateType != null">
+        #{dateType,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=BIGINT},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=BIGINT},
+      </if>
+      <if test="timeType != null">
+        #{timeType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=BIGINT},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=BIGINT},
+      </if>
+      <if test="filterType != null">
+        #{filterType,jdbcType=VARCHAR},
+      </if>
+      <if test="weekFilter != null">
+        #{weekFilter,jdbcType=VARCHAR},
+      </if>
+      <if test="monthFilter != null">
+        #{monthFilter,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Schedule">
+    update schedule
+    <set>
+      <if test="dateType != null">
+        dateType = #{dateType,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        startDate = #{startDate,jdbcType=BIGINT},
+      </if>
+      <if test="endDate != null">
+        endDate = #{endDate,jdbcType=BIGINT},
+      </if>
+      <if test="timeType != null">
+        timeType = #{timeType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        startTime = #{startTime,jdbcType=BIGINT},
+      </if>
+      <if test="endTime != null">
+        endTime = #{endTime,jdbcType=BIGINT},
+      </if>
+      <if test="filterType != null">
+        filterType = #{filterType,jdbcType=VARCHAR},
+      </if>
+      <if test="weekFilter != null">
+        weekFilter = #{weekFilter,jdbcType=VARCHAR},
+      </if>
+      <if test="monthFilter != null">
+        monthFilter = #{monthFilter,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByIdBatch" parameterType="String">
+    delete from schedule
+    where
+    id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectSchedulePage" parameterType="com.xinda.screen.model.entity.Schedule" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from schedule where 1=1
+  </select>
+</mapper>

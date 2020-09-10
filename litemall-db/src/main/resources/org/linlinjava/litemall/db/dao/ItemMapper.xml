@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinda.screen.dao.ItemMapper">
+  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Item">
+    <id column="_id" jdbcType="VARCHAR" property="_id" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="repeatTimes" jdbcType="INTEGER" property="repeatTimes" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="schedulesIds" jdbcType="VARCHAR" property="schedulesIds" />
+    <result column="programId" jdbcType="VARCHAR" property="programId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    _id, priority, repeatTimes, version, schedulesIds, programId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from item
+    where _id = #{_id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from item
+    where _id = #{_id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Item">
+    insert into item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        _id,
+      </if>
+      <if test="priority != null">
+        priority,
+      </if>
+      <if test="repeatTimes != null">
+        repeatTimes,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="schedulesIds != null">
+        schedulesIds,
+      </if>
+      <if test="programId != null">
+        programId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        #{_id,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="repeatTimes != null">
+        #{repeatTimes,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="schedulesIds != null">
+        #{schedulesIds,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        #{programId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Item">
+    update item
+    <set>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="repeatTimes != null">
+        repeatTimes = #{repeatTimes,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="schedulesIds != null">
+        schedulesIds = #{schedulesIds,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        programId = #{programId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where _id = #{_id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByIdBatch" parameterType="String">
+    delete from item
+    where
+    id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectItemPage" parameterType="com.xinda.screen.model.entity.Item" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from item where 1=1
+    <if test="item.schedulesIds != null" >
+      and schedulesIds = #{item.schedulesIds}
+    </if>
+  </select>
+</mapper>

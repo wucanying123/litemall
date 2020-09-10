@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinda.screen.dao.ProgramMapper">
+  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Program">
+    <id column="_id" jdbcType="VARCHAR" property="_id" />
+    <result column="totalSize" jdbcType="BIGINT" property="totalSize" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="width" jdbcType="INTEGER" property="width" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="_company" jdbcType="VARCHAR" property="_company" />
+    <result column="_department" jdbcType="VARCHAR" property="_department" />
+    <result column="_role" jdbcType="VARCHAR" property="_role" />
+    <result column="_user" jdbcType="VARCHAR" property="_user" />
+    <result column="__v" jdbcType="INTEGER" property="__v" />
+    <result column="createTime" jdbcType="BIGINT" property="createTime" />
+    <result column="layersIds" jdbcType="VARCHAR" property="layersIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    _id, totalSize, name, width, height, _company, _department, _role, _user, __v, createTime,layersIds
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from program
+    where _id = #{_id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from program
+    where _id = #{_id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Program">
+    insert into program
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        _id,
+      </if>
+      <if test="totalSize != null">
+        totalSize,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="_company != null">
+        _company,
+      </if>
+      <if test="_department != null">
+        _department,
+      </if>
+      <if test="_role != null">
+        _role,
+      </if>
+      <if test="_user != null">
+        _user,
+      </if>
+      <if test="__v != null">
+        __v,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="layersIds != null">
+        layersIds,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        #{_id,jdbcType=VARCHAR},
+      </if>
+      <if test="totalSize != null">
+        #{totalSize,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="_company != null">
+        #{_company,jdbcType=VARCHAR},
+      </if>
+      <if test="_department != null">
+        #{_department,jdbcType=VARCHAR},
+      </if>
+      <if test="_role != null">
+        #{_role,jdbcType=VARCHAR},
+      </if>
+      <if test="_user != null">
+        #{_user,jdbcType=VARCHAR},
+      </if>
+      <if test="__v != null">
+        #{__v,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="layersIds != null">
+        #{layersIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Program">
+    update program
+    <set>
+      <if test="totalSize != null">
+        totalSize = #{totalSize,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="_company != null">
+        _company = #{_company,jdbcType=VARCHAR},
+      </if>
+      <if test="_department != null">
+        _department = #{_department,jdbcType=VARCHAR},
+      </if>
+      <if test="_role != null">
+        _role = #{_role,jdbcType=VARCHAR},
+      </if>
+      <if test="_user != null">
+        _user = #{_user,jdbcType=VARCHAR},
+      </if>
+      <if test="__v != null">
+        __v = #{__v,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+     <if test="layersIds != null">
+       layersIds = #{layersIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where _id = #{_id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByIdBatch" parameterType="String">
+    delete from program
+    where
+    id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectProgramPage" parameterType="com.xinda.screen.model.entity.Program" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from program where 1=1
+  </select>
+</mapper>

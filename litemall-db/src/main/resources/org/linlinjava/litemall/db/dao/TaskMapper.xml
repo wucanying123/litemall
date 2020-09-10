@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinda.screen.dao.TaskMapper">
+  <resultMap id="BaseResultMap" type="com.xinda.screen.model.entity.Task">
+    <result column="_id" jdbcType="VARCHAR" property="_id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="_department" jdbcType="VARCHAR" property="_department" />
+    <result column="executeDate" jdbcType="BIGINT" property="executeDate" />
+    <result column="cmdId" jdbcType="VARCHAR" property="cmdId" />
+    <result column="itemsIds" jdbcType="VARCHAR" property="itemsIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    _id, name, _department, executeDate, cmdId, itemsIds
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from task
+    where _id = #{_id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from task
+    where _id = #{_id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.xinda.screen.model.entity.Task">
+    insert into task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        _id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="_department != null">
+        _department,
+      </if>
+      <if test="executeDate != null">
+        executeDate,
+      </if>
+      <if test="cmdId != null">
+        cmdId,
+      </if>
+      <if test="itemsIds != null">
+        itemsIds,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="_id != null">
+        #{_id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="_department != null">
+        #{_department,jdbcType=VARCHAR},
+      </if>
+      <if test="executeDate != null">
+        #{executeDate,jdbcType=BIGINT},
+      </if>
+      <if test="cmdId != null">
+        #{cmdId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsIds != null">
+        #{itemsIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xinda.screen.model.entity.Task">
+    update task
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="_department != null">
+        _department = #{_department,jdbcType=VARCHAR},
+      </if>
+      <if test="executeDate != null">
+        executeDate = #{executeDate,jdbcType=BIGINT},
+      </if>
+      <if test="cmdId != null">
+        cmdId = #{cmdId,jdbcType=VARCHAR},
+      </if>
+     <if test="itemsIds != null">
+       itemsIds = #{itemsIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where _id = #{_id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByIdBatch" parameterType="String">
+    delete from task
+    where
+    _id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectTaskPage" parameterType="com.xinda.screen.model.entity.Task" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from task where 1=1
+  </select>
+</mapper>
