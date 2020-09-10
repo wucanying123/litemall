@@ -17,7 +17,7 @@ public interface ProgramMapper {
 
     int updateByPrimaryKeySelective(Program program);
 
-    int deleteById(String ids);
+    int deleteByIdBatch(String[] ids);
 
     int deleteByPrimaryKey(String id);
 }

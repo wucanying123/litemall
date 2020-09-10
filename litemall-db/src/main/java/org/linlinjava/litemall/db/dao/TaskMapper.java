@@ -17,7 +17,7 @@ public interface TaskMapper {
 
     int updateByPrimaryKeySelective(Task task);
 
-    int deleteById(String ids);
+    int deleteByIdBatch(String[] ids);
 
     int deleteByPrimaryKey(String id);
 }
