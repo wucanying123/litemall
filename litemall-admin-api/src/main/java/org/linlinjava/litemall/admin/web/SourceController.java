@@ -1,13 +1,12 @@
 package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
-
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
-import org.linlinjava.litemall.db.util.Constant;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/admin/screen/source")
-
 public class SourceController {
     @Autowired
     private SourceService sourceService;
@@ -24,19 +22,17 @@ public class SourceController {
     private static Logger logger = LoggerFactory.getLogger(SourceController.class);
 
     /**
-     * @param page  开始页数
-     * @param limit 每页条数
      * @Description: 获取资源列表
      * @title selectSourcePage
+     * @param page 开始页数
+     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "获取资源列表")
     @GetMapping("/selectSourcePage")
-    public Object selectSourcePage(String name, String _type, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
-        Source source = new Source();
-        source.setName(name);
-        source.set_type(_type);
+    public Object selectSourcePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        Source source = null;
         logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
         try {
             PageInfo<Source> pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
@@ -48,23 +44,26 @@ public class SourceController {
     }
 
     /**
-     * @param sourceId 资源id
      * @Description: 通过资源id查看资源详情
+     * @param sourceId 资源id
      * @Title: selectSourceById
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "通过资源id查看资源详情")
     @GetMapping(value = "/selectSourceById")
-    public Object selectSourceById(@RequestParam(value = "sourceId") String sourceId) {
+    public ResponseUtil<Source> selectSourceById(@RequestParam(value = "sourceId") String sourceId) {
         logger.info("selectSourceById and sourceId={}", sourceId);
+        ResponseUtil<Source> responseUtil = new ResponseUtil<>();
+        if (StringUtilsXD.isBlank(sourceId)) {
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
         try {
-            Source source = sourceService.selectSourceById(sourceId);
-            return ResponseUtil.ok(source);
+            responseUtil = sourceService.selectSourceById(sourceId);
         } catch (Exception e) {
             logger.error("selectSourceById and sourceId={}", sourceId, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**
@@ -75,27 +74,11 @@ public class SourceController {
      */
     @ApiOperation(value = "添加资源")
     @PostMapping(value = "/insertSource")
-//    public Object insertSource(@RequestBody Source source) {
-//        logger.info("insertSource and source:{}", JSON.toJSONString(source));
-//        try {
-//            int n = sourceService.insertSource(source);
-//            if (n == 1) {
-//                return ResponseUtil.ok();
-//            }
-//        } catch (Exception e) {
-//            logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
-//        }
-//        return ResponseUtil.fail();
-//    }
-
     public ResponseUtil<Source> insertSource(@RequestBody Source source) {
         logger.info("insertSource and source:{}", JSON.toJSONString(source));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
-            int n = sourceService.insertSource(source);
-            if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            responseUtil = sourceService.insertSource(source);
         } catch (Exception e) {
             logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
         }
@@ -110,42 +93,38 @@ public class SourceController {
      */
     @ApiOperation(value = "编辑资源")
     @PostMapping(value = "/updateSourceById")
-    public Object updateSourceById(@RequestBody Source source) {
+    public ResponseUtil<Source> updateSourceById(@RequestBody Source source) {
         logger.info("updateSourceById and source:{}", JSON.toJSONString(source));
+        ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(source.getId())) {
-            return ResponseUtil.badArgument();
+            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            int n = sourceService.updateSourceById(source);
-            if (n == 1) {
-                return ResponseUtil.ok();
-            }
+            responseUtil = sourceService.updateSourceById(source);
         } catch (Exception e) {
             logger.error("updateSourceById and source:{}", JSON.toJSONString(source), e);
 
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**
-     * @param id 资源id
      * @Description: 删除资源
      * @Title: deleteById
+     * @param id 资源id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "删除资源")
     @PostMapping(value = "/deleteById")
-    public Object deleteById(@RequestParam(value = "id") String id) {
-        logger.info("deleteById and id={}", id);
+    public ResponseUtil<Source> deleteById(@RequestParam(value = "id") String id) {
+        logger.info("deleteById and id={}", JSON.toJSONString(id));
+        ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
-            int n = sourceService.deleteById(id);
-            if (n == 1) {
-                return ResponseUtil.ok();
-            }
+            responseUtil = sourceService.deleteById(id);
         } catch (Exception e) {
-            logger.error("deleteById and id={}", id, e);
+            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 }

@@ -7,7 +7,7 @@ import org.linlinjava.litemall.db.domain.Program;
 public interface ProgramService {
 
     /**
-     * @Description: 获取命令列表
+     * @Description: 获取节目列表
      * @title selectProgramPage
      * @param pageNum 开始页数
      * @param pageSize 每页条数
@@ -17,16 +17,16 @@ public interface ProgramService {
     PageInfo<Program> selectProgramPage(Program program,Integer pageNum,Integer pageSize);
 
     /**
-     * @Description: 通过命令id查看命令详情
+     * @Description: 通过节目id查看节目详情
      * @Title: selectProgramById
-     * @param programId 命令id
+     * @param programId 节目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     ResponseUtil<Program> selectProgramById(String programId);
 
     /**
-     * @Description: 添加命令
+     * @Description: 添加节目
      * @title insertProgram
      * @author IngaWu
      * @currentdate:2020年9月2日
@@ -34,7 +34,7 @@ public interface ProgramService {
     ResponseUtil<Program> insertProgram(Program program);
 
     /**
-     * @Description: 编辑命令
+     * @Description: 编辑节目
      * @title updateProgramById
      * @author IngaWu
      * @currentdate:2020年9月2日
@@ -42,9 +42,9 @@ public interface ProgramService {
     ResponseUtil<Program> updateProgramById(Program program);
 
     /**
-     * @Description: 删除命令
+     * @Description: 删除节目
      * @Title: deleteById
-     * @param id 命令id
+     * @param id 节目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */

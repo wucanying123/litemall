@@ -2,6 +2,7 @@ package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Source;
+import org.linlinjava.litemall.db.util.ResponseUtil;
 
 public interface SourceService {
 
@@ -13,7 +14,7 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    PageInfo<Source> selectSourcePage(Source source, Integer pageNum, Integer pageSize);
+    PageInfo<Source> selectSourcePage(Source source,Integer pageNum,Integer pageSize);
 
     /**
      * @Description: 通过资源id查看资源详情
@@ -22,7 +23,7 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    Source selectSourceById(String sourceId);
+    ResponseUtil<Source> selectSourceById(String sourceId);
 
     /**
      * @Description: 添加资源
@@ -30,7 +31,7 @@ public interface SourceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    int insertSource(Source source);
+    ResponseUtil<Source> insertSource(Source source);
 
     /**
      * @Description: 编辑资源
@@ -38,7 +39,7 @@ public interface SourceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    int updateSourceById(Source source);
+    ResponseUtil<Source> updateSourceById(Source source);
 
     /**
      * @Description: 删除资源
@@ -47,5 +48,5 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    int deleteById(String id);
+    ResponseUtil<Source> deleteById(String id);
 }
