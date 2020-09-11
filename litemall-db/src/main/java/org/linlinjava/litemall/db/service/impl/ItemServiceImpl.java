@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
         try {
             Item item = itemMapper.selectByPrimaryKey(itemId);
             responseUtil.setData(item);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectItemById error and msg={}", e);
         }
@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
             item.setCreateTime(DateUtil.getDateline());
             int n = itemMapper.insertSelective(item);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertItem error and msg={}", e);
@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
             item.setUpdateTime(DateUtil.getDateline());
             int n = itemMapper.updateByPrimaryKeySelective(item);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateItemById error and msg={}", e);
@@ -90,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         try {
             int m = itemMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);

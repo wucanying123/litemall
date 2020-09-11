@@ -550,7 +550,7 @@ public class StringUtilsXD extends StringUtils {
 			if (null != jsonObject.get("_type")) {
 				String _type = jsonObject.get("_type").toString();
 				if (_type.equals("success")) {
-					responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+					responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
 				}
 			}
 		} catch (Exception e) {

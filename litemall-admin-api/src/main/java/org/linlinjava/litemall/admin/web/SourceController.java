@@ -31,16 +31,17 @@ public class SourceController {
      */
     @ApiOperation(value = "获取资源列表")
     @GetMapping("/selectSourcePage")
-    public Object selectSourcePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectSourcePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Source source = null;
         logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
         try {
             PageInfo<Source> pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**
@@ -56,7 +57,7 @@ public class SourceController {
         logger.info("selectSourceById and sourceId={}", sourceId);
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(sourceId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = sourceService.selectSourceById(sourceId);
@@ -97,7 +98,7 @@ public class SourceController {
         logger.info("updateSourceById and source:{}", JSON.toJSONString(source));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(source.getId())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = sourceService.updateSourceById(source);

@@ -57,7 +57,7 @@ public class ScheduleController {
         logger.info("selectScheduleById and scheduleId={}", scheduleId);
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(scheduleId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = scheduleService.selectScheduleById(scheduleId);
@@ -98,7 +98,7 @@ public class ScheduleController {
         logger.info("updateScheduleById and schedule:{}", JSON.toJSONString(schedule));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(schedule.getId())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = scheduleService.updateScheduleById(schedule);

@@ -56,7 +56,7 @@ public class TaskController {
         logger.info("selectTaskById and taskId={}", taskId);
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(taskId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = taskService.selectTaskById(taskId);
@@ -97,7 +97,7 @@ public class TaskController {
         logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(task.get_id())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = taskService.updateTaskById(task);

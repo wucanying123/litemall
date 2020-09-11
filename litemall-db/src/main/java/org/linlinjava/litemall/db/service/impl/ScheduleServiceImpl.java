@@ -46,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         try {
             Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
             responseUtil.setData(schedule);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectScheduleById error and msg={}", e);
         }
@@ -61,7 +61,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             schedule.setCreateTime(DateUtil.getDateline());
             int n = scheduleMapper.insertSelective(schedule);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertSchedule error and msg={}", e);
@@ -76,7 +76,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             schedule.setUpdateTime(DateUtil.getDateline());
             int n = scheduleMapper.updateByPrimaryKeySelective(schedule);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateScheduleById error and msg={}", e);
@@ -90,7 +90,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         try {
             int m = scheduleMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);

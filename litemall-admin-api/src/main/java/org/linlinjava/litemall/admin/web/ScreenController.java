@@ -53,7 +53,7 @@ public class ScreenController {
             int indexEnd = resultString.indexOf("}");
             String result = resultString.substring(indexStart, indexEnd + 1);
             responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         }
         return responseUtil;
     }
@@ -251,7 +251,7 @@ public class ScreenController {
         logger.info("setVolume and volumenum={}", volumenum);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isEmpty(volumenum)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
 
         }
         return screenService.setVolume(Integer.parseInt(volumenum));
@@ -287,7 +287,7 @@ public class ScreenController {
         logger.info("setTimeSync and ntpServer = {},timezone = {}", ntpserver, timezone);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.hasBlankParams(ntpserver, timezone)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
 
         }
         return screenService.setTimeSync(ntpserver, timezone);

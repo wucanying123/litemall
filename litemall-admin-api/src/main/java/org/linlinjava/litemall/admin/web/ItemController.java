@@ -56,7 +56,7 @@ public class ItemController {
         logger.info("selectItemById and itemId={}", itemId);
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(itemId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = itemService.selectItemById(itemId);
@@ -97,7 +97,7 @@ public class ItemController {
         logger.info("updateItemById and item:{}", JSON.toJSONString(item));
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(item.get_id())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = itemService.updateItemById(item);

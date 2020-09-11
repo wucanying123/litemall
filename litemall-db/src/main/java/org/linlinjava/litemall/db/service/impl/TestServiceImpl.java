@@ -125,7 +125,7 @@ public class TestServiceImpl implements TestService {
             items.add(item);
             task.setItems(items);
             command.setTask(task);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("imitateAddXixunTask error", e);
         }

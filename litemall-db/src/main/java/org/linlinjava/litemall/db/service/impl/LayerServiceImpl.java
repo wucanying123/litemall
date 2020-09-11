@@ -52,7 +52,7 @@ public class LayerServiceImpl implements LayerService {
         try {
             Layer layer = layerMapper.selectByPrimaryKey(layerId);
             responseUtil.setData(layer);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectLayerById error and msg={}", e);
         }
@@ -68,7 +68,7 @@ public class LayerServiceImpl implements LayerService {
             layer.setCreateTime(DateUtil.getDateline());
             int n = layerMapper.insertSelective(layer);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertLayer error and msg={}", e);
@@ -84,7 +84,7 @@ public class LayerServiceImpl implements LayerService {
             layer.setIsRepeat(layer.getRepeat());
             int n = layerMapper.updateByPrimaryKeySelective(layer);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateLayerById error and msg={}", e);
@@ -98,7 +98,7 @@ public class LayerServiceImpl implements LayerService {
         try {
             int m = layerMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);

@@ -56,7 +56,7 @@ public class ProgramController {
         logger.info("selectProgramById and programId={}", programId);
         ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(programId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = programService.selectProgramById(programId);
@@ -97,7 +97,7 @@ public class ProgramController {
         logger.info("updateProgramById and program:{}", JSON.toJSONString(program));
         ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(program.get_id())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = programService.updateProgramById(program);

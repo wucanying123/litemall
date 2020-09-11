@@ -60,10 +60,23 @@ public class ResponseUtil <T extends Object> implements Serializable {
         this.errmsg = errmsg;
     }
 
-    public ResponseUtil initCodeAndDesp(int errno,String errmsg){
+    public ResponseUtil initCodeAndMsg(int errno,String errmsg){
         this.errno = errno;
         this.errmsg = errmsg;
         return this;
+    }
+
+    public static ResponseUtil succeedPage(PageInfo page) {
+        ResponseUtil responseUtil = new ResponseUtil();
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("list", page.getList());
+        data.put("total", page.getTotal());
+        data.put("page", page.getPageNum());
+        data.put("limit", page.getPageSize());
+        data.put("pages", page.getPages());
+        responseUtil.setData(data);
+        responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+        return responseUtil;
     }
     
     public static Object ok() {

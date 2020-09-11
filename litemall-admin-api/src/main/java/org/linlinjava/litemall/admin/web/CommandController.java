@@ -57,7 +57,7 @@ public class CommandController {
         logger.info("selectCommandById and commandId={}", commandId);
         ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(commandId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = commandService.selectCommandById(commandId);
@@ -98,7 +98,7 @@ public class CommandController {
         logger.info("updateCommandById and command:{}", JSON.toJSONString(command));
         ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(command.getId())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = commandService.updateCommandById(command);

@@ -52,7 +52,7 @@ public class SourceServiceImpl implements SourceService {
         try {
             Source source = sourceMapper.selectByPrimaryKey(sourceId);
             responseUtil.setData(source);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectSourceById error and msg={}", e);
         }
@@ -71,7 +71,7 @@ public class SourceServiceImpl implements SourceService {
             }
             int n = sourceMapper.insertSelective(source);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertSource error and msg={}", e);
@@ -86,7 +86,7 @@ public class SourceServiceImpl implements SourceService {
             source.setUpdateTime(DateUtil.getDateline());
             int n = sourceMapper.updateByPrimaryKeySelective(source);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateSourceById error and msg={}", e);
@@ -100,7 +100,7 @@ public class SourceServiceImpl implements SourceService {
         try {
             int m = sourceMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);

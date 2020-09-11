@@ -46,7 +46,7 @@ public class ProgramServiceImpl implements ProgramService {
         try {
             Program program = programMapper.selectByPrimaryKey(programId);
             responseUtil.setData(program);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectProgramById error and msg={}", e);
         }
@@ -61,7 +61,7 @@ public class ProgramServiceImpl implements ProgramService {
             program.setCreateTime(DateUtil.getDateline());
             int n = programMapper.insertSelective(program);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertProgram error and msg={}", e);
@@ -76,7 +76,7 @@ public class ProgramServiceImpl implements ProgramService {
             program.setUpdateTime(DateUtil.getDateline());
             int n = programMapper.updateByPrimaryKeySelective(program);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateProgramById error and msg={}", e);
@@ -90,7 +90,7 @@ public class ProgramServiceImpl implements ProgramService {
         try {
             int m = programMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);

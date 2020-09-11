@@ -57,7 +57,7 @@ public class LayerController {
         logger.info("selectLayerById and layerId={}", layerId);
         ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(layerId)) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = layerService.selectLayerById(layerId);
@@ -98,7 +98,7 @@ public class LayerController {
         logger.info("updateLayerById and layer:{}", JSON.toJSONString(layer));
         ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         if (StringUtilsXD.isBlank(layer.getId())) {
-            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
             responseUtil = layerService.updateLayerById(layer);

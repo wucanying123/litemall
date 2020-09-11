@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             Task task = taskMapper.selectByPrimaryKey(taskId);
             responseUtil.setData(task);
-            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectTaskById error and msg={}", e);
         }
@@ -61,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
             task.setCreateTime(DateUtil.getDateline());
             int n = taskMapper.insertSelective(task);
             if (n == 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("insertTask error and msg={}", e);
@@ -76,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
             task.setUpdateTime(DateUtil.getDateline());
             int n = taskMapper.updateByPrimaryKeySelective(task);
             if (n >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateTaskById error and msg={}", e);
@@ -90,7 +90,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             int m = taskMapper.deleteByPrimaryKey(id);
             if (m >= 1) {
-                responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
