@@ -18,4 +18,5 @@ public class Task implements Serializable {
     String itemsIds;
     Long createTime;//创建时间
     Long updateTime;//修改时间
+    Integer userid;//用户id
 }

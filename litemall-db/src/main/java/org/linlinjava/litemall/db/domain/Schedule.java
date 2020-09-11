@@ -20,4 +20,5 @@ public class Schedule extends Source implements Serializable {
      String id;
      Long createTime;//创建时间
      Long updateTime;//修改时间
+     Integer userid;//用户id
 }

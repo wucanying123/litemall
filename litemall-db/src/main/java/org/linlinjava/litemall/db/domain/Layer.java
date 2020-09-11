@@ -19,4 +19,5 @@ public class Layer implements Serializable {
     String sourcesIds;
     Long createTime;//创建时间
     Long updateTime;//修改时间
+    Integer userid;//用户id
 }

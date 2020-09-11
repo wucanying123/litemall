@@ -10,9 +10,10 @@
     <result column="itemsIds" jdbcType="VARCHAR" property="itemsIds" />
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
-    _id, name, _department, executeDate, cmdId, itemsIds, createTime, updateTime
+    _id, name, _department, executeDate, cmdId, itemsIds, createTime, updateTime, userid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -51,6 +52,9 @@
       <if test="updateTime != null">
         updateTime,
       </if>
+      <if test="userid != null">
+        userid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="_id != null">
@@ -77,6 +81,9 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Task">
@@ -102,6 +109,9 @@
       </if>
       <if test="updateTime != null">
         updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
       </if>
     </set>
     where _id = #{_id,jdbcType=VARCHAR}

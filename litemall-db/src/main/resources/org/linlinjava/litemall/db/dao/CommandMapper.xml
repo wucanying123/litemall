@@ -9,9 +9,10 @@
     <result column="taskId" jdbcType="VARCHAR" property="taskId" />
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, _type, preDownloadURL, notificationURL, taskId, createTime, updateTime
+    id, _type, preDownloadURL, notificationURL, taskId, createTime, updateTime, userid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -47,6 +48,9 @@
       <if test="updateTime != null">
         updateTime,
       </if>
+      <if test="userid != null">
+        userid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -70,6 +74,9 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Command">
@@ -92,6 +99,9 @@
       </if>
       <if test="updateTime != null">
         updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

@@ -56,7 +56,7 @@
     <result column="code" jdbcType="BIGINT" property="code" />
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
-
+    <result column="userid" jdbcType="INTEGER" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -65,7 +65,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime
+    city, code, createTime, updateTime, userid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -242,6 +242,9 @@
       <if test="updateTime != null">
         updateTime,
       </if>
+      <if test="userid != null">
+        userid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -406,6 +409,9 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Source">
@@ -569,6 +575,9 @@
       </if>
       <if test="updateTime != null">
         updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

@@ -24,4 +24,5 @@ public class Program implements Serializable {
     String dateCreated;//创建时间字符串形式，可为空 展示用
     String layersIds;
     Long updateTime;//修改时间
+    Integer userid;//用户id
 }
