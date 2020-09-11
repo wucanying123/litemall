@@ -2,8 +2,11 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.domain.Item;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ItemService;
@@ -80,6 +83,9 @@ public class ItemController {
         logger.info("insertItem and item:{}", JSON.toJSONString(item));
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            item.setUserid(admin.getId());
             responseUtil = itemService.insertItem(item);
         } catch (Exception e) {
             logger.error("insertItem and item:{}", JSON.toJSONString(item), e);

@@ -2,6 +2,9 @@ package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Schedule;
 import org.linlinjava.litemall.db.domain.Schedule;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -81,6 +84,9 @@ public class ScheduleController {
         logger.info("insertSchedule and schedule:{}", JSON.toJSONString(schedule));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            schedule.setUserid(admin.getId());
             responseUtil = scheduleService.insertSchedule(schedule);
         } catch (Exception e) {
             logger.error("insertSchedule and schedule:{}", JSON.toJSONString(schedule), e);

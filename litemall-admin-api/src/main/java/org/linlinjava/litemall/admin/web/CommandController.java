@@ -3,8 +3,11 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Command;
 import org.linlinjava.litemall.db.domain.Command;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.service.CommandService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -80,6 +83,9 @@ public class CommandController {
         logger.info("insertCommand and command:{}", JSON.toJSONString(command));
         ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            command.setUserid(admin.getId());
             responseUtil = commandService.insertCommand(command);
         } catch (Exception e) {
             logger.error("insertCommand and command:{}", JSON.toJSONString(command), e);

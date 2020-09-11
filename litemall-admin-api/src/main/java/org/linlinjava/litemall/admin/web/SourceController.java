@@ -3,6 +3,9 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
 import org.linlinjava.litemall.db.util.Constant;
@@ -79,6 +82,9 @@ public class SourceController {
         logger.info("insertSource and source:{}", JSON.toJSONString(source));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            source.setUserid(admin.getId());
             responseUtil = sourceService.insertSource(source);
         } catch (Exception e) {
             logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
