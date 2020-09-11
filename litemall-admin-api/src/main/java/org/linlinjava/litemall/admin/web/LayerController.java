@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.linlinjava.litemall.db.domain.Layer;
+import org.linlinjava.litemall.db.domain.Layer;
 import org.linlinjava.litemall.db.service.LayerService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -32,16 +33,17 @@ public class LayerController {
      */
     @ApiOperation(value = "获取层列表")
     @GetMapping("/selectLayerPage")
-    public Object selectLayerPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectLayerPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Layer layer = null;
         logger.info("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit);
         try {
             PageInfo<Layer> pageList = layerService.selectLayerPage(layer, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**

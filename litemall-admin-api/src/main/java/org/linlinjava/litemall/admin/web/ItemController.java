@@ -3,6 +3,7 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Item;
+import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ItemService;
@@ -31,16 +32,17 @@ public class ItemController {
      */
     @ApiOperation(value = "获取项目列表")
     @GetMapping("/selectItemPage")
-    public Object selectItemPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectItemPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Item item = null;
         logger.info("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit);
         try {
             PageInfo<Item> pageList = itemService.selectItemPage(item, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**

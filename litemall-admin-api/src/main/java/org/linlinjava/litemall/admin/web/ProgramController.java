@@ -3,6 +3,7 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Program;
+import org.linlinjava.litemall.db.domain.Program;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ProgramService;
@@ -31,16 +32,17 @@ public class ProgramController {
      */
     @ApiOperation(value = "获取节目列表")
     @GetMapping("/selectProgramPage")
-    public Object selectProgramPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectProgramPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Program program = null;
         logger.info("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit);
         try {
             PageInfo<Program> pageList = programService.selectProgramPage(program, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**

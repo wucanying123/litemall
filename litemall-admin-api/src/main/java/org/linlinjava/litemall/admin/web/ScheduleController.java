@@ -3,6 +3,7 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Schedule;
+import org.linlinjava.litemall.db.domain.Schedule;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.domain.Schedule;
@@ -32,16 +33,17 @@ public class ScheduleController {
      */
     @ApiOperation(value = "获取定时列表")
     @GetMapping("/selectSchedulePage")
-    public Object selectSchedulePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectSchedulePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Schedule schedule = null;
         logger.info("selectSchedulePage and schedule={},page={},limit", JSON.toJSONString(schedule), page, limit);
         try {
             PageInfo<Schedule> pageList = scheduleService.selectSchedulePage(schedule, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectSchedulePage and schedule={},page={},limit", JSON.toJSONString(schedule), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**

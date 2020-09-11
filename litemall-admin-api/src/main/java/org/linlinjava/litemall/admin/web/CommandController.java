@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.linlinjava.litemall.db.domain.Command;
+import org.linlinjava.litemall.db.domain.Command;
 import org.linlinjava.litemall.db.service.CommandService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -31,17 +32,17 @@ public class CommandController {
      */
     @ApiOperation(value = "获取命令列表")
     @GetMapping("/selectCommandPage")
-    public Object selectCommandPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectCommandPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+        ResponseUtil responseUtil = new ResponseUtil();
         Command command = null;
         logger.info("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit);
-        PageInfo<Command> pageList = null;
         try {
-            pageList = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
-            return ResponseUtil.okPage(pageList);
+            PageInfo<Command> pageList = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit, e);
         }
-        return ResponseUtil.fail();
+        return responseUtil;
     }
 
     /**
