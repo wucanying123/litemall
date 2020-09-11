@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.linlinjava.litemall.db.dao.ScreenDeviceMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.ScreenDevice">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+    <result column="network_type" jdbcType="VARCHAR" property="networkType" />
+    <result column="width" jdbcType="INTEGER" property="width" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="screen_open_status" jdbcType="BIT" property="screenOpenStatus" />
+    <result column="online_status" jdbcType="BIT" property="onlineStatus" />
+    <result column="brightness" jdbcType="INTEGER" property="brightness" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, card_id, network_type, width, height, screen_open_status, online_status, brightness, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from screen_device
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from screen_device
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.ScreenDevice">
+    insert into screen_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cardId != null">
+        card_id,
+      </if>
+      <if test="networkType != null">
+        network_type,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="screenOpenStatus != null">
+        screen_open_status,
+      </if>
+      <if test="onlineStatus != null">
+        online_status,
+      </if>
+      <if test="brightness != null">
+        brightness,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null">
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="networkType != null">
+        #{networkType,jdbcType=VARCHAR},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="screenOpenStatus != null">
+        #{screenOpenStatus,jdbcType=BIT},
+      </if>
+      <if test="onlineStatus != null">
+        #{onlineStatus,jdbcType=BIT},
+      </if>
+      <if test="brightness != null">
+        #{brightness,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.ScreenDevice">
+    update screen_device
+    <set>
+      <if test="cardId != null">
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="networkType != null">
+        network_type = #{networkType,jdbcType=VARCHAR},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="screenOpenStatus != null">
+        screen_open_status = #{screenOpenStatus,jdbcType=BIT},
+      </if>
+      <if test="onlineStatus != null">
+        online_status = #{onlineStatus,jdbcType=BIT},
+      </if>
+      <if test="brightness != null">
+        brightness = #{brightness,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectScreenDevicePage" parameterType="org.linlinjava.litemall.db.domain.ScreenDevice" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from screen_device where 1=1
+    order by create_time desc ,update_time desc
+  </select>
+</mapper>

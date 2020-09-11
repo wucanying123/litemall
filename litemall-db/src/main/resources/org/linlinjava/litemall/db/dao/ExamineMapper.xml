@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.linlinjava.litemall.db.dao.ExamineMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Examine">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="pass_status" jdbcType="VARCHAR" property="passStatus" />
+    <result column="check_userid1" jdbcType="INTEGER" property="checkUserid1" />
+    <result column="check_userid2" jdbcType="INTEGER" property="checkUserid2" />
+    <result column="reject_reason1" jdbcType="VARCHAR" property="rejectReason1" />
+    <result column="reject_reason2" jdbcType="VARCHAR" property="rejectReason2" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, pass_status, check_userid1, check_userid2, reject_reason1, reject_reason2, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from examine
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from examine
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Examine">
+    insert into examine
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="passStatus != null">
+        pass_status,
+      </if>
+      <if test="checkUserid1 != null">
+        check_userid1,
+      </if>
+      <if test="checkUserid2 != null">
+        check_userid2,
+      </if>
+      <if test="rejectReason1 != null">
+        reject_reason1,
+      </if>
+      <if test="rejectReason2 != null">
+        reject_reason2,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="passStatus != null">
+        #{passStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkUserid1 != null">
+        #{checkUserid1,jdbcType=INTEGER},
+      </if>
+      <if test="checkUserid2 != null">
+        #{checkUserid2,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason1 != null">
+        #{rejectReason1,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectReason2 != null">
+        #{rejectReason2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Examine">
+    update examine
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="passStatus != null">
+        pass_status = #{passStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkUserid1 != null">
+        check_userid1 = #{checkUserid1,jdbcType=INTEGER},
+      </if>
+      <if test="checkUserid2 != null">
+        check_userid2 = #{checkUserid2,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason1 != null">
+        reject_reason1 = #{rejectReason1,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectReason2 != null">
+        reject_reason2 = #{rejectReason2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectExaminePage" parameterType="org.linlinjava.litemall.db.domain.Examine" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from examine where 1=1
+    order by create_time desc ,update_time desc
+  </select>
+</mapper>
