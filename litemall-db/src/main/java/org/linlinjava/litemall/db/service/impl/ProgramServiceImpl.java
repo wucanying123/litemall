@@ -73,6 +73,7 @@ public class ProgramServiceImpl implements ProgramService {
     public ResponseUtil<Program> updateProgramById(Program program) {
         ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         try {
+            program.setUpdateTime(DateUtil.getDateline());
             int n = programMapper.updateByPrimaryKeySelective(program);
             if (n >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

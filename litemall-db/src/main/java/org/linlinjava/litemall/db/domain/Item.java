@@ -21,8 +21,8 @@ public class Item implements Serializable {
     //----------------扩展字段----------------
     String programId; //节目id
 
-    String schedulesIds;//TODO 增加
-
-//    String taskId; //节目任务id //TODO 减少
+    String schedulesIds;
+    Long createTime;//创建时间
+    Long updateTime;//修改时间
 
 }

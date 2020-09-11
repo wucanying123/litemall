@@ -7,9 +7,11 @@
     <result column="preDownloadURL" jdbcType="VARCHAR" property="preDownloadURL" />
     <result column="notificationURL" jdbcType="VARCHAR" property="notificationURL" />
     <result column="taskId" jdbcType="VARCHAR" property="taskId" />
+    <result column="createTime" jdbcType="BIGINT" property="createTime" />
+    <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, _type, preDownloadURL, notificationURL, taskId
+    id, _type, preDownloadURL, notificationURL, taskId, createTime, updateTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -39,6 +41,12 @@
       <if test="taskId != null">
         taskId,
       </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -56,6 +64,12 @@
       <if test="taskId != null">
         #{taskId,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Command">
@@ -72,6 +86,12 @@
       </if>
       <if test="taskId != null">
         taskId = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -91,5 +111,6 @@
     <if test="command != null and command.taskId != null" >
       and taskId = #{command.taskId}
     </if>
+    order by updateTime desc ,createTime desc
   </select>
 </mapper>

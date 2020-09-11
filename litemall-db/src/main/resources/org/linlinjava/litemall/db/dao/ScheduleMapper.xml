@@ -12,10 +12,13 @@
     <result column="filterType" jdbcType="VARCHAR" property="filterType" />
     <result column="weekFilter" jdbcType="VARCHAR" property="weekFilter" />
     <result column="monthFilter" jdbcType="VARCHAR" property="monthFilter" />
+    <result column="createTime" jdbcType="BIGINT" property="createTime" />
+    <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
+
   </resultMap>
   <sql id="Base_Column_List">
     id, dateType, startDate, endDate, timeType, startTime, endTime, filterType, weekFilter, 
-    monthFilter
+    monthFilter, createTime, updateTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -60,6 +63,12 @@
       <if test="monthFilter != null">
         monthFilter,
       </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -91,6 +100,12 @@
       </if>
       <if test="monthFilter != null">
         #{monthFilter,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -124,6 +139,12 @@
       <if test="monthFilter != null">
         monthFilter = #{monthFilter,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -139,5 +160,6 @@
     select
     <include refid="Base_Column_List" />
     from schedule where 1=1
+    order by updateTime desc ,createTime desc
   </select>
 </mapper>

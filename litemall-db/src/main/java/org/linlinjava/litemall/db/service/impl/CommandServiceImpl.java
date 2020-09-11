@@ -2,6 +2,7 @@ package org.linlinjava.litemall.db.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.dao.CommandMapper;
@@ -56,6 +57,7 @@ public class CommandServiceImpl implements CommandService {
         ResponseUtil<Command> responseUtil = new ResponseUtil<Command>();
         command.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
+            command.setCreateTime(DateUtil.getDateline());
             int n = commandMapper.insertSelective(command);
             if (n == 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
@@ -70,6 +72,7 @@ public class CommandServiceImpl implements CommandService {
     public ResponseUtil<Command> updateCommandById(Command command) {
         ResponseUtil<Command> responseUtil = new ResponseUtil<Command>();
         try {
+            command.setUpdateTime(DateUtil.getDateline());
             int n = commandMapper.updateByPrimaryKeySelective(command);
             if (n >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

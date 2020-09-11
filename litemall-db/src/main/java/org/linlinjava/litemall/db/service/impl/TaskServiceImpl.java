@@ -3,6 +3,7 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.dao.TaskMapper;
@@ -57,6 +58,7 @@ public class TaskServiceImpl implements TaskService {
         ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         task.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
+            task.setCreateTime(DateUtil.getDateline());
             int n = taskMapper.insertSelective(task);
             if (n == 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
@@ -71,6 +73,7 @@ public class TaskServiceImpl implements TaskService {
     public ResponseUtil<Task> updateTaskById(Task task) {
         ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         try {
+            task.setUpdateTime(DateUtil.getDateline());
             int n = taskMapper.updateByPrimaryKeySelective(task);
             if (n >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

@@ -18,9 +18,10 @@ public class Program implements Serializable {
     String _user;//用户，不使用AIPS平台时不重要，可任意设置
     Integer __v;//节目版本类型，默认0不用修改，会被播放程序改写
     List<Layer> layers;//layer对应AIPS平台节目编辑中的时间轴，用于内容分层显示，实际显示效果可参考平台节目预览
-    Long createTime;//创建时间，可为空
+    Long createTime;//创建时间
 
     //----------------扩展字段----------------
     String dateCreated;//创建时间字符串形式，可为空 展示用
     String layersIds;
+    Long updateTime;//修改时间
 }

@@ -14,9 +14,10 @@
     <result column="__v" jdbcType="INTEGER" property="__v" />
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="layersIds" jdbcType="VARCHAR" property="layersIds" />
+    <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    _id, totalSize, name, width, height, _company, _department, _role, _user, __v, createTime,layersIds
+    _id, totalSize, name, width, height, _company, _department, _role, _user, __v, createTime,layersIds, updateTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -67,6 +68,9 @@
       <if test="layersIds != null">
         layersIds,
       </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="_id != null">
@@ -104,6 +108,9 @@
       </if>
       <if test="layersIds != null">
         #{layersIds,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -143,6 +150,9 @@
      <if test="layersIds != null">
        layersIds = #{layersIds,jdbcType=VARCHAR},
       </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
     </set>
     where _id = #{_id,jdbcType=VARCHAR}
   </update>
@@ -158,5 +168,6 @@
     select
     <include refid="Base_Column_List" />
     from program where 1=1
+    order by updateTime desc ,createTime desc
   </select>
 </mapper>

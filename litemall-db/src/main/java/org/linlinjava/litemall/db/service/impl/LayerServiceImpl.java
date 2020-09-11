@@ -8,6 +8,7 @@ import org.linlinjava.litemall.db.dao.LayerMapper;
 import org.linlinjava.litemall.db.domain.Layer;
 import org.linlinjava.litemall.db.service.LayerService;
 import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,7 @@ public class LayerServiceImpl implements LayerService {
         layer.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             layer.setIsRepeat(layer.getRepeat());
+            layer.setCreateTime(DateUtil.getDateline());
             int n = layerMapper.insertSelective(layer);
             if (n == 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
@@ -78,6 +80,7 @@ public class LayerServiceImpl implements LayerService {
     public ResponseUtil<Layer> updateLayerById(Layer layer) {
         ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
         try {
+            layer.setUpdateTime(DateUtil.getDateline());
             layer.setIsRepeat(layer.getRepeat());
             int n = layerMapper.updateByPrimaryKeySelective(layer);
             if (n >= 1) {

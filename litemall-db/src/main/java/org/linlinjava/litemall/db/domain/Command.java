@@ -25,4 +25,6 @@ public class Command implements Serializable {
 
     //----------------扩展字段----------------
     String taskId; //节目任务id
+    Long createTime;//创建时间
+    Long updateTime;//修改时间
 }

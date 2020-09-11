@@ -3,6 +3,7 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.dao.ScheduleMapper;
@@ -57,6 +58,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         schedule.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
+            schedule.setCreateTime(DateUtil.getDateline());
             int n = scheduleMapper.insertSelective(schedule);
             if (n == 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
@@ -71,6 +73,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ResponseUtil<Schedule> updateScheduleById(Schedule schedule) {
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         try {
+            schedule.setUpdateTime(DateUtil.getDateline());
             int n = scheduleMapper.updateByPrimaryKeySelective(schedule);
             if (n >= 1) {
                 responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

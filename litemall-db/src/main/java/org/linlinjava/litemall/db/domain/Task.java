@@ -15,5 +15,7 @@ public class Task implements Serializable {
     String cmdId;//命令id，建议设置有效字符串，不要与其他id重复
 
     //----------------扩展字段----------------
-    String itemsIds; //TODO 增加
+    String itemsIds;
+    Long createTime;//创建时间
+    Long updateTime;//修改时间
 }

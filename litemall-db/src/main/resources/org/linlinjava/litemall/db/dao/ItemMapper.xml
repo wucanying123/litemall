@@ -8,9 +8,11 @@
     <result column="version" jdbcType="INTEGER" property="version" />
     <result column="schedulesIds" jdbcType="VARCHAR" property="schedulesIds" />
     <result column="programId" jdbcType="VARCHAR" property="programId" />
+    <result column="createTime" jdbcType="BIGINT" property="createTime" />
+    <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    _id, priority, repeatTimes, version, schedulesIds, programId
+    _id, priority, repeatTimes, version, schedulesIds, programId, createTime, updateTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -43,6 +45,12 @@
       <if test="programId != null">
         programId,
       </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="_id != null">
@@ -62,6 +70,12 @@
       </if>
       <if test="programId != null">
         #{programId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -83,6 +97,12 @@
       <if test="programId != null">
         programId = #{programId,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
     </set>
     where _id = #{_id,jdbcType=VARCHAR}
   </update>
@@ -101,5 +121,6 @@
     <if test="item != null and item.schedulesIds != null" >
       and schedulesIds = #{item.schedulesIds}
     </if>
+    order by updateTime desc ,createTime desc
   </select>
 </mapper>
