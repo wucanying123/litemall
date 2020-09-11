@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Command;
-import org.linlinjava.litemall.db.domain.Command;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.service.CommandService;
 import org.linlinjava.litemall.db.util.Constant;
