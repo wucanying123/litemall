@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Examine">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="detail_id" jdbcType="VARCHAR" property="detailId" />
     <result column="pass_status" jdbcType="VARCHAR" property="passStatus" />
     <result column="check_userid1" jdbcType="INTEGER" property="checkUserid1" />
     <result column="check_userid2" jdbcType="INTEGER" property="checkUserid2" />
@@ -13,7 +14,7 @@
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, type, pass_status, check_userid1, check_userid2, reject_reason1, reject_reason2, 
+    id, type, detail_id, pass_status, check_userid1, check_userid2, reject_reason1, reject_reason2,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -34,6 +35,9 @@
       </if>
       <if test="type != null">
         type,
+      </if>
+      <if test="detailId != null">
+        detail_id,
       </if>
       <if test="passStatus != null">
         pass_status,
@@ -64,6 +68,9 @@
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
       </if>
+      <if test="detailId != null">
+        #{detailId,jdbcType=VARCHAR},
+      </if>
       <if test="passStatus != null">
         #{passStatus,jdbcType=VARCHAR},
       </if>
@@ -92,6 +99,9 @@
     <set>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null">
+        detail_id = #{detailId,jdbcType=VARCHAR},
       </if>
       <if test="passStatus != null">
         pass_status = #{passStatus,jdbcType=VARCHAR},

@@ -15,6 +15,11 @@ public class Examine {
     private String type;
 
     /**
+     * 详细id
+     */
+    private String detailId;
+
+    /**
      * 审核状态：0未审核，1一审过等待二审，2一审不过，3二审过，4二审不过
      */
     private String passStatus;
