@@ -85,12 +85,42 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'screenDevice',
+        component: () => import('@/views/screen/screenDevice'),
+        name: 'screenDevice',
+        meta: {
+          perms: ['GET /admin/screen/screenDevice/selectScreenDevicePage', 'POST /admin/screen/screenDevice/insertScreenDevice', 'GET /admin/screen/screenDevice/selectScreenDeviceById', 'POST /admin/screen/screenDevice/updateScreenDeviceById', 'POST /admin/screen/screenDevice/deleteById'],
+          title: '屏幕设备',
+          noCache: true
+        }
+      },
+      {
         path: 'source',
         component: () => import('@/views/screen/source'),
         name: 'source',
         meta: {
           perms: ['GET /admin/screen/source/selectSourcePage', 'POST /admin/screen/source/insertSource', 'GET /admin/screen/source/selectSourceById', 'POST /admin/screen/source/updateSourceById', 'POST /admin/screen/source/deleteById'],
           title: '媒体资源',
+          noCache: true
+        }
+      },
+      {
+        path: 'live',
+        component: () => import('@/views/screen/live'),
+        name: 'live',
+        meta: {
+          perms: ['GET /admin/screen/live/selectLivePage', 'POST /admin/screen/live/insertLive', 'GET /admin/screen/live/selectLiveById', 'POST /admin/screen/live/updateLiveById', 'POST /admin/screen/live/deleteById'],
+          title: '直播',
+          noCache: true
+        }
+      },
+      {
+        path: 'examine',
+        component: () => import('@/views/screen/examine'),
+        name: 'examine',
+        meta: {
+          perms: ['GET /admin/screen/examine/selectExaminePage', 'POST /admin/screen/examine/insertExamine', 'GET /admin/screen/examine/selectExamineById', 'POST /admin/screen/examine/updateExamineById', 'POST /admin/screen/examine/deleteById'],
+          title: '审核',
           noCache: true
         }
       }
