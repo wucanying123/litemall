@@ -41,3 +41,20 @@ export function deleteLive(id) {
     }
   })
 }
+
+export function playLive(id) {
+  return request({
+    url: '/screen/live/playLive',
+    method: 'post',
+    params: {
+      id: id
+    }
+  })
+}
+
+export function stopLiveVideo(id) {
+  return request({
+    url: '/screen/live/stopLiveVideo',
+    method: 'post'
+  })
+}

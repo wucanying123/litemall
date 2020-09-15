@@ -3,6 +3,7 @@ package org.linlinjava.litemall.db.service.impl;//package org.linlinjava.litemal
 import net.sf.json.JSONObject;
 import org.linlinjava.litemall.db.dao.*;
 import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.LiveService;
 import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.util.*;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public class ScreenServiceImpl implements ScreenService {
     private SourceMapper sourceMapper;
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private LiveService liveService;
 
     private static Logger logger = LoggerFactory.getLogger(ScreenServiceImpl.class);
 
@@ -231,12 +234,13 @@ public class ScreenServiceImpl implements ScreenService {
      * 播放直播
      */
     public ResponseUtil<Object> playLiveVideo(String liveId) {
+        Live live = liveService.selectLiveById(liveId);
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
         params.put("_type", "StartLiveVideo");
-        params.put("url", "rtmp://58.200.131.2:1935/livetv/hunantv");
-        params.put("width", "128");
-        params.put("height", "320");
+        params.put("url", live.getUrl());
+        params.put("width", live.getWidth().toString());
+        params.put("height", live.getHeight().toString());
         String result = HttpUtil.postMap(Constant.URL, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
@@ -244,7 +248,7 @@ public class ScreenServiceImpl implements ScreenService {
     }
 
     /**
-     * 播放直播
+     * 停止直播
      */
     public ResponseUtil<Object> stopLiveVideo() {
         Map<String, String> params = new HashMap<>();
@@ -490,7 +494,7 @@ public class ScreenServiceImpl implements ScreenService {
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
 
         Task task = taskMapper.selectByPrimaryKey(taskId);
-        if(null == task){
+        if (null == task) {
             return responseUtil;
         }
         RequestData requestData = new RequestData();

@@ -125,18 +125,6 @@ public class ScreenController {
         return screenService.playXixunProgramZip();
     }
 
-    @ApiOperation(value = "10、播放直播")
-    @PostMapping(value = "/playLiveVideo")
-    public ResponseUtil<Object> playLiveVideo(@RequestParam(value = "liveId") String liveId) {
-        return screenService.playLiveVideo(liveId);
-    }
-
-    @ApiOperation(value = "10、停止直播")
-    @PostMapping(value = "/stopLiveVideo")
-    public ResponseUtil<Object> stopLiveVideo() {
-        return screenService.stopLiveVideo();
-    }
-
     @ApiOperation(value = "11、以字符串形式上传并保存html、图片等文件到sd卡")
     @PostMapping(value = "/saveSDStringFile")
     public ResponseUtil<Object> saveSDStringFile() {

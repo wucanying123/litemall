@@ -4,8 +4,9 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container">
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入直播名称" />
-      <el-button v-permission="['GET /admin/screen/live/selectLivePage']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button v-permission="['POST /admin/screen/live/insertLive']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopLive">停止直播</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -13,19 +14,15 @@
 
       <el-table-column align="center" label="名称" prop="name" />
 
-      <el-table-column align="center" label="直播地址" prop="url">
-        <template slot-scope="scope">
-          <video :src="scope.row.url" controls="controls" width="200" height="90" />
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="直播地址" prop="url" />
       <el-table-column align="center" label="宽" prop="width" />
       <el-table-column align="center" label="高" prop="height" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
           <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button v-permission="['POST /admin/screen/live/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -101,7 +98,7 @@
 </style>
 
 <script>
-import { listLive, createLive, updateLive, deleteLive } from '@/api/live'
+import { listLive, createLive, updateLive, deleteLive, playLive, stopLiveVideo } from '@/api/live'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -240,6 +237,36 @@ export default {
     handleDetail(row) {
       this.userDetail = row
       this.userDialogVisible = true
+    },
+    stopLive() {
+      stopLiveVideo()
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '停止成功'
+          })
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handlePlay(row) {
+      playLive(row.id)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '播放成功'
+          })
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
     },
     handleUpdate(row) {
       this.dataForm = Object.assign({}, row)

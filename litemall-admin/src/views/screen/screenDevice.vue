@@ -7,8 +7,8 @@
       <el-select v-model="listQuery._type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
         <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
       </el-select>
-      <el-button v-permission="['GET /admin/screen/screenDevice/selectScreenDevicePage']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button v-permission="['POST /admin/screen/screenDevice/insertScreenDevice']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <!-- 查询结果 -->

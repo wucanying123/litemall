@@ -8,6 +8,7 @@ import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Live;
 import org.linlinjava.litemall.db.service.LiveService;
+import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class LiveController {
     @Autowired
     private LiveService liveService;
+    @Autowired
+    private ScreenService screenService;
 
     private static Logger logger = LoggerFactory.getLogger(LiveController.class);
 
@@ -144,5 +147,25 @@ public class LiveController {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
+    }
+
+    /**
+     * @Description: 播放直播
+     * @Title: playLive
+     * @param id 直播id
+     * @auther IngaWu
+     * @currentdate:2020年9月15日
+     */
+    @ApiOperation(value = "播放直播")
+    @PostMapping(value = "/playLive")
+    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id) {
+        logger.info("playLive and id={}", JSON.toJSONString(id));
+        return screenService.playLiveVideo(id);
+    }
+
+    @ApiOperation(value = "停止直播")
+    @PostMapping(value = "/stopLiveVideo")
+    public ResponseUtil<Object> stopLiveVideo() {
+        return screenService.stopLiveVideo();
     }
 }
