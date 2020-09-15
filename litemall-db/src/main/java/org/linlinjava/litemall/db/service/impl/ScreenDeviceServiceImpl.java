@@ -58,7 +58,9 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
         ResponseUtil<ScreenDevice> responseUtil = new ResponseUtil<ScreenDevice>();
         screenDevice.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            screenDevice.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            screenDevice.setCreateTime(cuttentTime);
+            screenDevice.setUpdateTime(cuttentTime);
             int n = screenDeviceMapper.insertSelective(screenDevice);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

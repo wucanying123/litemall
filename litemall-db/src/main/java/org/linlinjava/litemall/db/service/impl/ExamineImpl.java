@@ -58,7 +58,9 @@ public class ExamineImpl implements ExamineService {
         ResponseUtil<Examine> responseUtil = new ResponseUtil<Examine>();
         examine.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            examine.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            examine.setCreateTime(cuttentTime);
+            examine.setUpdateTime(cuttentTime);
             int n = examineMapper.insertSelective(examine);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

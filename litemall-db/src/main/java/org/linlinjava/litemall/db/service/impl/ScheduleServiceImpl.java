@@ -58,7 +58,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
         schedule.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            schedule.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            schedule.setCreateTime(cuttentTime);
+            schedule.setUpdateTime(cuttentTime);
             int n = scheduleMapper.insertSelective(schedule);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

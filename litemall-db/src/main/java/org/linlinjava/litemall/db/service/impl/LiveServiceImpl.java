@@ -58,7 +58,9 @@ public class LiveServiceImpl implements LiveService {
         ResponseUtil<Live> responseUtil = new ResponseUtil<Live>();
         live.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            live.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            live.setCreateTime(cuttentTime);
+            live.setUpdateTime(cuttentTime);
             int n = liveMapper.insertSelective(live);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

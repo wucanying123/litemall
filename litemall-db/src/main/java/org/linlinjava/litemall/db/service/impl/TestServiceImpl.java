@@ -308,7 +308,9 @@ public class TestServiceImpl implements TestService {
         program.set_role("admin");
         program.set_user("xinda");
         program.set__v(0);
-        program.setCreateTime(DateUtil.getDateline());
+        long cuttentTime = DateUtil.getDateline();
+        program.setCreateTime(cuttentTime);
+        program.setUpdateTime(cuttentTime);
         programMapper.insertSelective(program);
         imitateAddItems( program);
     }

@@ -58,7 +58,9 @@ public class TaskServiceImpl implements TaskService {
         ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
         task.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
-            task.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            task.setCreateTime(cuttentTime);
+            task.setUpdateTime(cuttentTime);
             int n = taskMapper.insertSelective(task);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

@@ -57,7 +57,9 @@ public class CommandServiceImpl implements CommandService {
         ResponseUtil<Command> responseUtil = new ResponseUtil<Command>();
         command.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            command.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            command.setCreateTime(cuttentTime);
+            command.setUpdateTime(cuttentTime);
             int n = commandMapper.insertSelective(command);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

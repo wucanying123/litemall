@@ -65,7 +65,9 @@ public class LayerServiceImpl implements LayerService {
         layer.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             layer.setIsRepeat(layer.getRepeat());
-            layer.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            layer.setCreateTime(cuttentTime);
+            layer.setUpdateTime(cuttentTime);
             int n = layerMapper.insertSelective(layer);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

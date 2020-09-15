@@ -58,7 +58,9 @@ public class ProgramServiceImpl implements ProgramService {
         ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
         program.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
-            program.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            program.setCreateTime(cuttentTime);
+            program.setUpdateTime(cuttentTime);
             int n = programMapper.insertSelective(program);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

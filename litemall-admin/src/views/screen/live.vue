@@ -38,9 +38,10 @@
       <el-table-column align="center" label="类型" prop="_type">
         <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
       </el-table-column>
-
       <el-table-column align="center" label="格式" prop="fileExt" />
-
+      <el-table-column align="center" label="修改时间" prop="updateTime">
+        <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -213,6 +214,23 @@ export default {
         }
       }
       return time
+    },
+    timestampToTime(timestamp) {
+      if (timestamp != null) {
+        var date = new Date(timestamp * 1000)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        const y = date.getFullYear()
+        let MM = date.getMonth() + 1
+        MM = MM < 10 ? ('0' + MM) : MM
+        let d = date.getDate()
+        d = d < 10 ? ('0' + d) : d
+        let h = date.getHours()
+        h = h < 10 ? ('0' + h) : h
+        let m = date.getMinutes()
+        m = m < 10 ? ('0' + m) : m
+        let s = date.getSeconds()
+        s = s < 10 ? ('0' + s) : s
+        return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+      }
     }
   },
   data() {

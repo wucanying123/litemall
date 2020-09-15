@@ -58,7 +58,9 @@ public class ItemServiceImpl implements ItemService {
         ResponseUtil<Item> responseUtil = new ResponseUtil<Item>();
         item.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
-            item.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            item.setCreateTime(cuttentTime);
+            item.setUpdateTime(cuttentTime);
             int n = itemMapper.insertSelective(item);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

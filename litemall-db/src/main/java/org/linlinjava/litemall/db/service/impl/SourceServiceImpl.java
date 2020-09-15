@@ -64,7 +64,9 @@ public class SourceServiceImpl implements SourceService {
         ResponseUtil<Source> responseUtil = new ResponseUtil<Source>();
         source.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
-            source.setCreateTime(DateUtil.getDateline());
+            long cuttentTime = DateUtil.getDateline();
+            source.setCreateTime(cuttentTime);
+            source.setUpdateTime(cuttentTime);
             source.setTheLeft(source.getLeft());
             if(null == source.getMaxPlayTime()){
                 source.setMaxPlayTime(10);
