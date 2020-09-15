@@ -1,7 +1,6 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Task;
 
 public interface TaskService {
@@ -23,7 +22,7 @@ public interface TaskService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Task> selectTaskById(String taskId);
+    Task selectTaskById(String taskId);
 
     /**
      * @Description: 添加任务
@@ -31,7 +30,7 @@ public interface TaskService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Task> insertTask(Task task);
+    int insertTask(Task task);
 
     /**
      * @Description: 编辑任务
@@ -39,7 +38,7 @@ public interface TaskService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Task> updateTaskById(Task task);
+    int updateTaskById(Task task);
 
     /**
      * @Description: 删除任务
@@ -48,5 +47,5 @@ public interface TaskService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Task> deleteById(String id);
+    int deleteById(String id);
 }

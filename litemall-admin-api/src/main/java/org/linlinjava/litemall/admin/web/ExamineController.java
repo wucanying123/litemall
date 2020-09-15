@@ -22,10 +22,10 @@ public class ExamineController {
     private static Logger logger = LoggerFactory.getLogger(ExamineController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取审核列表
      * @title selectExaminePage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -45,8 +45,8 @@ public class ExamineController {
     }
 
     /**
-     * @Description: 通过审核id查看审核详情
      * @param examineId 审核id
+     * @Description: 通过审核id查看审核详情
      * @Title: selectExamineById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -60,7 +60,9 @@ public class ExamineController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = examineService.selectExamineById(examineId);
+            Examine examine = examineService.selectExamineById(examineId);
+            responseUtil.setData(examine);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectExamineById and examineId={}", examineId, e);
         }
@@ -79,7 +81,10 @@ public class ExamineController {
         logger.info("insertExamine and examine:{}", JSON.toJSONString(examine));
         ResponseUtil<Examine> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = examineService.insertExamine(examine);
+            int n = examineService.insertExamine(examine);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertExamine and examine:{}", JSON.toJSONString(examine), e);
         }
@@ -101,7 +106,10 @@ public class ExamineController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = examineService.updateExamineById(examine);
+            int n = examineService.updateExamineById(examine);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateExamineById and examine:{}", JSON.toJSONString(examine), e);
 
@@ -110,9 +118,9 @@ public class ExamineController {
     }
 
     /**
+     * @param id 审核id
      * @Description: 删除审核
      * @Title: deleteById
-     * @param id 审核id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -122,7 +130,10 @@ public class ExamineController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Examine> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = examineService.deleteById(id);
+            int n = examineService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

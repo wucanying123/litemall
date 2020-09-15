@@ -230,7 +230,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 播放直播
      */
-    public ResponseUtil<Object> playLiveVideo() {
+    public ResponseUtil<Object> playLiveVideo(String liveId) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
         params.put("_type", "StartLiveVideo");

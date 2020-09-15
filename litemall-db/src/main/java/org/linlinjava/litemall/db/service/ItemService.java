@@ -1,7 +1,6 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Item;
 
 public interface ItemService {
@@ -23,7 +22,7 @@ public interface ItemService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Item> selectItemById(String itemId);
+    Item selectItemById(String itemId);
 
     /**
      * @Description: 添加项目
@@ -31,7 +30,7 @@ public interface ItemService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Item> insertItem(Item item);
+    int insertItem(Item item);
 
     /**
      * @Description: 编辑项目
@@ -39,7 +38,7 @@ public interface ItemService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Item> updateItemById(Item item);
+    int updateItemById(Item item);
 
     /**
      * @Description: 删除项目
@@ -48,5 +47,5 @@ public interface ItemService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Item> deleteById(String id);
+    int deleteById(String id);
 }

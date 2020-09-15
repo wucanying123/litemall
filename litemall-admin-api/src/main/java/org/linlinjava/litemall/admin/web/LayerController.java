@@ -26,10 +26,10 @@ public class LayerController {
     private static Logger logger = LoggerFactory.getLogger(LayerController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取层列表
      * @title selectLayerPage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -49,8 +49,8 @@ public class LayerController {
     }
 
     /**
-     * @Description: 通过层id查看层详情
      * @param layerId 层id
+     * @Description: 通过层id查看层详情
      * @Title: selectLayerById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -64,7 +64,9 @@ public class LayerController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = layerService.selectLayerById(layerId);
+            Layer layer = layerService.selectLayerById(layerId);
+            responseUtil.setData(layer);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectLayerById and layerId={}", layerId, e);
         }
@@ -86,7 +88,10 @@ public class LayerController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             layer.setUserid(admin.getId());
-            responseUtil = layerService.insertLayer(layer);
+            int n = layerService.insertLayer(layer);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertLayer and layer:{}", JSON.toJSONString(layer), e);
         }
@@ -108,7 +113,10 @@ public class LayerController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = layerService.updateLayerById(layer);
+            int n = layerService.updateLayerById(layer);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateLayerById and layer:{}", JSON.toJSONString(layer), e);
 
@@ -117,9 +125,9 @@ public class LayerController {
     }
 
     /**
+     * @param id 层id
      * @Description: 删除层
      * @Title: deleteById
-     * @param id 层id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -129,7 +137,10 @@ public class LayerController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Layer> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = layerService.deleteById(id);
+            int n = layerService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

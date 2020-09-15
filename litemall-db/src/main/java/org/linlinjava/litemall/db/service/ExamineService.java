@@ -2,7 +2,6 @@ package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Examine;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 
 public interface ExamineService {
 
@@ -23,7 +22,7 @@ public interface ExamineService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Examine> selectExamineById(String examineId);
+    Examine selectExamineById(String examineId);
 
     /**
      * @Description: 添加审核
@@ -31,7 +30,7 @@ public interface ExamineService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Examine> insertExamine(Examine examine);
+    int insertExamine(Examine examine);
 
     /**
      * @Description: 编辑审核
@@ -39,7 +38,7 @@ public interface ExamineService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Examine> updateExamineById(Examine examine);
+    int updateExamineById(Examine examine);
 
     /**
      * @Description: 删除审核
@@ -48,5 +47,5 @@ public interface ExamineService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Examine> deleteById(String id);
+    int deleteById(String id);
 }

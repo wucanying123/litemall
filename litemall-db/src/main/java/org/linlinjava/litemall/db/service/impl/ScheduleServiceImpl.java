@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.dao.ScheduleMapper;
 import org.linlinjava.litemall.db.domain.Schedule;
 import org.linlinjava.litemall.db.service.ScheduleService;
@@ -27,7 +25,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private static Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
 
     @Override
-    public PageInfo<Schedule> selectSchedulePage(Schedule schedule,Integer pageNum,Integer pageSize) {
+    public PageInfo<Schedule> selectSchedulePage(Schedule schedule, Integer pageNum, Integer pageSize) {
         PageInfo<Schedule> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -41,62 +39,52 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ResponseUtil<Schedule> selectScheduleById(String scheduleId) {
-        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
+    public Schedule selectScheduleById(String scheduleId) {
+        Schedule schedule = null;
         try {
-            Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
-            responseUtil.setData(schedule);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
         } catch (Exception e) {
             logger.error("selectScheduleById error and msg={}", e);
         }
-        return responseUtil;
+        return schedule;
     }
 
     @Override
-    public ResponseUtil<Schedule> insertSchedule(Schedule schedule) {
-        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
+    public int insertSchedule(Schedule schedule) {
+        int n = 0;
         schedule.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             schedule.setCreateTime(cuttentTime);
             schedule.setUpdateTime(cuttentTime);
-            int n = scheduleMapper.insertSelective(schedule);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = scheduleMapper.insertSelective(schedule);
         } catch (Exception e) {
             logger.error("insertSchedule error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Schedule> updateScheduleById(Schedule schedule) {
-        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
+    public int updateScheduleById(Schedule schedule) {
+        int n = 0;
         try {
             schedule.setUpdateTime(DateUtil.getDateline());
-            int n = scheduleMapper.updateByPrimaryKeySelective(schedule);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = scheduleMapper.updateByPrimaryKeySelective(schedule);
+
         } catch (Exception e) {
             logger.error("updateScheduleById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Schedule> deleteById(String id) {
-        ResponseUtil<Schedule> responseUtil = new ResponseUtil<Schedule>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = scheduleMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = scheduleMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

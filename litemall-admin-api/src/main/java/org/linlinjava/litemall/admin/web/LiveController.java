@@ -63,7 +63,9 @@ public class LiveController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = liveService.selectLiveById(liveId);
+            Live live = liveService.selectLiveById(liveId);
+            responseUtil.setData(live);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectLiveById and liveId={}", liveId, e);
         }
@@ -85,7 +87,10 @@ public class LiveController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             live.setUserid(admin.getId());
-            responseUtil = liveService.insertLive(live);
+            int n = liveService.insertLive(live);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertLive and live:{}", JSON.toJSONString(live), e);
         }
@@ -107,7 +112,10 @@ public class LiveController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = liveService.updateLiveById(live);
+            int n = liveService.updateLiveById(live);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateLiveById and live:{}", JSON.toJSONString(live), e);
 
@@ -128,7 +136,10 @@ public class LiveController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Live> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = liveService.deleteById(id);
+            int n = liveService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

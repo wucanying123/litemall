@@ -2,7 +2,6 @@ package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Live;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 
 public interface LiveService {
 
@@ -23,7 +22,7 @@ public interface LiveService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Live> selectLiveById(String liveId);
+    Live selectLiveById(String liveId);
 
     /**
      * @Description: 添加直播
@@ -31,7 +30,7 @@ public interface LiveService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Live> insertLive(Live live);
+    int insertLive(Live live);
 
     /**
      * @Description: 编辑直播
@@ -39,7 +38,7 @@ public interface LiveService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Live> updateLiveById(Live live);
+    int updateLiveById(Live live);
 
     /**
      * @Description: 删除直播
@@ -48,5 +47,5 @@ public interface LiveService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Live> deleteById(String id);
+    int deleteById(String id);
 }

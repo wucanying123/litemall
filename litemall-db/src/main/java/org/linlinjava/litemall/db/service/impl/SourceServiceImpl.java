@@ -6,9 +6,7 @@ import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.SourceMapper;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class SourceServiceImpl implements SourceService {
     private static Logger logger = LoggerFactory.getLogger(SourceServiceImpl.class);
 
     @Override
-    public PageInfo<Source> selectSourcePage(Source source,Integer pageNum,Integer pageSize) {
+    public PageInfo<Source> selectSourcePage(Source source, Integer pageNum, Integer pageSize) {
         PageInfo<Source> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -47,66 +45,55 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public ResponseUtil<Source> selectSourceById(String sourceId) {
-        ResponseUtil<Source> responseUtil = new ResponseUtil<Source>();
+    public Source selectSourceById(String sourceId) {
+        Source source = null;
         try {
-            Source source = sourceMapper.selectByPrimaryKey(sourceId);
-            responseUtil.setData(source);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            source = sourceMapper.selectByPrimaryKey(sourceId);
         } catch (Exception e) {
             logger.error("selectSourceById error and msg={}", e);
         }
-        return responseUtil;
+        return source;
     }
 
     @Override
-    public ResponseUtil<Source> insertSource(Source source) {
-        ResponseUtil<Source> responseUtil = new ResponseUtil<Source>();
+    public int insertSource(Source source) {
+        int n = 0;
         source.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             source.setCreateTime(cuttentTime);
             source.setUpdateTime(cuttentTime);
             source.setTheLeft(source.getLeft());
-            if(null == source.getMaxPlayTime()){
+            if (null == source.getMaxPlayTime()) {
                 source.setMaxPlayTime(10);
             }
-            int n = sourceMapper.insertSelective(source);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = sourceMapper.insertSelective(source);
         } catch (Exception e) {
             logger.error("insertSource error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Source> updateSourceById(Source source) {
-        ResponseUtil<Source> responseUtil = new ResponseUtil<Source>();
+    public int updateSourceById(Source source) {
+        int n = 0;
         try {
             source.setUpdateTime(DateUtil.getDateline());
-            int n = sourceMapper.updateByPrimaryKeySelective(source);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = sourceMapper.updateByPrimaryKeySelective(source);
         } catch (Exception e) {
             logger.error("updateSourceById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Source> deleteById(String id) {
-        ResponseUtil<Source> responseUtil = new ResponseUtil<Source>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = sourceMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = sourceMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

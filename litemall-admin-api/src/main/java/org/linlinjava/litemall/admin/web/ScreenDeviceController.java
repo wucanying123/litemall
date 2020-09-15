@@ -3,9 +3,6 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.ScreenDevice;
 import org.linlinjava.litemall.db.service.ScreenDeviceService;
 import org.linlinjava.litemall.db.util.Constant;
@@ -63,7 +60,9 @@ public class ScreenDeviceController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = screenDeviceService.selectScreenDeviceById(screenDeviceId);
+            ScreenDevice screenDevice = screenDeviceService.selectScreenDeviceById(screenDeviceId);
+            responseUtil.setData(screenDevice);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectScreenDeviceById and screenDeviceId={}", screenDeviceId, e);
         }
@@ -82,7 +81,10 @@ public class ScreenDeviceController {
         logger.info("insertScreenDevice and screenDevice:{}", JSON.toJSONString(screenDevice));
         ResponseUtil<ScreenDevice> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = screenDeviceService.insertScreenDevice(screenDevice);
+            int n = screenDeviceService.insertScreenDevice(screenDevice);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertScreenDevice and screenDevice:{}", JSON.toJSONString(screenDevice), e);
         }
@@ -104,7 +106,10 @@ public class ScreenDeviceController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = screenDeviceService.updateScreenDeviceById(screenDevice);
+            int n = screenDeviceService.updateScreenDeviceById(screenDevice);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateScreenDeviceById and screenDevice:{}", JSON.toJSONString(screenDevice), e);
 
@@ -125,7 +130,10 @@ public class ScreenDeviceController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<ScreenDevice> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = screenDeviceService.deleteById(id);
+            int n = screenDeviceService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

@@ -127,8 +127,8 @@ public class ScreenController {
 
     @ApiOperation(value = "10、播放直播")
     @PostMapping(value = "/playLiveVideo")
-    public ResponseUtil<Object> playLiveVideo() {
-        return screenService.playLiveVideo();
+    public ResponseUtil<Object> playLiveVideo(@RequestParam(value = "liveId") String liveId) {
+        return screenService.playLiveVideo(liveId);
     }
 
     @ApiOperation(value = "10、停止直播")

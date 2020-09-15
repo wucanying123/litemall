@@ -5,9 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.ProgramMapper;
 import org.linlinjava.litemall.db.service.ProgramService;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Program;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +25,7 @@ public class ProgramServiceImpl implements ProgramService {
     private static Logger logger = LoggerFactory.getLogger(ProgramServiceImpl.class);
 
     @Override
-    public PageInfo<Program> selectProgramPage(Program program,Integer pageNum,Integer pageSize) {
+    public PageInfo<Program> selectProgramPage(Program program, Integer pageNum, Integer pageSize) {
         PageInfo<Program> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -41,62 +39,51 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public ResponseUtil<Program> selectProgramById(String programId) {
-        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
+    public Program selectProgramById(String programId) {
+        Program program = null;
         try {
-            Program program = programMapper.selectByPrimaryKey(programId);
-            responseUtil.setData(program);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            program = programMapper.selectByPrimaryKey(programId);
         } catch (Exception e) {
             logger.error("selectProgramById error and msg={}", e);
         }
-        return responseUtil;
+        return program;
     }
 
     @Override
-    public ResponseUtil<Program> insertProgram(Program program) {
-        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
+    public int insertProgram(Program program) {
+        int n = 0;
         program.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             program.setCreateTime(cuttentTime);
             program.setUpdateTime(cuttentTime);
-            int n = programMapper.insertSelective(program);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = programMapper.insertSelective(program);
         } catch (Exception e) {
             logger.error("insertProgram error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Program> updateProgramById(Program program) {
-        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
+    public int updateProgramById(Program program) {
+        int n = 0;
         try {
             program.setUpdateTime(DateUtil.getDateline());
-            int n = programMapper.updateByPrimaryKeySelective(program);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = programMapper.updateByPrimaryKeySelective(program);
         } catch (Exception e) {
             logger.error("updateProgramById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Program> deleteById(String id) {
-        ResponseUtil<Program> responseUtil = new ResponseUtil<Program>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = programMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = programMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

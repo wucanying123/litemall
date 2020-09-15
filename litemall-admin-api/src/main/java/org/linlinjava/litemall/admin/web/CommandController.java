@@ -63,7 +63,9 @@ public class CommandController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = commandService.selectCommandById(commandId);
+            Command command = commandService.selectCommandById(commandId);
+            responseUtil.setData(command);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectCommandById and commandId={}", commandId, e);
         }
@@ -85,7 +87,10 @@ public class CommandController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             command.setUserid(admin.getId());
-            responseUtil = commandService.insertCommand(command);
+            int n = commandService.insertCommand(command);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertCommand and command:{}", JSON.toJSONString(command), e);
         }
@@ -107,7 +112,10 @@ public class CommandController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = commandService.updateCommandById(command);
+            int n = commandService.updateCommandById(command);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateCommandById and command:{}", JSON.toJSONString(command), e);
         }
@@ -127,7 +135,10 @@ public class CommandController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Command> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = commandService.deleteById(id);
+            int n = commandService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

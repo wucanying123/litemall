@@ -23,7 +23,7 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Source> selectSourceById(String sourceId);
+    Source selectSourceById(String sourceId);
 
     /**
      * @Description: 添加资源
@@ -31,7 +31,7 @@ public interface SourceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Source> insertSource(Source source);
+    int insertSource(Source source);
 
     /**
      * @Description: 编辑资源
@@ -39,7 +39,7 @@ public interface SourceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Source> updateSourceById(Source source);
+    int updateSourceById(Source source);
 
     /**
      * @Description: 删除资源
@@ -48,5 +48,5 @@ public interface SourceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Source> deleteById(String id);
+    int deleteById(String id);
 }

@@ -1,7 +1,6 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.domain.Program;
 
 public interface ProgramService {
@@ -23,7 +22,7 @@ public interface ProgramService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Program> selectProgramById(String programId);
+    Program selectProgramById(String programId);
 
     /**
      * @Description: 添加节目
@@ -31,7 +30,7 @@ public interface ProgramService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Program> insertProgram(Program program);
+    int insertProgram(Program program);
 
     /**
      * @Description: 编辑节目
@@ -39,7 +38,7 @@ public interface ProgramService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Program> updateProgramById(Program program);
+    int updateProgramById(Program program);
 
     /**
      * @Description: 删除节目
@@ -48,5 +47,5 @@ public interface ProgramService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<Program> deleteById(String id);
+    int deleteById(String id);
 }

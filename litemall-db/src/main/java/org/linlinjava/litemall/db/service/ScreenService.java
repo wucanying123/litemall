@@ -76,7 +76,7 @@ public interface ScreenService {
     /**
      * 播放直播
      */
-    ResponseUtil<Object> playLiveVideo();
+    ResponseUtil<Object> playLiveVideo(String liveId);
 
     /**
      * 停止直播

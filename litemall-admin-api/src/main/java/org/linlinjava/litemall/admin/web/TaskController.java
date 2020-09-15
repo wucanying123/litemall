@@ -63,7 +63,9 @@ public class TaskController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = taskService.selectTaskById(taskId);
+            Task task = taskService.selectTaskById(taskId);
+            responseUtil.setData(task);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectTaskById and taskId={}", taskId, e);
         }
@@ -85,7 +87,10 @@ public class TaskController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             task.setUserid(admin.getId());
-            responseUtil = taskService.insertTask(task);
+            int n = taskService.insertTask(task);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertTask and task:{}", JSON.toJSONString(task), e);
         }
@@ -107,7 +112,10 @@ public class TaskController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = taskService.updateTaskById(task);
+            int n = taskService.updateTaskById(task);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
 
@@ -128,7 +136,10 @@ public class TaskController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = taskService.deleteById(id);
+            int n = taskService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

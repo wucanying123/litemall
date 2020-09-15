@@ -7,9 +7,7 @@ import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.LayerMapper;
 import org.linlinjava.litemall.db.domain.Layer;
 import org.linlinjava.litemall.db.service.LayerService;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,8 @@ public class LayerServiceImpl implements LayerService {
             List<Layer> list = layerMapper.selectLayerPage(layer);
             page = new PageInfo<>(list);
             List<Layer> list1 = page.getList();
-            if(null != list1 && list1.size() > 0){
-                for(Layer layer1:list1){
+            if (null != list1 && list1.size() > 0) {
+                for (Layer layer1 : list1) {
                     layer1.setRepeat(layer1.getIsRepeat());
                 }
             }
@@ -47,64 +45,53 @@ public class LayerServiceImpl implements LayerService {
     }
 
     @Override
-    public ResponseUtil<Layer> selectLayerById(String layerId) {
-        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
+    public Layer selectLayerById(String layerId) {
+        Layer layer = null;
         try {
-            Layer layer = layerMapper.selectByPrimaryKey(layerId);
-            responseUtil.setData(layer);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            layer = layerMapper.selectByPrimaryKey(layerId);
         } catch (Exception e) {
             logger.error("selectLayerById error and msg={}", e);
         }
-        return responseUtil;
+        return layer;
     }
 
     @Override
-    public ResponseUtil<Layer> insertLayer(Layer layer) {
-        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
+    public int insertLayer(Layer layer) {
+        int n = 0;
         layer.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             layer.setIsRepeat(layer.getRepeat());
             long cuttentTime = DateUtil.getDateline();
             layer.setCreateTime(cuttentTime);
             layer.setUpdateTime(cuttentTime);
-            int n = layerMapper.insertSelective(layer);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = layerMapper.insertSelective(layer);
         } catch (Exception e) {
             logger.error("insertLayer error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Layer> updateLayerById(Layer layer) {
-        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
+    public int updateLayerById(Layer layer) {
+        int n = 0;
         try {
             layer.setUpdateTime(DateUtil.getDateline());
             layer.setIsRepeat(layer.getRepeat());
-            int n = layerMapper.updateByPrimaryKeySelective(layer);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = layerMapper.updateByPrimaryKeySelective(layer);
         } catch (Exception e) {
             logger.error("updateLayerById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Layer> deleteById(String id) {
-        ResponseUtil<Layer> responseUtil = new ResponseUtil<Layer>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = layerMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = layerMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

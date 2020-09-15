@@ -63,7 +63,9 @@ public class ProgramController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = programService.selectProgramById(programId);
+            Program program = programService.selectProgramById(programId);
+            responseUtil.setData(program);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectProgramById and programId={}", programId, e);
         }
@@ -85,7 +87,10 @@ public class ProgramController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             program.setUserid(admin.getId());
-            responseUtil = programService.insertProgram(program);
+            int n = programService.insertProgram(program);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertProgram and program:{}", JSON.toJSONString(program), e);
         }
@@ -107,7 +112,10 @@ public class ProgramController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = programService.updateProgramById(program);
+            int n = programService.updateProgramById(program);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateProgramById and program:{}", JSON.toJSONString(program), e);
 
@@ -128,7 +136,10 @@ public class ProgramController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Program> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = programService.deleteById(id);
+            int n = programService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

@@ -25,10 +25,10 @@ public class ItemController {
     private static Logger logger = LoggerFactory.getLogger(ItemController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取项目列表
      * @title selectItemPage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -48,8 +48,8 @@ public class ItemController {
     }
 
     /**
-     * @Description: 通过项目id查看项目详情
      * @param itemId 项目id
+     * @Description: 通过项目id查看项目详情
      * @Title: selectItemById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -63,7 +63,9 @@ public class ItemController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = itemService.selectItemById(itemId);
+            Item item = itemService.selectItemById(itemId);
+            responseUtil.setData(item);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectItemById and itemId={}", itemId, e);
         }
@@ -85,7 +87,10 @@ public class ItemController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             item.setUserid(admin.getId());
-            responseUtil = itemService.insertItem(item);
+            int n = itemService.insertItem(item);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertItem and item:{}", JSON.toJSONString(item), e);
         }
@@ -107,7 +112,10 @@ public class ItemController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = itemService.updateItemById(item);
+            int n = itemService.updateItemById(item);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateItemById and item:{}", JSON.toJSONString(item), e);
 
@@ -116,9 +124,9 @@ public class ItemController {
     }
 
     /**
+     * @param id 项目id
      * @Description: 删除项目
      * @Title: deleteById
-     * @param id 项目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -128,7 +136,10 @@ public class ItemController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = itemService.deleteById(id);
+            int n = itemService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

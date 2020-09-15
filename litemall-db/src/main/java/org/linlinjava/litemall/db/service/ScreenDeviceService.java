@@ -2,7 +2,6 @@ package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.ScreenDevice;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 
 public interface ScreenDeviceService {
 
@@ -23,7 +22,7 @@ public interface ScreenDeviceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<ScreenDevice> selectScreenDeviceById(String screenDeviceId);
+    ScreenDevice selectScreenDeviceById(String screenDeviceId);
 
     /**
      * @Description: 添加屏幕设备
@@ -31,7 +30,7 @@ public interface ScreenDeviceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<ScreenDevice> insertScreenDevice(ScreenDevice screenDevice);
+    int insertScreenDevice(ScreenDevice screenDevice);
 
     /**
      * @Description: 编辑屏幕设备
@@ -39,7 +38,7 @@ public interface ScreenDeviceService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<ScreenDevice> updateScreenDeviceById(ScreenDevice screenDevice);
+    int updateScreenDeviceById(ScreenDevice screenDevice);
 
     /**
      * @Description: 删除屏幕设备
@@ -48,5 +47,5 @@ public interface ScreenDeviceService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    ResponseUtil<ScreenDevice> deleteById(String id);
+    int deleteById(String id);
 }

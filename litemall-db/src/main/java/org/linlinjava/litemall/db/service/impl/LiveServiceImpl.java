@@ -6,9 +6,7 @@ import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.LiveMapper;
 import org.linlinjava.litemall.db.domain.Live;
 import org.linlinjava.litemall.db.service.LiveService;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class LiveServiceImpl implements LiveService {
     private static Logger logger = LoggerFactory.getLogger(LiveServiceImpl.class);
 
     @Override
-    public PageInfo<Live> selectLivePage(Live live,Integer pageNum,Integer pageSize) {
+    public PageInfo<Live> selectLivePage(Live live, Integer pageNum, Integer pageSize) {
         PageInfo<Live> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -41,62 +39,51 @@ public class LiveServiceImpl implements LiveService {
     }
 
     @Override
-    public ResponseUtil<Live> selectLiveById(String liveId) {
-        ResponseUtil<Live> responseUtil = new ResponseUtil<Live>();
+    public Live selectLiveById(String liveId) {
+        Live live = null;
         try {
-            Live live = liveMapper.selectByPrimaryKey(liveId);
-            responseUtil.setData(live);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            live = liveMapper.selectByPrimaryKey(liveId);
         } catch (Exception e) {
             logger.error("selectLiveById error and msg={}", e);
         }
-        return responseUtil;
+        return live;
     }
 
     @Override
-    public ResponseUtil<Live> insertLive(Live live) {
-        ResponseUtil<Live> responseUtil = new ResponseUtil<Live>();
+    public int insertLive(Live live) {
+        int n = 0;
         live.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             live.setCreateTime(cuttentTime);
             live.setUpdateTime(cuttentTime);
-            int n = liveMapper.insertSelective(live);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = liveMapper.insertSelective(live);
         } catch (Exception e) {
             logger.error("insertLive error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Live> updateLiveById(Live live) {
-        ResponseUtil<Live> responseUtil = new ResponseUtil<Live>();
+    public int updateLiveById(Live live) {
+        int n = 0;
         try {
             live.setUpdateTime(DateUtil.getDateline());
-            int n = liveMapper.updateByPrimaryKeySelective(live);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = liveMapper.updateByPrimaryKeySelective(live);
         } catch (Exception e) {
             logger.error("updateLiveById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Live> deleteById(String id) {
-        ResponseUtil<Live> responseUtil = new ResponseUtil<Live>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = liveMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = liveMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

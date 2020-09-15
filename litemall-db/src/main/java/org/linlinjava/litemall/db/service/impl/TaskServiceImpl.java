@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.dao.TaskMapper;
 import org.linlinjava.litemall.db.domain.Task;
 import org.linlinjava.litemall.db.service.TaskService;
@@ -27,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     @Override
-    public PageInfo<Task> selectTaskPage(Task task,Integer pageNum,Integer pageSize) {
+    public PageInfo<Task> selectTaskPage(Task task, Integer pageNum, Integer pageSize) {
         PageInfo<Task> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -41,62 +39,52 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseUtil<Task> selectTaskById(String taskId) {
-        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
+    public Task selectTaskById(String taskId) {
+        Task task = null;
         try {
-            Task task = taskMapper.selectByPrimaryKey(taskId);
-            responseUtil.setData(task);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            task = taskMapper.selectByPrimaryKey(taskId);
         } catch (Exception e) {
             logger.error("selectTaskById error and msg={}", e);
         }
-        return responseUtil;
+        return task;
     }
 
     @Override
-    public ResponseUtil<Task> insertTask(Task task) {
-        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
+    public int insertTask(Task task) {
+        int n = 0;
         task.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             task.setCreateTime(cuttentTime);
             task.setUpdateTime(cuttentTime);
-            int n = taskMapper.insertSelective(task);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = taskMapper.insertSelective(task);
         } catch (Exception e) {
             logger.error("insertTask error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Task> updateTaskById(Task task) {
-        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
+    public int updateTaskById(Task task) {
+        int n = 0;
         try {
             task.setUpdateTime(DateUtil.getDateline());
-            int n = taskMapper.updateByPrimaryKeySelective(task);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = taskMapper.updateByPrimaryKeySelective(task);
         } catch (Exception e) {
             logger.error("updateTaskById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Task> deleteById(String id) {
-        ResponseUtil<Task> responseUtil = new ResponseUtil<Task>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = taskMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = taskMapper.deleteByPrimaryKey(id);
+
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }

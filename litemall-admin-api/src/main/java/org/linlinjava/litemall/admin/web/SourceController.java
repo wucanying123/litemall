@@ -63,7 +63,9 @@ public class SourceController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = sourceService.selectSourceById(sourceId);
+            Source source = sourceService.selectSourceById(sourceId);
+            responseUtil.setData(source);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectSourceById and sourceId={}", sourceId, e);
         }
@@ -85,7 +87,10 @@ public class SourceController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             source.setUserid(admin.getId());
-            responseUtil = sourceService.insertSource(source);
+            int n = sourceService.insertSource(source);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertSource and source:{}", JSON.toJSONString(source), e);
         }
@@ -107,7 +112,10 @@ public class SourceController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = sourceService.updateSourceById(source);
+            int n = sourceService.updateSourceById(source);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateSourceById and source:{}", JSON.toJSONString(source), e);
 
@@ -128,7 +136,10 @@ public class SourceController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = sourceService.deleteById(id);
+            int n = sourceService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

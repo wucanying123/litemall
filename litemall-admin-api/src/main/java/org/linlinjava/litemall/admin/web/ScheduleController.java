@@ -63,7 +63,9 @@ public class ScheduleController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = scheduleService.selectScheduleById(scheduleId);
+            Schedule schedule = scheduleService.selectScheduleById(scheduleId);
+            responseUtil.setData(schedule);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
             logger.error("selectScheduleById and scheduleId={}", scheduleId, e);
         }
@@ -85,7 +87,10 @@ public class ScheduleController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             schedule.setUserid(admin.getId());
-            responseUtil = scheduleService.insertSchedule(schedule);
+            int n = scheduleService.insertSchedule(schedule);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("insertSchedule and schedule:{}", JSON.toJSONString(schedule), e);
         }
@@ -107,7 +112,10 @@ public class ScheduleController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
-            responseUtil = scheduleService.updateScheduleById(schedule);
+            int n = scheduleService.updateScheduleById(schedule);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("updateScheduleById and schedule:{}", JSON.toJSONString(schedule), e);
 
@@ -128,7 +136,10 @@ public class ScheduleController {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
-            responseUtil = scheduleService.deleteById(id);
+            int n = scheduleService.deleteById(id);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }

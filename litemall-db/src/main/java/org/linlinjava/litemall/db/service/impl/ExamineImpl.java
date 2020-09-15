@@ -6,9 +6,7 @@ import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.ExamineMapper;
 import org.linlinjava.litemall.db.domain.Examine;
 import org.linlinjava.litemall.db.service.ExamineService;
-import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class ExamineImpl implements ExamineService {
     private static Logger logger = LoggerFactory.getLogger(ExamineImpl.class);
 
     @Override
-    public PageInfo<Examine> selectExaminePage(Examine examine,Integer pageNum,Integer pageSize) {
+    public PageInfo<Examine> selectExaminePage(Examine examine, Integer pageNum, Integer pageSize) {
         PageInfo<Examine> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
@@ -41,62 +39,51 @@ public class ExamineImpl implements ExamineService {
     }
 
     @Override
-    public ResponseUtil<Examine> selectExamineById(String examineId) {
-        ResponseUtil<Examine> responseUtil = new ResponseUtil<Examine>();
+    public Examine selectExamineById(String examineId) {
+        Examine examine = null;
         try {
-            Examine examine = examineMapper.selectByPrimaryKey(examineId);
-            responseUtil.setData(examine);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            examine = examineMapper.selectByPrimaryKey(examineId);
         } catch (Exception e) {
             logger.error("selectExamineById error and msg={}", e);
         }
-        return responseUtil;
+        return examine;
     }
 
     @Override
-    public ResponseUtil<Examine> insertExamine(Examine examine) {
-        ResponseUtil<Examine> responseUtil = new ResponseUtil<Examine>();
+    public int insertExamine(Examine examine) {
+        int n = 0;
         examine.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             examine.setCreateTime(cuttentTime);
             examine.setUpdateTime(cuttentTime);
-            int n = examineMapper.insertSelective(examine);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = examineMapper.insertSelective(examine);
         } catch (Exception e) {
             logger.error("insertExamine error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Examine> updateExamineById(Examine examine) {
-        ResponseUtil<Examine> responseUtil = new ResponseUtil<Examine>();
+    public int updateExamineById(Examine examine) {
+        int n = 0;
         try {
             examine.setUpdateTime(DateUtil.getDateline());
-            int n = examineMapper.updateByPrimaryKeySelective(examine);
-            if (n >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = examineMapper.updateByPrimaryKeySelective(examine);
         } catch (Exception e) {
             logger.error("updateExamineById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 
     @Override
-    public ResponseUtil<Examine> deleteById(String id) {
-        ResponseUtil<Examine> responseUtil = new ResponseUtil<Examine>();
+    public int deleteById(String id) {
+        int n = 0;
         try {
-            int m = examineMapper.deleteByPrimaryKey(id);
-            if (m >= 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
+            n = examineMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
-        return responseUtil;
+        return n;
     }
 }
