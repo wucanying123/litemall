@@ -3,7 +3,10 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Examine;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.service.ExamineService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -31,9 +34,12 @@ public class ExamineController {
      */
     @ApiOperation(value = "获取审核列表")
     @GetMapping("/selectExaminePage")
-    public ResponseUtil selectExaminePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectExaminePage(String detailName, Integer type, Integer passStatus, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
-        Examine examine = null;
+        Examine examine = new Examine();
+        examine.setDetailName(detailName);
+        examine.setType(type);
+        examine.setPassStatus(passStatus);
         logger.info("selectExaminePage and examine={},page={},limit", JSON.toJSONString(examine), page, limit);
         try {
             PageInfo<Examine> pageList = examineService.selectExaminePage(examine, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
@@ -106,6 +112,13 @@ public class ExamineController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            if (2 == examine.getPassStatus() || 3 == examine.getPassStatus()) {
+                examine.setCheckUserid1(admin.getId());
+            } else if (4 == examine.getPassStatus() || 5 == examine.getPassStatus()) {
+                examine.setCheckUserid2(admin.getId());
+            }
             int n = examineService.updateExamineById(examine);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

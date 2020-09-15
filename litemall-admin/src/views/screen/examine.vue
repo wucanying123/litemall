@@ -3,42 +3,26 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入媒体名称" />
-      <el-select v-model="listQuery._type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
-        <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
+      <el-input v-model="listQuery.detailName" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
+      <el-select v-model="listQuery.type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
+        <el-option v-for="type in typeOptions" :key="type.value" :label="type.label" :value="type.value" />
+      </el-select>
+      <el-select v-model="listQuery.passStatus" clearable style="width: 200px" class="filter-item" placeholder="请选择状态">
+        <el-option v-for="passStatus in passStatusOptions" :key="passStatus.value" :label="passStatus.label" :value="passStatus.value" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="名称" prop="name" />
-
-      <el-table-column align="center" label="内容" prop="url">
-        <template slot-scope="scope">
-          <div v-if="scope.row._type === 'Video'">
-            <video :src="scope.row.url" controls="controls" width="200" height="90" />
-          </div>
-          <div v-if="scope.row._type === 'Image'">
-            <img v-if="scope.row.url" :src="scope.row.url" width="100" height="90">
-          </div>
-        </template>
+      <el-table-column align="center" label="名称" prop="detailName" />
+      <el-table-column align="center" label="类型" prop="type">
+        <template slot-scope="scope">{{ scope.row.type | formatType }}</template>
       </el-table-column>
-
-      <!--      <el-table-column align="center" label="播放时长" prop="playTime">-->
-      <!--        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>-->
-      <!--      </el-table-column>-->
-
-      <el-table-column align="center" label="素材时长" prop="maxPlayTime">
-        <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
+      <el-table-column align="center" label="审核状态" prop="passStatus">
+        <template slot-scope="scope">{{ scope.row.passStatus | formatPassStatus }}</template>
       </el-table-column>
-
-      <el-table-column align="center" label="类型" prop="_type">
-        <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
-      </el-table-column>
-      <el-table-column align="center" label="格式" prop="fileExt" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
@@ -55,48 +39,40 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dataForm.name" />
+        <el-form-item label="名称" prop="detailName">
+          <el-input v-model="dataForm.detailName" />
         </el-form-item>
-        <el-form-item label="类型" prop="_type">
-          <el-select v-model="dataForm._type" placeholder="请选择">
-            <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
-          </el-select>
-        </el-form-item>
-        <div v-if="dataForm._type === 'Video' || dataForm._type === 'Image'">
-          <el-form-item label="内容" prop="url">
-            <el-upload
-              :headers="headers"
-              :action="uploadPath"
-              :show-file-list="false"
-              :on-success="uploadUrl"
-              :before-upload="checkFileSize"
-              class="avatar-uploader"
-              accept=".jpg,.jpeg,.png,.gif,.mp4"
-            >
-              <div v-if="dataForm.url && dataForm._type === 'Video'">
-                <video :src="dataForm.url" controls="controls" width="200" />
-              </div>
-              <div v-if="dataForm.url && dataForm._type === 'Image'">
-                <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
-              </div>
 
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
-              <div slot="tip" class="el-upload__tip">只能上传mp4/jpg/jpeg/png/gif文件，且不超过500M</div>
-            </el-upload>
+        <div v-if="dataForm.passStatus === 1 || dataForm.passStatus === 3">
+          <el-form-item label="是否通过一审" prop="passStatus">
+            <el-select v-model="dataForm.passStatus" placeholder="请选择">
+              <el-option :value="1" label="未审核" />
+              <el-option :value="2" label="通过" />
+              <el-option :value="3" label="不通过" />
+            </el-select>
           </el-form-item>
+          <div v-if="dataForm.passStatus === 3">
+            <el-form-item label="拒绝原因" prop="rejectReason1">
+              <el-input v-model="dataForm.rejectReason1" :rows="8" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </div>
         </div>
-        <!--        <el-form-item label="播放时长(秒)" prop="playTime">-->
-        <!--          <el-input-->
-        <!--            v-model="dataForm.playTime"-->
-        <!--            type="number"-->
-        <!--            min="0"-->
-        <!--            max="60"-->
-        <!--            step="1"-->
-        <!--            size="2"-->
-        <!--            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"-->
-        <!--          />-->
-        <!--        </el-form-item>-->
+
+        <div v-if="dataForm.passStatus === 2 || dataForm.passStatus === 4 || dataForm.passStatus === 5">
+          <el-form-item label="是否通过二审" prop="passStatus">
+            <el-select v-model="dataForm.passStatus" placeholder="请选择">
+              <el-option :value="2" label="未审核" />
+              <el-option :value="4" label="通过" />
+              <el-option :value="5" label="不通过" />
+            </el-select>
+          </el-form-item>
+          <div v-if="dataForm.passStatus === 5">
+            <el-form-item label="拒绝原因" prop="rejectReason2">
+              <el-input v-model="dataForm.rejectReason2" :rows="8" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </div>
+        </div>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -146,36 +122,41 @@ const defaultTypeOptions = [
     value: ''
   },
   {
-    label: '视频',
-    value: 'Video'
+    label: '节目',
+    value: 1
   },
   {
-    label: '图片',
-    value: 'Image'
+    label: '直播',
+    value: 2
   },
   {
-    label: '时钟',
-    value: 'AnalogClock'
+    label: '资源',
+    value: 3
+  }
+]
+const defaultPassStatusOptions = [
+  {
+    label: '',
+    value: ''
   },
   {
-    label: '数字时钟',
-    value: 'DigitalClock'
+    label: '未审核',
+    value: 1
   },
   {
-    label: '倒计时',
-    value: 'Countdown'
+    label: '一审过待二审',
+    value: 2
   },
   {
-    label: 'Flash',
-    value: 'Flash'
+    label: '一审不过',
+    value: 3
+  }, {
+    label: '二审过',
+    value: 4
   },
   {
-    label: '天气预报',
-    value: 'Weather'
-  },
-  {
-    label: '多行文本',
-    value: 'MultiText'
+    label: '二审不过',
+    value: 5
   }
 ]
 
@@ -183,10 +164,18 @@ export default {
   name: 'Examine',
   components: { Pagination },
   filters: {
-    formatType(_type) {
+    formatType(type) {
       for (let i = 0; i < defaultTypeOptions.length; i++) {
-        if (_type === defaultTypeOptions[i].value) {
+        if (type === defaultTypeOptions[i].value) {
           return defaultTypeOptions[i].label
+        }
+      }
+      return ''
+    },
+    formatPassStatus(type) {
+      for (let i = 0; i < defaultPassStatusOptions.length; i++) {
+        if (type === defaultPassStatusOptions[i].value) {
+          return defaultPassStatusOptions[i].label
         }
       }
       return ''
@@ -236,6 +225,7 @@ export default {
   data() {
     return {
       typeOptions: Object.assign({}, defaultTypeOptions),
+      passStatusOptions: Object.assign({}, defaultPassStatusOptions),
       uploadPath,
       list: [],
       total: 0,
@@ -243,15 +233,15 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined,
-        _type: undefined
+        detailName: undefined,
+        type: undefined,
+        passStatus: undefined
       },
       dataForm: {
         id: undefined,
-        name: undefined,
-        _type: undefined,
+        detailName: undefined,
+        type: undefined,
         url: undefined
-        // playTime: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -260,16 +250,15 @@ export default {
         create: '创建'
       },
       rules: {
-        name: [
+        detailName: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
-        _type: [
+        type: [
           { required: true, message: '类型不能为空', trigger: 'blur' }
+        ],
+        passStatus: [
+          { required: true, message: '审核状态不能为空', trigger: 'blur' }
         ]
-        // ,
-        // playTime: [
-        //   { required: true, message: '播放时长不能为空', trigger: 'blur' }
-        // ]
       },
       downloadLoading: false
     }
@@ -306,29 +295,11 @@ export default {
     resetForm() {
       this.dataForm = {
         id: undefined,
-        name: undefined,
-        _type: '',
+        detailName: undefined,
+        type: '',
         url: undefined
         // playTime: undefined
       }
-    },
-    handleCreate() {
-      this.resetForm()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    uploadUrl: function(response) {
-      this.dataForm.url = response.data.url
-    },
-    checkFileSize: function(file) {
-      if (file.size > 524288000) {
-        this.$message.error(`${file.name}文件大于500M，请选择小于500M的文件`)
-        return false
-      }
-      return true
     },
     createData() {
       this.$refs['dataForm'].validate(valid => {

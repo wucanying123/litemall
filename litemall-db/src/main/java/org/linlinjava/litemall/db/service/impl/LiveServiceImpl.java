@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.LiveMapper;
+import org.linlinjava.litemall.db.domain.Examine;
 import org.linlinjava.litemall.db.domain.Live;
+import org.linlinjava.litemall.db.service.ExamineService;
 import org.linlinjava.litemall.db.service.LiveService;
 import org.linlinjava.litemall.db.util.DateUtil;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ public class LiveServiceImpl implements LiveService {
 
     @Autowired
     private LiveMapper liveMapper;
+    @Autowired
+    private ExamineService examineService;
 
 
     private static Logger logger = LoggerFactory.getLogger(LiveServiceImpl.class);
@@ -58,6 +63,12 @@ public class LiveServiceImpl implements LiveService {
             live.setCreateTime(cuttentTime);
             live.setUpdateTime(cuttentTime);
             n = liveMapper.insertSelective(live);
+            Examine examine = new Examine();
+            examine.setPassStatus(1);
+            examine.setType(2);
+            examine.setDetailId(live.getId());
+            examine.setDetailName(live.getName());
+            examineService.insertExamine(examine);
         } catch (Exception e) {
             logger.error("insertLive error and msg={}", e);
         }
@@ -70,6 +81,9 @@ public class LiveServiceImpl implements LiveService {
         try {
             live.setUpdateTime(DateUtil.getDateline());
             n = liveMapper.updateByPrimaryKeySelective(live);
+            if (StringUtilsXD.isNotEmpty(live.getId()) && StringUtilsXD.isNotEmpty(live.getName())) {
+                examineService.updateExamineDetailName(live.getId(),live.getName());
+            }
         } catch (Exception e) {
             logger.error("updateLiveById error and msg={}", e);
         }

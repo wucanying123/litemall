@@ -110,6 +110,7 @@
     select
     <include refid="Base_Column_List" />
     from live where 1=1
+    and id in(SELECT examine.detail_id from examine where examine.pass_status = 4)
     order by create_time desc ,update_time desc
   </select>
 </mapper>

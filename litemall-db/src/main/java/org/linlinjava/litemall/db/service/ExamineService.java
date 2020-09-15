@@ -25,6 +25,15 @@ public interface ExamineService {
     Examine selectExamineById(String examineId);
 
     /**
+     * @Description: 通过详细id查看审核详情
+     * @Title: selecByDetailId
+     * @param detailId 详细id
+     * @auther IngaWu
+     * @currentdate:2020年9月15日
+     */
+    Examine selecByDetailId(String detailId);
+
+    /**
      * @Description: 添加审核
      * @title insertExamine
      * @author IngaWu
@@ -48,4 +57,12 @@ public interface ExamineService {
      * @currentdate:2020年9月2日
      */
     int deleteById(String id);
+
+    /**
+     * @Description: 编辑详细名称
+     * @title updateExamineDetailName
+     * @author IngaWu
+     * @currentdate:2020年9月15日
+     */
+    int updateExamineDetailName(String detailId,String detailName);
 }

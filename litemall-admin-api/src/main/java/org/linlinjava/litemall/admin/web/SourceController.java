@@ -25,18 +25,20 @@ public class SourceController {
     private static Logger logger = LoggerFactory.getLogger(SourceController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取资源列表
      * @title selectSourcePage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
     @ApiOperation(value = "获取资源列表")
     @GetMapping("/selectSourcePage")
-    public ResponseUtil selectSourcePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectSourcePage(String name, String _type, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
-        Source source = null;
+        Source source = new Source();
+        source.setName(name);
+        source.set_type(_type);
         logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
         try {
             PageInfo<Source> pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
@@ -48,8 +50,8 @@ public class SourceController {
     }
 
     /**
-     * @Description: 通过资源id查看资源详情
      * @param sourceId 资源id
+     * @Description: 通过资源id查看资源详情
      * @Title: selectSourceById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -124,9 +126,9 @@ public class SourceController {
     }
 
     /**
+     * @param id 资源id
      * @Description: 删除资源
      * @Title: deleteById
-     * @param id 资源id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */

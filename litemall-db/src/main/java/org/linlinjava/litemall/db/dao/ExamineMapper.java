@@ -12,6 +12,8 @@ public interface ExamineMapper {
 
     Examine selectByPrimaryKey(String id);
 
+    Examine selecByDetailId(@Param("detailId") String detailId);
+
     int updateByPrimaryKeySelective(Examine record);
     
     List<Examine> selectExaminePage(@Param("examine") Examine examine);

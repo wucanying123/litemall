@@ -50,6 +50,17 @@ public class ExamineImpl implements ExamineService {
     }
 
     @Override
+    public Examine selecByDetailId(String detailId) {
+        Examine examine = null;
+        try {
+            examine = examineMapper.selecByDetailId(detailId);
+        } catch (Exception e) {
+            logger.error("selecByDetailId error and msg={}", e);
+        }
+        return examine;
+    }
+
+    @Override
     public int insertExamine(Examine examine) {
         int n = 0;
         examine.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -69,6 +80,11 @@ public class ExamineImpl implements ExamineService {
         int n = 0;
         try {
             examine.setUpdateTime(DateUtil.getDateline());
+            if(2 == examine.getPassStatus()){
+                examine.setRejectReason1("");
+            }else if(4 == examine.getPassStatus()){
+                examine.setRejectReason2("");
+            }
             n = examineMapper.updateByPrimaryKeySelective(examine);
         } catch (Exception e) {
             logger.error("updateExamineById error and msg={}", e);
@@ -84,6 +100,16 @@ public class ExamineImpl implements ExamineService {
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
+        return n;
+    }
+
+    @Override
+    public int updateExamineDetailName(String detailId,String detailName) {
+        Examine searchExamine = new Examine();
+        searchExamine.setDetailId(detailId);
+        Examine examine= examineMapper.selecByDetailId(detailId);
+        examine.setDetailName(detailName);
+        int n = examineMapper.updateByPrimaryKeySelective(examine);
         return n;
     }
 }

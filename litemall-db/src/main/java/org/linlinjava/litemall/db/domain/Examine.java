@@ -10,19 +10,23 @@ public class Examine {
     private String id;
 
     /**
-     * 类型：0节目，1直播，2资源
+     * 类型：1节目，2直播，3资源
      */
-    private String type;
+    private Integer type;
 
     /**
      * 详细id
      */
     private String detailId;
+    /**
+     * 详细名称
+     */
+    private String detailName;
 
     /**
-     * 审核状态：0未审核，1一审过等待二审，2一审不过，3二审过，4二审不过
+     * 审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
      */
-    private String passStatus;
+    private Integer passStatus;
 
     /**
      * 一审人员
