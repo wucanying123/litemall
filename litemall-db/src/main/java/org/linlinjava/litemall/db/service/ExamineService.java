@@ -59,6 +59,15 @@ public interface ExamineService {
     int deleteById(String id);
 
     /**
+     * @Description: 通过详细id删除审核
+     * @Title: deleteById
+     * @param detailId 详细id
+     * @auther IngaWu
+     * @currentdate:2020年9月16日
+     */
+    int deleteByDetailId(String detailId);
+
+    /**
      * @Description: 编辑详细名称
      * @title updateExamineDetailName
      * @author IngaWu

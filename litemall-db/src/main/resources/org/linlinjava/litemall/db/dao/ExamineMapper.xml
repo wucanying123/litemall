@@ -28,6 +28,10 @@
     delete from examine
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteByDetailId" parameterType="java.lang.String">
+    delete from examine
+    where detail_id = #{detailId,jdbcType=VARCHAR}
+  </delete>
   <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.Examine">
     insert into examine
     <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -107,6 +107,8 @@ public class SourceServiceImpl implements SourceService {
         int n = 0;
         try {
             n = sourceMapper.deleteByPrimaryKey(id);
+            //同步删除审核表数据
+            examineService.deleteByDetailId(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }

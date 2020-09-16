@@ -27,8 +27,7 @@ public class Examine {
      * 审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
      */
     private Integer passStatus;
-    private Integer passStatus1;
-    private Integer passStatus2;
+
 
     /**
      * 一审人员
@@ -59,4 +58,13 @@ public class Examine {
      * 修改时间
      */
     private Long updateTime;
+
+
+    //----------------扩展字段----------------
+
+    private Integer passStatus1;//仅展示用，一审状态
+    private Integer passStatus2;//仅展示用，二审状态
+    private String addUserName;//仅展示用，提交者名称
+    private String checkUserName1;//仅展示用，一审人员名称
+    private String checkUserName2;//仅展示用，二审人员名称
 }

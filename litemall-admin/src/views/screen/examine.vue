@@ -23,6 +23,9 @@
       <el-table-column align="center" label="审核状态" prop="passStatus">
         <template slot-scope="scope">{{ scope.row.passStatus | formatPassStatus }}</template>
       </el-table-column>
+      <el-table-column align="center" label="提交者" prop="addUserName" />
+      <el-table-column align="center" label="一审员" prop="checkUserName1" />
+      <el-table-column align="center" label="二审员" prop="checkUserName2" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>

@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.ExamineMapper;
-import org.linlinjava.litemall.db.domain.Examine;
-import org.linlinjava.litemall.db.service.ExamineService;
+import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.*;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,14 @@ public class ExamineImpl implements ExamineService {
 
     @Autowired
     private ExamineMapper examineMapper;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private SourceService sourceService;
+    @Autowired
+    private LiveService liveService;
+    @Autowired
+    private LitemallAdminService adminService;
 
 
     private static Logger logger = LoggerFactory.getLogger(ExamineImpl.class);
@@ -29,9 +37,51 @@ public class ExamineImpl implements ExamineService {
         PageInfo<Examine> page = null;
         try {
             PageHelper.startPage(pageNum, pageSize);
-            List<Examine> list = examineMapper.selectExaminePage(examine);
-            String jsonString = JSON.toJSONString(list);
-            page = new PageInfo<>(list);
+            List<Examine> examineList = examineMapper.selectExaminePage(examine);
+            String jsonString = JSON.toJSONString(examineList);
+            page = new PageInfo<>(examineList);
+            List<Examine> list = page.getList();
+            if(null != list && list.size() >0){
+                for(Examine examine1 : list){
+                    if(examine1.getPassStatus() == 1 || examine1.getPassStatus() == 2 || examine1.getPassStatus() == 3){
+                        examine1.setPassStatus1(examine1.getPassStatus());
+                        examine1.setPassStatus2(null);
+                    }else if(examine1.getPassStatus() == 4 || examine1.getPassStatus() == 5){
+                        examine1.setPassStatus2(examine1.getPassStatus());
+                        examine1.setPassStatus1(null);
+                    }
+                    //人员名称 1节目，2直播，3资源
+                    if(examine1.getType() == 1){
+                        Task task = taskService.selectTaskById(examine1.getDetailId());
+                        if(null != task && null != task.getUserid()) {
+                            LitemallAdmin admin = adminService.findById(task.getUserid());
+                            examine1.setAddUserName(admin.getUsername());
+                        }
+                    }else if(examine1.getType() == 2){
+                        Live live = liveService.selectLiveById(examine1.getDetailId());
+                        if(null != live && null != live.getUserid()) {
+                            LitemallAdmin admin = adminService.findById(live.getUserid());
+                            examine1.setAddUserName(admin.getUsername());
+                        }
+                    }else if(examine1.getType() == 3){
+                        Source source = sourceService.selectSourceById(examine1.getDetailId());
+                        if(null != source && null != source.getUserid()) {
+                            LitemallAdmin admin = adminService.findById(source.getUserid());
+                            examine1.setAddUserName(admin.getUsername());
+                        }
+                    }
+                    if(null != examine1.getCheckUserid1()) {
+                        LitemallAdmin admin = adminService.findById(examine1.getCheckUserid1());
+                        examine1.setCheckUserName1(admin.getUsername());
+                    }
+                    if(null != examine1.getCheckUserid2()) {
+                        LitemallAdmin admin = adminService.findById(examine1.getCheckUserid2());
+                        examine1.setCheckUserName2(admin.getUsername());
+                    }
+
+                }
+
+            }
         } catch (Exception e) {
             logger.error("selectExaminePage error and msg={}", e);
         }
@@ -99,6 +149,17 @@ public class ExamineImpl implements ExamineService {
             n = examineMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
+        }
+        return n;
+    }
+
+    @Override
+    public int deleteByDetailId(String detailId){
+        int n = 0;
+        try {
+            n = examineMapper.deleteByDetailId(detailId);
+        } catch (Exception e) {
+            logger.error("deleteByDetailId error and msg={}", e);
         }
         return n;
     }

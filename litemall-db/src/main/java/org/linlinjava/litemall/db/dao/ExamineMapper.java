@@ -8,6 +8,8 @@ import java.util.List;
 public interface ExamineMapper {
     int deleteByPrimaryKey(String id);
 
+    int deleteByDetailId(@Param("detailId")String detailId);
+
     int insertSelective(Examine record);
 
     Examine selectByPrimaryKey(String id);
