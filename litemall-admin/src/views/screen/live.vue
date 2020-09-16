@@ -6,7 +6,7 @@
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入直播名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
-      <el-select v-model="dataForm.cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
+      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
         <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopLive">停止直播</el-button>
@@ -135,6 +135,7 @@ export default {
       uploadPath,
       list: [],
       cardList: [],
+      cardId: undefined,
       total: 0,
       listLoading: true,
       listQuery: {
@@ -252,7 +253,7 @@ export default {
       this.userDialogVisible = true
     },
     stopLive() {
-      stopLiveVideo()
+      stopLiveVideo(this.cardId)
         .then(response => {
           this.$notify.success({
             title: '成功',
@@ -267,7 +268,7 @@ export default {
         })
     },
     handlePlay(row) {
-      playLive(row.id)
+      playLive(row.id, this.cardId)
         .then(response => {
           this.$notify.success({
             title: '成功',

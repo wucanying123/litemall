@@ -158,14 +158,22 @@ public class LiveController {
      */
     @ApiOperation(value = "播放直播")
     @PostMapping(value = "/playLive")
-    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id,@RequestParam(value = "cardId") String cardId) {
+    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id,String cardId) {
         logger.info("playLive and id={}", JSON.toJSONString(id));
+        if(StringUtilsXD.isEmpty(cardId)){
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
         return screenService.playLiveVideo(id,cardId);
     }
 
     @ApiOperation(value = "停止直播")
     @PostMapping(value = "/stopLiveVideo")
     public ResponseUtil<Object> stopLiveVideo(String cardId) {
+        if(StringUtilsXD.isEmpty(cardId)){
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
         return screenService.stopLiveVideo(cardId);
     }
 }

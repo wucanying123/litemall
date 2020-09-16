@@ -24,6 +24,7 @@ public class Constant {
     public static final int STATUS_SYS_00 = 0;
     public static final int STATUS_SYS_01 = -1;
     public static final int STATUS_SYS_02 = -2;
+    public static final int STATUS_SYS_03 = -3;
 
     /**
      * 服务端返回描述
@@ -31,6 +32,7 @@ public class Constant {
     public static final String RTNINFO_SYS_00 = "操作成功!";
     public static final String RTNINFO_SYS_01 = "系统异常";
     public static final String RTNINFO_SYS_02 = "参数错误";
+    public static final String RTNINFO_SYS_03 = "卡号不能为空";
 
     //图片的后缀名
     public static final List<String> imgExt = new ArrayList<String>() {{
