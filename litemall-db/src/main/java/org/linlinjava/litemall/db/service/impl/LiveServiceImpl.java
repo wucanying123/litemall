@@ -63,6 +63,7 @@ public class LiveServiceImpl implements LiveService {
             live.setCreateTime(cuttentTime);
             live.setUpdateTime(cuttentTime);
             n = liveMapper.insertSelective(live);
+            //同步添加到审核表
             Examine examine = new Examine();
             examine.setPassStatus(1);
             examine.setType(2);
@@ -81,6 +82,7 @@ public class LiveServiceImpl implements LiveService {
         try {
             live.setUpdateTime(DateUtil.getDateline());
             n = liveMapper.updateByPrimaryKeySelective(live);
+            //同步修改名称到审核表
             if (StringUtilsXD.isNotEmpty(live.getId()) && StringUtilsXD.isNotEmpty(live.getName())) {
                 examineService.updateExamineDetailName(live.getId(),live.getName());
             }

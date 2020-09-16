@@ -28,8 +28,10 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/screen/examine/updateExamineById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="['POST /admin/screen/examine/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <div v-if="scope.row.passStatus !== 4">
+            <el-button v-permission="['POST /admin/screen/examine/updateExamineById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          </div>
+          <!--          <el-button v-permission="['POST /admin/screen/examine/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -44,29 +46,28 @@
         </el-form-item>
 
         <div v-if="dataForm.passStatus === 1 || dataForm.passStatus === 3">
-          <el-form-item label="是否通过一审" prop="passStatus">
-            <el-select v-model="dataForm.passStatus" placeholder="请选择">
+          <el-form-item label="一审审核" prop="passStatus1">
+            <el-select v-model="dataForm.passStatus1" placeholder="请选择">
               <el-option :value="1" label="未审核" />
               <el-option :value="2" label="通过" />
               <el-option :value="3" label="不通过" />
             </el-select>
           </el-form-item>
-          <div v-if="dataForm.passStatus === 3">
+          <div v-if="dataForm.passStatus1 === 3">
             <el-form-item label="拒绝原因" prop="rejectReason1">
               <el-input v-model="dataForm.rejectReason1" :rows="8" type="textarea" placeholder="请输入内容" />
             </el-form-item>
           </div>
         </div>
-
-        <div v-if="dataForm.passStatus === 2 || dataForm.passStatus === 4 || dataForm.passStatus === 5">
-          <el-form-item label="是否通过二审" prop="passStatus">
-            <el-select v-model="dataForm.passStatus" placeholder="请选择">
+        <div v-if="dataForm.passStatus === 2 || dataForm.passStatus === 5">
+          <el-form-item label="二审审核" prop="passStatus2">
+            <el-select v-model="dataForm.passStatus2" placeholder="请选择">
               <el-option :value="2" label="未审核" />
               <el-option :value="4" label="通过" />
               <el-option :value="5" label="不通过" />
             </el-select>
           </el-form-item>
-          <div v-if="dataForm.passStatus === 5">
+          <div v-if="dataForm.passStatus2 === 5">
             <el-form-item label="拒绝原因" prop="rejectReason2">
               <el-input v-model="dataForm.rejectReason2" :rows="8" type="textarea" placeholder="请输入内容" />
             </el-form-item>
@@ -241,7 +242,10 @@ export default {
         id: undefined,
         detailName: undefined,
         type: undefined,
-        url: undefined
+        url: undefined,
+        passStatus: undefined,
+        passStatus1: undefined,
+        passStatus2: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -255,9 +259,6 @@ export default {
         ],
         type: [
           { required: true, message: '类型不能为空', trigger: 'blur' }
-        ],
-        passStatus: [
-          { required: true, message: '审核状态不能为空', trigger: 'blur' }
         ]
       },
       downloadLoading: false
@@ -297,8 +298,10 @@ export default {
         id: undefined,
         detailName: undefined,
         type: '',
-        url: undefined
-        // playTime: undefined
+        url: undefined,
+        passStatus: undefined,
+        passStatus1: undefined,
+        passStatus2: undefined
       }
     },
     createData() {

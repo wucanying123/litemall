@@ -8,7 +8,7 @@
         <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
     </div>
 
     <!-- 查询结果 -->

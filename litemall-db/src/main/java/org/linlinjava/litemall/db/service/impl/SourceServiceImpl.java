@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.SourceMapper;
+import org.linlinjava.litemall.db.domain.Examine;
 import org.linlinjava.litemall.db.domain.Source;
+import org.linlinjava.litemall.db.service.ExamineService;
 import org.linlinjava.litemall.db.service.SourceService;
 import org.linlinjava.litemall.db.util.DateUtil;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ public class SourceServiceImpl implements SourceService {
 
     @Autowired
     private SourceMapper sourceMapper;
+    @Autowired
+    private ExamineService examineService;
 
 
     private static Logger logger = LoggerFactory.getLogger(SourceServiceImpl.class);
@@ -68,6 +73,13 @@ public class SourceServiceImpl implements SourceService {
                 source.setMaxPlayTime(10);
             }
             n = sourceMapper.insertSelective(source);
+            //同步添加到审核表
+            Examine examine = new Examine();
+            examine.setPassStatus(1);
+            examine.setType(3);
+            examine.setDetailId(source.getId());
+            examine.setDetailName(source.getName());
+            examineService.insertExamine(examine);
         } catch (Exception e) {
             logger.error("insertSource error and msg={}", e);
         }
@@ -80,6 +92,10 @@ public class SourceServiceImpl implements SourceService {
         try {
             source.setUpdateTime(DateUtil.getDateline());
             n = sourceMapper.updateByPrimaryKeySelective(source);
+            //同步修改名称到审核表
+            if (StringUtilsXD.isNotEmpty(source.getId()) && StringUtilsXD.isNotEmpty(source.getName())) {
+                examineService.updateExamineDetailName(source.getId(),source.getName());
+            }
         } catch (Exception e) {
             logger.error("updateSourceById error and msg={}", e);
         }

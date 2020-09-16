@@ -27,6 +27,8 @@ public class Examine {
      * 审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
      */
     private Integer passStatus;
+    private Integer passStatus1;
+    private Integer passStatus2;
 
     /**
      * 一审人员

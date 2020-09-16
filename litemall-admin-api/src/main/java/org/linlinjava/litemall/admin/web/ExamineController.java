@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/admin/screen/examine")
 public class ExamineController {
@@ -43,6 +45,20 @@ public class ExamineController {
         logger.info("selectExaminePage and examine={},page={},limit", JSON.toJSONString(examine), page, limit);
         try {
             PageInfo<Examine> pageList = examineService.selectExaminePage(examine, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
+            List<Examine> list = pageList.getList();
+            if(null != list && list.size() >0){
+                for(Examine examine1 : list){
+                    if(examine1.getPassStatus() == 1 || examine1.getPassStatus() == 2 || examine1.getPassStatus() == 3){
+                        examine1.setPassStatus1(examine1.getPassStatus());
+                        examine1.setPassStatus2(null);
+                    }else if(examine1.getPassStatus() == 4 || examine1.getPassStatus() == 5){
+                        examine1.setPassStatus2(examine1.getPassStatus());
+                        examine1.setPassStatus1(null);
+
+                    }
+                }
+
+            }
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
             logger.error("selectExaminePage and examine={},page={},limit", JSON.toJSONString(examine), page, limit, e);
@@ -112,6 +128,12 @@ public class ExamineController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
+            if(examine.getPassStatus1() != null){
+                examine.setPassStatus(examine.getPassStatus1());
+            }
+            if(examine.getPassStatus2() != null){
+                examine.setPassStatus(examine.getPassStatus2());
+            }
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             if (2 == examine.getPassStatus() || 3 == examine.getPassStatus()) {

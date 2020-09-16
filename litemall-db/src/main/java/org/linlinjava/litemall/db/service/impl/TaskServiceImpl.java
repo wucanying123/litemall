@@ -3,10 +3,13 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.domain.Examine;
+import org.linlinjava.litemall.db.service.ExamineService;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.TaskMapper;
 import org.linlinjava.litemall.db.domain.Task;
 import org.linlinjava.litemall.db.service.TaskService;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private ExamineService examineService;
 
 
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -58,6 +63,13 @@ public class TaskServiceImpl implements TaskService {
             task.setCreateTime(cuttentTime);
             task.setUpdateTime(cuttentTime);
             n = taskMapper.insertSelective(task);
+            //同步添加到审核表
+            Examine examine = new Examine();
+            examine.setPassStatus(1);
+            examine.setType(3);
+            examine.setDetailId(task.get_id());
+            examine.setDetailName(task.getName());
+            examineService.insertExamine(examine);
         } catch (Exception e) {
             logger.error("insertTask error and msg={}", e);
         }
@@ -70,6 +82,10 @@ public class TaskServiceImpl implements TaskService {
         try {
             task.setUpdateTime(DateUtil.getDateline());
             n = taskMapper.updateByPrimaryKeySelective(task);
+            //同步修改名称到审核表
+            if (StringUtilsXD.isNotEmpty(task.get_id()) && StringUtilsXD.isNotEmpty(task.getName())) {
+                examineService.updateExamineDetailName(task.get_id(),task.getName());
+            }
         } catch (Exception e) {
             logger.error("updateTaskById error and msg={}", e);
         }

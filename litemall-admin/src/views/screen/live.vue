@@ -5,7 +5,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入直播名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopLive">停止直播</el-button>
     </div>
 
@@ -39,6 +39,7 @@
         </el-form-item>
         <el-form-item label="直播地址" prop="url">
           <el-input v-model="dataForm.url" />
+          如：rtmp://58.200.131.2:1935/livetv/hunantv
         </el-form-item>
         <el-form-item label="宽" prop="width">
           <el-input
