@@ -48,3 +48,23 @@ export function selectOnlineDevice() {
     method: 'get'
   })
 }
+
+export function reboot(cardId) {
+  return request({
+    url: '/screen/screenDevice/reboot',
+    method: 'post',
+    params: {
+      cardId: cardId
+    }
+  })
+}
+
+export function clearScreen(cardId) {
+  return request({
+    url: '/screen/screenDevice/clearScreen',
+    method: 'post',
+    params: {
+      cardId: cardId
+    }
+  })
+}

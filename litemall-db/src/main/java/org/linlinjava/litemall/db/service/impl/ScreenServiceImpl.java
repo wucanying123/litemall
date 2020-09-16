@@ -470,11 +470,11 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 设置亮度
      */
-    public ResponseUtil<Object> setBrightness(String brightNum,String cardId) {
+    public ResponseUtil<Object> setBrightness(Integer brightNum,String cardId) {
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("callCardService");
         requestData2.setFn("setBrightness");
-        requestData2.setArg1(Integer.parseInt(brightNum));
+        requestData2.setArg1(brightNum);
         String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
 
 //        Map<String, Object> params = new HashMap<>();

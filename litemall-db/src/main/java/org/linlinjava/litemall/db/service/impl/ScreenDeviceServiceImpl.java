@@ -64,12 +64,15 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
                 String height = jsonObject.get("height").toString();
                 newScreenDevice.setHeight(Integer.parseInt(height));
             }
-            if (null != jsonObject.get("brightness")) {
-                String brightness = jsonObject.get("brightness").toString();
-                newScreenDevice.setBrightness(Integer.parseInt(brightness));
-            }
+
             newScreenDevice.setOnlineStatus(true);
 
+            ResponseUtil<Object> brightnessRes = screenService.getBrightness(cardId);
+            if (brightnessRes.getErrno() == 0) {
+                JSONObject brightnessJSONObject = JSONObject.fromObject(brightnessRes.getData());
+                Integer brightness1=(Integer) brightnessJSONObject.get("result");
+                newScreenDevice.setBrightness(brightness1);
+            }
             ResponseUtil<Object> openStatusRes = screenService.getScreenOpenStatus(cardId);
             if (openStatusRes.getErrno() == 0) {
                 JSONObject openStatusJSONObject = JSONObject.fromObject(openStatusRes.getData());
@@ -82,7 +85,6 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
                 String networkType =networkTypeJSONObject.get("result").toString();
                 newScreenDevice.setNetworkType(networkType);
             }
-
             ResponseUtil<Object> volumeRes = screenService.getVolume(cardId);
             if (volumeRes.getErrno() == 0) {
                 JSONObject volumeJSONObject = JSONObject.fromObject(volumeRes.getData());

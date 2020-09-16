@@ -1,6 +1,7 @@
 //package org.linlinjava.litemall.admin.web;
 //
 //import io.swagger.annotations.ApiOperation;
+//import org.linlinjava.litemall.admin.util.UDPClient;
 //import org.linlinjava.litemall.db.service.ScreenService;
 //import org.linlinjava.litemall.db.service.TestService;
 //import org.linlinjava.litemall.db.util.Constant;
@@ -44,7 +45,17 @@
 //    @ApiOperation(value = "通过UDP广播找卡")
 //    @PostMapping(value = "/udpFindCard")
 //    public ResponseUtil<Object> udpFindCard() {
-//        return screenService.udpFindCard();
+//        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+//        String jsonString = "{action:getInfo}";
+//        String resultString = UDPClient.getCardInfo(jsonString);
+//        if(!StringUtilsXD.isEmpty(resultString)) {
+//            int indexStart = resultString.indexOf("{");
+//            int indexEnd = resultString.indexOf("}");
+//            String result = resultString.substring(indexStart, indexEnd + 1);
+//            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+//            responseUtil.initCodeAndDesp(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+//        }
+//        return responseUtil;
 //    }
 //
 //    @ApiOperation(value = "1、加载顶层网页")
@@ -114,6 +125,18 @@
 //        return screenService.playXixunProgramZip();
 //    }
 //
+//    @ApiOperation(value = "10、播放直播")
+//    @PostMapping(value = "/playLiveVideo")
+//    public ResponseUtil<Object> playLiveVideo() {
+//        return screenService.playLiveVideo();
+//    }
+//
+//    @ApiOperation(value = "10、停止直播")
+//    @PostMapping(value = "/stopLiveVideo")
+//    public ResponseUtil<Object> stopLiveVideo() {
+//        return screenService.stopLiveVideo();
+//    }
+//
 //    @ApiOperation(value = "11、以字符串形式上传并保存html、图片等文件到sd卡")
 //    @PostMapping(value = "/saveSDStringFile")
 //    public ResponseUtil<Object> saveSDStringFile() {
@@ -180,12 +203,23 @@
 //        return screenService.getGpsLocation();
 //    }
 //
-//    @ApiOperation(value = "23、获取屏幕是否打开")
-//    @PostMapping(value = "/getScreenOpenStatus")
-//    public ResponseUtil<Object> getScreenOpenStatus() {
-//        return screenService.getScreenOpenStatus(null);
+//    @ApiOperation(value = "22、开关屏幕")
+//    @PostMapping(value = "/setScreenOpen")
+//    public ResponseUtil<Object> setScreenOpen(boolean isopen) {
+//        return screenService.setScreenOpen(isopen);
 //    }
 //
+//    @ApiOperation(value = "23、获取屏幕是否打开")
+//    @PostMapping(value = "/getScreenOpenStutus")
+//    public ResponseUtil<Object> getScreenOpenStutus() {
+//        return screenService.getScreenOpenStutus();
+//    }
+//
+//    @ApiOperation(value = "24、设置亮度")
+//    @PostMapping(value = "/setBrightness")
+//    public ResponseUtil<Object> setBrightness(String brightnum) {
+//        return screenService.setBrightness(brightnum);
+//    }
 //
 //    @ApiOperation(value = "提交JsonString")
 //    @PostMapping(value = "/postJsonString")
@@ -205,6 +239,47 @@
 //        testService.imitateAddSource(null, null, null);
 //    }
 //
+//    @ApiOperation(value = "25、获取亮度")
+//    @PostMapping(value = "/getBrightness")
+//    public ResponseUtil<Object> getBrightness() {
+//        return screenService.getBrightness();
+//    }
+//
+//    @ApiOperation(value = "26、设置音量")
+//    @PostMapping(value = "/setVolume")
+//    public ResponseUtil<Object> setVolume(String volumenum) {
+//        logger.info("setVolume and volumenum={}", volumenum);
+//        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+//        if (StringUtilsXD.isEmpty(volumenum)) {
+//            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+//
+//        }
+//        return screenService.setVolume(Integer.parseInt(volumenum));
+//    }
+//
+//    @ApiOperation(value = "27、获取音量")
+//    @PostMapping(value = "/getVolume")
+//    public ResponseUtil<Object> getVolume() {
+//        return screenService.getVolume();
+//    }
+//
+//    @ApiOperation(value = "28、获取屏宽")
+//    @PostMapping(value = "/getScreenWidth")
+//    public ResponseUtil<Object> getScreenWidth() {
+//        return screenService.getScreenWidth();
+//    }
+//
+//    @ApiOperation(value = "29、获取屏高")
+//    @PostMapping(value = "/getScreenHeight")
+//    public ResponseUtil<Object> getScreenHeight() {
+//        return screenService.getScreenHeight();
+//    }
+//
+//    @ApiOperation(value = "30、获取网络类型")
+//    @PostMapping(value = "/getNetworkType")
+//    public ResponseUtil<Object> getNetworkType() {
+//        return screenService.getNetworkType();
+//    }
 //
 //    @ApiOperation(value = "31、设置NTP服务器或时区")
 //    @PostMapping(value = "/setTimeSync")
@@ -212,7 +287,7 @@
 //        logger.info("setTimeSync and ntpServer = {},timezone = {}", ntpserver, timezone);
 //        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
 //        if (StringUtilsXD.hasBlankParams(ntpserver, timezone)) {
-//            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+//            return responseUtil.initCodeAndDesp(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
 //
 //        }
 //        return screenService.setTimeSync(ntpserver, timezone);

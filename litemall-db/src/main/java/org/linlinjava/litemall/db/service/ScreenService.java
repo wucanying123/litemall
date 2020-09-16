@@ -169,7 +169,7 @@ public interface ScreenService {
     /**
      * 设置亮度
      */
-    ResponseUtil<Object> setBrightness(String brightNum,String cardId);
+    ResponseUtil<Object> setBrightness(Integer brightNum,String cardId);
 
     /**
      * 设置音量

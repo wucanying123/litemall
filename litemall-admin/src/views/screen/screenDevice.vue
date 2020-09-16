@@ -22,9 +22,11 @@
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
+          <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
           <el-button v-permission="['POST /admin/screen/screenDevice/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -35,8 +37,17 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dataForm.name" />
+        <el-form-item label="音量" prop="volume">
+          <el-input v-model="dataForm.volume" />
+        </el-form-item>
+        <el-form-item label="屏幕亮度" prop="brightness">
+          <el-input v-model="dataForm.brightness" />
+        </el-form-item>
+        <el-form-item label="屏幕状态" prop="onlineStatus">
+          <el-radio-group v-model="dataForm.onlineStatus">
+            <el-radio :value="false">关屏</el-radio>
+            <el-radio :label="true">亮屏</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -58,7 +69,7 @@
 </style>
 
 <script>
-import { listScreenDevice, createScreenDevice, updateScreenDevice, deleteScreenDevice } from '@/api/screenDevice'
+import { listScreenDevice, createScreenDevice, updateScreenDevice, deleteScreenDevice, reboot, clearScreen } from '@/api/screenDevice'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -92,15 +103,15 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined,
-        _type: undefined
+        name: undefined
       },
       dataForm: {
         id: undefined,
         name: undefined,
-        _type: undefined,
-        url: undefined
-        // playTime: undefined
+        url: undefined,
+        volume: undefined,
+        brightness: undefined,
+        onlineStatus: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -109,12 +120,6 @@ export default {
         create: '创建'
       },
       rules: {
-        name: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
-        ],
-        _type: [
-          { required: true, message: '类型不能为空', trigger: 'blur' }
-        ]
       },
       downloadLoading: false
     }
@@ -152,9 +157,10 @@ export default {
       this.dataForm = {
         id: undefined,
         name: undefined,
-        _type: '',
-        url: undefined
-        // playTime: undefined
+        url: undefined,
+        volume: undefined,
+        brightness: undefined,
+        onlineStatus: undefined
       }
     },
     handleCreate() {
@@ -233,6 +239,38 @@ export default {
           this.$notify.success({
             title: '成功',
             message: '删除成功'
+          })
+          this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handleReboot(row) {
+      reboot(row.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '重启成功'
+          })
+          this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handleclearScreen(row) {
+      clearScreen(row.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '清屏成功'
           })
           this.getList()
         })

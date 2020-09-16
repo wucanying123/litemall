@@ -31,10 +31,10 @@ public class ScreenDeviceController {
     private static Logger logger = LoggerFactory.getLogger(ScreenDeviceController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取屏幕设备列表
      * @title selectScreenDevicePage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -77,8 +77,8 @@ public class ScreenDeviceController {
     }
 
     /**
-     * @Description: 通过屏幕设备id查看屏幕设备详情
      * @param screenDeviceId 屏幕设备id
+     * @Description: 通过屏幕设备id查看屏幕设备详情
      * @Title: selectScreenDeviceById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -143,7 +143,17 @@ public class ScreenDeviceController {
         if (StringUtilsXD.isBlank(screenDevice.getId())) {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
+        String cardId = screenDevice.getCardId();
         try {
+            if (null != screenDevice.getVolume()) {
+                screenService.setVolume(screenDevice.getVolume(), cardId);
+            }
+            if (null != screenDevice.getBrightness()) {
+                screenService.setBrightness(screenDevice.getBrightness(), cardId);
+            }
+            if (null != screenDevice.getScreenOpenStatus()) {
+                screenService.setScreenOpen(screenDevice.getScreenOpenStatus(), cardId);
+            }
             int n = screenDeviceService.updateScreenDeviceById(screenDevice);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
@@ -156,9 +166,9 @@ public class ScreenDeviceController {
     }
 
     /**
+     * @param id 屏幕设备id
      * @Description: 删除屏幕设备
      * @Title: deleteById
-     * @param id 屏幕设备id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -177,15 +187,24 @@ public class ScreenDeviceController {
         }
         return responseUtil;
     }
-    //    @ApiOperation(value = "34、重启")
-//    @PostMapping(value = "/reboot")
-//    public ResponseUtil<Object> reboot() {
-//        return screenService.reboot();
-//    }
 
-    //    @ApiOperation(value = "4、清屏")
-//    @PostMapping(value = "/clearScreen")
-//    public ResponseUtil<Object> clearScreen() {
-//        return screenService.clearScreen();
-//    }
+    @ApiOperation(value = "重启")
+    @PostMapping(value = "/reboot")
+    public ResponseUtil<Object> reboot(String cardId) {
+        if (StringUtilsXD.isEmpty(cardId)) {
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.reboot(cardId);
+    }
+
+    @ApiOperation(value = "清屏")
+    @PostMapping(value = "/clearScreen")
+    public ResponseUtil<Object> clearScreen(String cardId) {
+        if (StringUtilsXD.isEmpty(cardId)) {
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.clearScreen(cardId);
+    }
 }
