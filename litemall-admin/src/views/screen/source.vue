@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/screen/source/updateSourceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <!--          <el-button v-permission="['POST /admin/screen/source/updateSourceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>-->
           <el-button v-permission="['POST /admin/screen/source/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -64,27 +64,52 @@
           </el-select>
         </el-form-item>
         <div v-if="dataForm._type === 'Video' || dataForm._type === 'Image'">
-          <el-form-item label="内容" prop="url">
-            <el-upload
-              :headers="headers"
-              :action="uploadPath"
-              :show-file-list="false"
-              :on-success="uploadUrl"
-              :before-upload="checkFileSize"
-              class="avatar-uploader"
-              accept=".jpg,.jpeg,.png,.gif,.mp4"
-            >
-              <div v-if="dataForm.url && dataForm._type === 'Video'">
-                <video :src="dataForm.url" controls="controls" width="200" />
-              </div>
-              <div v-if="dataForm.url && dataForm._type === 'Image'">
-                <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
-              </div>
+          <div v-if="dataForm._type === 'Video'">
+            <el-form-item label="内容" prop="url">
+              <el-upload
+                :headers="headers"
+                :action="uploadPath"
+                :show-file-list="false"
+                :on-success="uploadUrl"
+                :before-upload="checkFileSize"
+                class="avatar-uploader"
+                accept=".mp4"
+              >
+                <div v-if="dataForm.url && dataForm._type === 'Video'">
+                  <video :src="dataForm.url" controls="controls" width="200" />
+                </div>
+                <div v-if="dataForm.url && dataForm._type === 'Image'">
+                  <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
+                </div>
 
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
-              <div slot="tip" class="el-upload__tip">只能上传mp4/jpg/jpeg/png/gif文件，且不超过500M</div>
-            </el-upload>
-          </el-form-item>
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+                <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过500M</div>
+              </el-upload>
+            </el-form-item>
+          </div>
+          <div v-if="dataForm._type === 'Image'">
+            <el-form-item label="内容" prop="url">
+              <el-upload
+                :headers="headers"
+                :action="uploadPath"
+                :show-file-list="false"
+                :on-success="uploadUrl"
+                :before-upload="checkFileSize"
+                class="avatar-uploader"
+                accept=".jpg,.jpeg,.png,.gif"
+              >
+                <div v-if="dataForm.url && dataForm._type === 'Video'">
+                  <video :src="dataForm.url" controls="controls" width="200" />
+                </div>
+                <div v-if="dataForm.url && dataForm._type === 'Image'">
+                  <img v-if="dataForm.url" :src="dataForm.url" class="avatar">
+                </div>
+
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+                <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png/gif文件，且不超过500M</div>
+              </el-upload>
+            </el-form-item>
+          </div>
         </div>
         <!--        <el-form-item label="播放时长(秒)" prop="playTime">-->
         <!--          <el-input-->
@@ -152,31 +177,32 @@ const defaultTypeOptions = [
   {
     label: '图片',
     value: 'Image'
-  },
-  {
-    label: '时钟',
-    value: 'AnalogClock'
-  },
-  {
-    label: '数字时钟',
-    value: 'DigitalClock'
-  },
-  {
-    label: '倒计时',
-    value: 'Countdown'
-  },
-  {
-    label: 'Flash',
-    value: 'Flash'
-  },
-  {
-    label: '天气预报',
-    value: 'Weather'
-  },
-  {
-    label: '多行文本',
-    value: 'MultiText'
   }
+  // ,
+  // {
+  //   label: '时钟',
+  //   value: 'AnalogClock'
+  // },
+  // {
+  //   label: '数字时钟',
+  //   value: 'DigitalClock'
+  // },
+  // {
+  //   label: '倒计时',
+  //   value: 'Countdown'
+  // },
+  // {
+  //   label: 'Flash',
+  //   value: 'Flash'
+  // },
+  // {
+  //   label: '天气预报',
+  //   value: 'Weather'
+  // },
+  // {
+  //   label: '多行文本',
+  //   value: 'MultiText'
+  // }
 ]
 
 export default {

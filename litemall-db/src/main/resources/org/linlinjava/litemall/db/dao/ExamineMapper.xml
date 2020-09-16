@@ -154,7 +154,7 @@
     <if test="examine != null and examine.passStatus != null and examine.passStatus != '' " >
       and pass_status = #{examine.passStatus}
     </if>
-    order by create_time desc ,update_time desc
+    order by update_time desc ,create_time desc
   </select>
   <select id="selecByDetailId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select

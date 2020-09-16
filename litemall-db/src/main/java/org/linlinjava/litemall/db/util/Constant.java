@@ -15,7 +15,7 @@ public class Constant {
     public static String WEBPORT = "8081";
     public static String UDP_HOSTNAME = "255.255.255.255";
     public static Integer UDP_PORT = 22222;
-    public static String URL = LOCALHOST + ":" + WEBPORT + "/command/y60-720-40143";
+    public static String URL = LOCALHOST + ":" + WEBPORT + "/command/";
     public static String PASSWORD = "999";
 
     /**

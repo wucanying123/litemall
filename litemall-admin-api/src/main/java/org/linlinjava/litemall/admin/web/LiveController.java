@@ -158,14 +158,14 @@ public class LiveController {
      */
     @ApiOperation(value = "播放直播")
     @PostMapping(value = "/playLive")
-    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id) {
+    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id,String cardId) {
         logger.info("playLive and id={}", JSON.toJSONString(id));
-        return screenService.playLiveVideo(id);
+        return screenService.playLiveVideo(id,cardId);
     }
 
     @ApiOperation(value = "停止直播")
     @PostMapping(value = "/stopLiveVideo")
-    public ResponseUtil<Object> stopLiveVideo() {
-        return screenService.stopLiveVideo();
+    public ResponseUtil<Object> stopLiveVideo(String cardId) {
+        return screenService.stopLiveVideo(cardId);
     }
 }

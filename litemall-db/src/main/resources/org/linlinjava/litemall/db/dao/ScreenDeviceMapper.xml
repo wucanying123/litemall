@@ -7,6 +7,7 @@
     <result column="network_type" jdbcType="VARCHAR" property="networkType" />
     <result column="width" jdbcType="INTEGER" property="width" />
     <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="volume" jdbcType="INTEGER" property="volume" />
     <result column="screen_open_status" jdbcType="BIT" property="screenOpenStatus" />
     <result column="online_status" jdbcType="BIT" property="onlineStatus" />
     <result column="brightness" jdbcType="INTEGER" property="brightness" />
@@ -14,7 +15,7 @@
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, card_id, network_type, width, height, screen_open_status, online_status, brightness, 
+    id, card_id, network_type, width, height, volume, screen_open_status, online_status, brightness,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -44,6 +45,9 @@
       </if>
       <if test="height != null">
         height,
+      </if>
+     <if test="volume != null">
+       volume,
       </if>
       <if test="screenOpenStatus != null">
         screen_open_status,
@@ -77,6 +81,9 @@
       <if test="height != null">
         #{height,jdbcType=INTEGER},
       </if>
+      <if test="volume != null">
+        #{volume,jdbcType=INTEGER},
+      </if>
       <if test="screenOpenStatus != null">
         #{screenOpenStatus,jdbcType=BIT},
       </if>
@@ -109,6 +116,9 @@
       <if test="height != null">
         height = #{height,jdbcType=INTEGER},
       </if>
+      <if test="volume != null">
+        volume = #{volume,jdbcType=INTEGER},
+      </if>
       <if test="screenOpenStatus != null">
         screen_open_status = #{screenOpenStatus,jdbcType=BIT},
       </if>
@@ -131,7 +141,7 @@
     select
     <include refid="Base_Column_List" />
     from screen_device where 1=1
-    order by create_time desc ,update_time desc
+    order by update_time desc ,create_time desc
   </select>
   <select id="selectByCardId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select

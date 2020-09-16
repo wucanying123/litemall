@@ -30,6 +30,11 @@ public class ScreenDevice {
     private Integer height;
 
     /**
+     * 音量
+     */
+    private Integer volume;
+
+    /**
      * 屏幕状态
      */
     private Boolean screenOpenStatus;

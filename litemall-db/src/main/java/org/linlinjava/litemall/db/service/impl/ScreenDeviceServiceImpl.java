@@ -69,18 +69,27 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
                 newScreenDevice.setBrightness(Integer.parseInt(brightness));
             }
             newScreenDevice.setOnlineStatus(true);
-            ResponseUtil<Object> openStatusRes = screenService.getScreenOpenStatus();
+
+            ResponseUtil<Object> openStatusRes = screenService.getScreenOpenStatus(cardId);
             if (openStatusRes.getErrno() == 0) {
                 JSONObject openStatusJSONObject = JSONObject.fromObject(openStatusRes.getData());
                 Boolean screenOpenStatus=(Boolean)openStatusJSONObject.get("result");
                 newScreenDevice.setScreenOpenStatus(screenOpenStatus);
             }
-            ResponseUtil<Object> networkTypeRes = screenService.getNetworkType();
+            ResponseUtil<Object> networkTypeRes = screenService.getNetworkType(cardId);
             if (networkTypeRes.getErrno() == 0) {
                 JSONObject networkTypeJSONObject = JSONObject.fromObject(networkTypeRes.getData());
                 String networkType =networkTypeJSONObject.get("result").toString();
                 newScreenDevice.setNetworkType(networkType);
             }
+
+            ResponseUtil<Object> volumeRes = screenService.getVolume(cardId);
+            if (volumeRes.getErrno() == 0) {
+                JSONObject volumeJSONObject = JSONObject.fromObject(volumeRes.getData());
+                Integer volume =(Integer)volumeJSONObject.get("result");
+                newScreenDevice.setVolume(volume);
+            }
+
             if (null == screenDevice1) {//数据表中没有就新增
                 insertScreenDevice(newScreenDevice);
             } else {//数据表中有就修改为新的值
