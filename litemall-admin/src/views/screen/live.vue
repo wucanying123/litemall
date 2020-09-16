@@ -6,6 +6,9 @@
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入直播名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
+      <el-select v-model="dataForm.cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
+        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopLive">停止直播</el-button>
     </div>
 
@@ -22,9 +25,9 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
-          <el-button v-permission="['POST /admin/screen/live/updateLiveById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="['POST /admin/screen/live/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -100,9 +103,10 @@
 
 <script>
 import { listLive, createLive, updateLive, deleteLive, playLive, stopLiveVideo } from '@/api/live'
+import { selectOnlineDevice } from '@/api/screenDevice'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'Live',
@@ -130,6 +134,7 @@ export default {
     return {
       uploadPath,
       list: [],
+      cardList: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -164,7 +169,8 @@ export default {
           { required: true, message: '高不能为空', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      brandList: []
     }
   },
   computed: {
@@ -176,8 +182,14 @@ export default {
   },
   created() {
     this.getList()
+    this.handleCardList()
   },
   methods: {
+    handleCardList() {
+      selectOnlineDevice().then(response => {
+        this.cardList = response.data.data.list
+      })
+    },
     getList() {
       this.listLoading = true
       listLive(this.listQuery)

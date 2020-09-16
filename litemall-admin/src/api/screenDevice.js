@@ -41,3 +41,10 @@ export function deleteScreenDevice(id) {
     }
   })
 }
+
+export function selectOnlineDevice() {
+  return request({
+    url: '/screen/screenDevice/selectOnlineDevice',
+    method: 'get'
+  })
+}

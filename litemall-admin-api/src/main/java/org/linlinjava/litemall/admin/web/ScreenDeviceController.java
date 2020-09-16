@@ -3,6 +3,7 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.db.domain.LitemallRole;
 import org.linlinjava.litemall.db.domain.ScreenDevice;
 import org.linlinjava.litemall.db.service.ScreenDeviceService;
 import org.linlinjava.litemall.db.service.ScreenService;
@@ -13,6 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/admin/screen/screenDevice")
@@ -45,6 +51,29 @@ public class ScreenDeviceController {
             logger.error("selectScreenDevicePage and screenDevice={},page={},limit", JSON.toJSONString(screenDevice), page, limit, e);
         }
         return responseUtil;
+    }
+
+
+    /**
+     * @Description: 获取在线屏幕设备列表
+     * @title selectOnlineDevice
+     * @auther IngaWu
+     * @currentdate:2020年9月16日
+     */
+    @GetMapping("/selectOnlineDevice")
+    public Object selectOnlineDevice() {
+        ScreenDevice screenDevice = new ScreenDevice();
+        screenDevice.setOnlineStatus(true);
+        PageInfo<ScreenDevice> pageList = screenDeviceService.selectScreenDevicePage(screenDevice, 1, 1000);
+        List<ScreenDevice> list = pageList.getList();
+        List<Map<String, Object>> options = new ArrayList<>(list.size());
+        for (ScreenDevice screenDevice1 : list) {
+            Map<String, Object> option = new HashMap<>(2);
+            option.put("value", screenDevice1.getCardId());
+            option.put("label", screenDevice1.getCardId());
+            options.add(option);
+        }
+        return ResponseUtil.okList(options);
     }
 
     /**
@@ -148,4 +177,15 @@ public class ScreenDeviceController {
         }
         return responseUtil;
     }
+    //    @ApiOperation(value = "34、重启")
+//    @PostMapping(value = "/reboot")
+//    public ResponseUtil<Object> reboot() {
+//        return screenService.reboot();
+//    }
+
+    //    @ApiOperation(value = "4、清屏")
+//    @PostMapping(value = "/clearScreen")
+//    public ResponseUtil<Object> clearScreen() {
+//        return screenService.clearScreen();
+//    }
 }

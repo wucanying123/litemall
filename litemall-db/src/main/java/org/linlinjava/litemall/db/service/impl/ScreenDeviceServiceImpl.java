@@ -96,7 +96,7 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
                 newScreenDevice.setId(screenDevice1.getId());
                 updateScreenDeviceById(newScreenDevice);
             }
-            updateOffLineByCardId(cardId);
+//            updateOffLineByCardId(cardId);
         }
     }
 
