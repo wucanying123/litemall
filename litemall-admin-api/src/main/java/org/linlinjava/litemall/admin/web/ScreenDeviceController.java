@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.linlinjava.litemall.db.domain.ScreenDevice;
 import org.linlinjava.litemall.db.service.ScreenDeviceService;
+import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class ScreenDeviceController {
     @Autowired
     private ScreenDeviceService screenDeviceService;
+    @Autowired
+    private ScreenService screenService;
 
     private static Logger logger = LoggerFactory.getLogger(ScreenDeviceController.class);
 
@@ -67,6 +70,12 @@ public class ScreenDeviceController {
             logger.error("selectScreenDeviceById and screenDeviceId={}", screenDeviceId, e);
         }
         return responseUtil;
+    }
+
+    @ApiOperation(value = "通过UDP广播找卡")
+    @PostMapping(value = "/udpFindCard")
+    public ResponseUtil<Object> udpFindCard() {
+        return screenService.udpFindCard();
     }
 
     /**

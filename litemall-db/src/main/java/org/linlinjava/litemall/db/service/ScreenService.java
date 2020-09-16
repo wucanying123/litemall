@@ -13,6 +13,11 @@ import org.linlinjava.litemall.db.util.ResponseUtil;
 public interface ScreenService {
 
     /**
+     * 通过UDP广播找卡
+     */
+    ResponseUtil<Object> udpFindCard();
+
+    /**
      * 加载顶层网页
      *
      * @param weburl
@@ -147,7 +152,7 @@ public interface ScreenService {
     /**
      * 获取屏幕是否打开
      */
-    ResponseUtil<Object> getScreenOpenStutus();
+    ResponseUtil<Object> getScreenOpenStatus();
 
     /**
      * 设置亮度

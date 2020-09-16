@@ -12,7 +12,11 @@ public interface ScreenDeviceMapper {
 
     ScreenDevice selectByPrimaryKey(String id);
 
+    ScreenDevice selectByCardId(@Param("cardId") String cardId);
+
     int updateByPrimaryKeySelective(ScreenDevice record);
+
+    int updateOffLineByCardId(@Param("cardId") String cardId);
 
     List<ScreenDevice> selectScreenDevicePage(@Param("screenDevice") ScreenDevice screenDevice);
 }

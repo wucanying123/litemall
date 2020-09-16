@@ -2,43 +2,24 @@
   <div class="app-container">
 
     <!-- 查询和其他操作 -->
-    <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入媒体名称" />
-      <el-select v-model="listQuery._type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
-        <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
-      </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
-    </div>
+    <div class="filter-container" />
 
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="名称" prop="name" />
-
-      <el-table-column align="center" label="内容" prop="url">
-        <template slot-scope="scope">
-          <div v-if="scope.row._type === 'Video'">
-            <video :src="scope.row.url" controls="controls" width="200" height="90" />
-          </div>
-          <div v-if="scope.row._type === 'Image'">
-            <img v-if="scope.row.url" :src="scope.row.url" width="100" height="90">
-          </div>
-        </template>
+      <el-table-column align="center" label="卡号" prop="cardId" />
+      <el-table-column align="center" label="网络类型" prop="networkType" />
+      <el-table-column align="center" label="屏宽" prop="width" />
+      <el-table-column align="center" label="屏高" prop="height" />
+      <!--      <el-table-column align="center" label="屏幕状态" prop="screenOpenStatus" />-->
+      <el-table-column align="center" label="屏幕状态" prop="screenOpenStatus">
+        <template slot-scope="scope">{{ scope.row.screenOpenStatus == 1 ? "亮屏" : "关屏" }}</template>
       </el-table-column>
-
-      <!--      <el-table-column align="center" label="播放时长" prop="playTime">-->
-      <!--        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>-->
-      <!--      </el-table-column>-->
-
-      <el-table-column align="center" label="素材时长" prop="maxPlayTime">
-        <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
+      <!--      <el-table-column align="center" label="在线状态" prop="onlineStatus" />-->
+      <el-table-column align="center" label="在线状态" prop="onlineStatus">
+        <template slot-scope="scope">{{ scope.row.onlineStatus == 1 ? "在线" : "离线" }}</template>
       </el-table-column>
-
-      <el-table-column align="center" label="类型" prop="_type">
-        <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
-      </el-table-column>
-      <el-table-column align="center" label="格式" prop="fileExt" />
+      <el-table-column align="center" label="屏幕亮度" prop="brightness" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
@@ -86,17 +67,6 @@
             </el-upload>
           </el-form-item>
         </div>
-        <!--        <el-form-item label="播放时长(秒)" prop="playTime">-->
-        <!--          <el-input-->
-        <!--            v-model="dataForm.playTime"-->
-        <!--            type="number"-->
-        <!--            min="0"-->
-        <!--            max="60"-->
-        <!--            step="1"-->
-        <!--            size="2"-->
-        <!--            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"-->
-        <!--          />-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>

@@ -133,4 +133,16 @@
     from screen_device where 1=1
     order by create_time desc ,update_time desc
   </select>
+  <select id="selectByCardId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from screen_device
+    where card_id = #{cardId,jdbcType=VARCHAR}
+  </select>
+  <update id="updateOffLineByCardId" parameterType="java.lang.String">
+    update screen_device
+    set
+      online_status = 0
+    where card_id != #{cardId,jdbcType=VARCHAR}
+  </update>
 </mapper>

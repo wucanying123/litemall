@@ -1,4 +1,4 @@
-package org.linlinjava.litemall.admin.util;
+package org.linlinjava.litemall.db.util;
 
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 

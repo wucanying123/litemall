@@ -1,7 +1,6 @@
 package org.linlinjava.litemall.admin.web;
 
 import io.swagger.annotations.ApiOperation;
-import org.linlinjava.litemall.admin.util.UDPClient;
 import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.service.TestService;
 import org.linlinjava.litemall.db.util.Constant;
@@ -45,17 +44,7 @@ public class ScreenController {
     @ApiOperation(value = "通过UDP广播找卡")
     @PostMapping(value = "/udpFindCard")
     public ResponseUtil<Object> udpFindCard() {
-        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-        String jsonString = "{action:getInfo}";
-        String resultString = UDPClient.getCardInfo(jsonString);
-        if(!StringUtilsXD.isEmpty(resultString)) {
-            int indexStart = resultString.indexOf("{");
-            int indexEnd = resultString.indexOf("}");
-            String result = resultString.substring(indexStart, indexEnd + 1);
-            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
-            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-        }
-        return responseUtil;
+        return screenService.udpFindCard();
     }
 
     @ApiOperation(value = "1、加载顶层网页")
@@ -198,9 +187,9 @@ public class ScreenController {
     }
 
     @ApiOperation(value = "23、获取屏幕是否打开")
-    @PostMapping(value = "/getScreenOpenStutus")
-    public ResponseUtil<Object> getScreenOpenStutus() {
-        return screenService.getScreenOpenStutus();
+    @PostMapping(value = "/getScreenOpenStatus")
+    public ResponseUtil<Object> getScreenOpenStatus() {
+        return screenService.getScreenOpenStatus();
     }
 
     @ApiOperation(value = "24、设置亮度")

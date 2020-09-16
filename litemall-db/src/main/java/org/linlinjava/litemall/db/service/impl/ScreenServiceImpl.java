@@ -39,6 +39,23 @@ public class ScreenServiceImpl implements ScreenService {
     private static Logger logger = LoggerFactory.getLogger(ScreenServiceImpl.class);
 
     /**
+     * 通过UDP广播找卡
+     */
+    public ResponseUtil<Object> udpFindCard() {
+        ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+        String jsonString = "{action:getInfo}";
+        String resultString = UDPClient.getCardInfo(jsonString);
+        if(!StringUtilsXD.isEmpty(resultString)) {
+            int indexStart = resultString.indexOf("{");
+            int indexEnd = resultString.indexOf("}");
+            String result = resultString.substring(indexStart, indexEnd + 1);
+            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+        }
+        return responseUtil;
+    }
+
+    /**
      * 加载顶层网页 （显示在其他界面之上，默认是透明的）
      */
     public ResponseUtil<Object> updateTopWeb(String weburl) {
@@ -440,7 +457,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 获取屏幕是否打开
      */
-    public ResponseUtil<Object> getScreenOpenStutus() {
+    public ResponseUtil<Object> getScreenOpenStatus() {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "isScreenOpen");
