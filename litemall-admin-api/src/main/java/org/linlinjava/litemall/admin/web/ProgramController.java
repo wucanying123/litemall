@@ -34,9 +34,10 @@ public class ProgramController {
      */
     @ApiOperation(value = "获取节目列表")
     @GetMapping("/selectProgramPage")
-    public ResponseUtil selectProgramPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectProgramPage(String name,@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
-        Program program = null;
+        Program program = new Program();
+        program.setName(name);
         logger.info("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit);
         try {
             PageInfo<Program> pageList = programService.selectProgramPage(program, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));

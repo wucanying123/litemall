@@ -131,9 +131,6 @@
     <if test="task != null and task.name != null and task.name != '' " >
       and name LIKE concat(concat('%',#{task.name}),'%')
     </if>
-    <if test="task != null and task._department != null and task._department != '' " >
-      and _department LIKE concat(concat('%',#{task._department}),'%')
-    </if>
     order by updateTime desc ,createTime desc
   </select>
 </mapper>

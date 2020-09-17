@@ -178,6 +178,9 @@
     select
     <include refid="Base_Column_List" />
     from program where 1=1
+    <if test="program != null and program.name != null and program.name != '' " >
+      and name LIKE concat(concat('%',#{program.name}),'%')
+    </if>
     order by updateTime desc ,createTime desc
   </select>
 </mapper>

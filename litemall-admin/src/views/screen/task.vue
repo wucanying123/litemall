@@ -4,7 +4,6 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container">
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
-      <el-input v-model="listQuery._department" clearable class="filter-item" style="width: 200px;" placeholder="请输入部门" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
     </div>
@@ -13,7 +12,6 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
-      <el-table-column align="center" label="所属部门" prop="_department" />
       <el-table-column align="center" label="itemsIds" prop="itemsIds" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
@@ -33,9 +31,6 @@
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" />
-        </el-form-item>
-        <el-form-item label="所属部门" prop="_department">
-          <el-input v-model="dataForm._department" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -109,13 +104,11 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined,
-        _department: undefined
+        name: undefined
       },
       dataForm: {
         id: undefined,
-        name: undefined,
-        _department: undefined
+        name: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
