@@ -34,9 +34,11 @@ public class TaskController {
      */
     @ApiOperation(value = "获取任务列表")
     @GetMapping("/selectTaskPage")
-    public ResponseUtil selectTaskPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectTaskPage(String name, String _department, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
-        Task task = null;
+        Task task = new Task();
+        task.setName(name);
+        task.set_department(_department);
         logger.info("selectTaskPage and task={},page={},limit", JSON.toJSONString(task), page, limit);
         try {
             PageInfo<Task> pageList = taskService.selectTaskPage(task, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));

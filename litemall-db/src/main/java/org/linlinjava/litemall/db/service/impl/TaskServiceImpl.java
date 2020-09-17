@@ -62,6 +62,7 @@ public class TaskServiceImpl implements TaskService {
             long cuttentTime = DateUtil.getDateline();
             task.setCreateTime(cuttentTime);
             task.setUpdateTime(cuttentTime);
+            task.setCmdId(UUID.randomUUID().toString().replace("-", ""));
             n = taskMapper.insertSelective(task);
             //同步添加到审核表
             Examine examine = new Examine();
@@ -81,6 +82,7 @@ public class TaskServiceImpl implements TaskService {
         int n = 0;
         try {
             task.setUpdateTime(DateUtil.getDateline());
+            task.setCmdId(UUID.randomUUID().toString().replace("-", ""));
             n = taskMapper.updateByPrimaryKeySelective(task);
             //同步修改名称到审核表
             if (StringUtilsXD.isNotEmpty(task.get_id()) && StringUtilsXD.isNotEmpty(task.getName())) {
