@@ -40,58 +40,11 @@
         <el-form-item label="节目高" prop="height">
           <el-input v-model="dataForm.height" />
         </el-form-item>
-
-        <el-form-item label="专题商品" prop="goods">
-          <el-button style="float:right;" size="mini" type="primary" @click="handleSearch()">创建商品</el-button>
-
-          <!-- 查询结果 -->
-          <el-table :data="goodsList" border fit highlight-current-row>
-
-            <el-table-column align="center" label="商品ID" prop="id" />
-            <el-table-column align="center" property="picUrl" label="图片">
-              <template slot-scope="scope">
-                <img :src="scope.row.picUrl" width="60">
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="商品名称" prop="name" />
-            <el-table-column align="center" label="商品介绍" prop="brief" />
-            <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
         <el-button v-else type="primary" @click="updateData">确定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="addVisiable" title="添加商品">
-      <div class="search">
-        <el-input v-model="listQuerySource.goodsSn" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品编号" />
-        <el-input v-model="listQuerySource.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入商品名称" />
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleSourceFilter">查找</el-button>
-        <el-table v-loading="listLoadingSource" :data="listSource" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" />
-          <el-table-column align="center" label="商品ID" prop="id" />
-          <el-table-column align="center" property="picUrl" label="图片">
-            <template slot-scope="scope">
-              <img :src="scope.row.picUrl" width="40">
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="商品名称" prop="name" />
-        </el-table>
-        <pagination v-show="totalSource>0" :total="totalSource" :page.sync="listQuerySource.page" :limit.sync="listQuerySource.limit" @pagination="getList" />
-
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addVisiable = false">取消</el-button>
-        <el-button type="primary" @click="confirmAddSource">确定1</el-button>
       </div>
     </el-dialog>
 
@@ -127,8 +80,7 @@
 <script>
 import { listProgram, createProgram, updateProgram, deleteProgram } from '@/api/program'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination'
-import { listGoods } from '@/api/goods' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'Program',
@@ -185,22 +137,7 @@ export default {
           { required: true, message: '节目高不能为空', trigger: 'blur' }
         ]
       },
-      goodsList: [],
-      downloadLoading: false,
-      addVisiable: false,
-      listQuerySource: {
-        pageSource: 1,
-        limitSource: 20,
-        type: undefined,
-        name: undefined
-      },
-      listSource: [],
-      totalSource: 0,
-      listLoadingSource: false,
-      selectedlist: [],
-      topic: {
-        goods: []
-      }
+      downloadLoading: false
     }
   },
   computed: {
@@ -321,62 +258,6 @@ export default {
             message: response.data.errmsg
           })
         })
-    },
-    handleSearch() {
-      this.listQuerySource = {
-        pageSource: 1,
-        limitSource: 5,
-        id: undefined,
-        name: undefined,
-        sort: 'add_time',
-        order: 'desc'
-      }
-      this.listSource = []
-      this.totalSource = 0
-      this.selectedlist = []
-      this.addVisiable = true
-    },
-    handleSourceFilter() {
-      this.listQuerySource.pageSource = 1
-      this.getGoodList()
-    },
-    confirmAddSource() {
-      const newGoodsIds = []
-      const newGoodsList = []
-      this.selectedlist.forEach(item => {
-        const id = item.id
-        let found = false
-        this.topic.goods.forEach(goodsId => {
-          if (id === goodsId) {
-            found = true
-          }
-        })
-        if (!found) {
-          newGoodsIds.push(id)
-          newGoodsList.push(item)
-        }
-      })
-
-      if (newGoodsIds.length > 0) {
-        this.topic.goods = this.topic.goods.concat(newGoodsIds)
-        this.goodsList = this.goodsList.concat(newGoodsList)
-      }
-      this.addVisiable = false
-    },
-    getGoodList() {
-      this.listLoadingSource = true
-      listGoods(this.listQuerySource).then(response => {
-        this.listSource = response.data.data.list
-        this.totalSource = response.data.data.total
-        this.listLoadingSource = false
-      }).catch(() => {
-        this.listSource = []
-        this.totalSource = 0
-        this.listLoadingSource = false
-      })
-    },
-    handleSelectionChange(val) {
-      this.selectedlist = val
     }
   }
 }
