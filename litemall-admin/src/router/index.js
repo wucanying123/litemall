@@ -105,12 +105,32 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'program',
+        component: () => import('@/views/screen/program'),
+        name: 'program',
+        meta: {
+          perms: ['GET /admin/screen/program/selectProgramPage', 'POST /admin/screen/program/insertProgram', 'GET /admin/screen/program/selectProgramById', 'POST /admin/screen/program/updateProgramById', 'POST /admin/screen/program/deleteById'],
+          title: '节目列表',
+          noCache: true
+        }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/screen/task'),
+        name: 'task',
+        meta: {
+          perms: ['GET /admin/screen/task/selectTaskPage', 'POST /admin/screen/task/insertTask', 'GET /admin/screen/task/selectTaskById', 'POST /admin/screen/task/updateTaskById', 'POST /admin/screen/task/deleteById'],
+          title: '任务列表',
+          noCache: true
+        }
+      },
+      {
         path: 'live',
         component: () => import('@/views/screen/live'),
         name: 'live',
         meta: {
           perms: ['GET /admin/screen/live/selectLivePage', 'POST /admin/screen/live/insertLive', 'GET /admin/screen/live/selectLiveById', 'POST /admin/screen/live/updateLiveById', 'POST /admin/screen/live/deleteById'],
-          title: '直播',
+          title: '直播列表',
           noCache: true
         }
       },
@@ -120,7 +140,7 @@ export const asyncRoutes = [
         name: 'examine',
         meta: {
           perms: ['GET /admin/screen/examine/selectExaminePage', 'POST /admin/screen/examine/insertExamine', 'GET /admin/screen/examine/selectExamineById', 'POST /admin/screen/examine/updateExamineById', 'POST /admin/screen/examine/deleteById'],
-          title: '审核',
+          title: '审核列表',
           noCache: true
         }
       }

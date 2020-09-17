@@ -128,7 +128,6 @@
     select
     <include refid="Base_Column_List" />
     from task where 1=1
-    and _id in(SELECT examine.detail_id from examine where examine.pass_status = 4)
     order by updateTime desc ,createTime desc
   </select>
 </mapper>

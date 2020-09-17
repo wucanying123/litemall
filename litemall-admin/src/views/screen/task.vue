@@ -44,8 +44,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>-->
-          <el-button v-permission="['POST /admin/screen/source/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +160,7 @@
 </style>
 
 <script>
-import { listSource, createSource, updateSource, deleteSource } from '@/api/source'
+import { listTask, createTask, updateTask, deleteTask } from '@/api/task'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -206,7 +206,7 @@ const defaultTypeOptions = [
 ]
 
 export default {
-  name: 'Source',
+  name: 'Task',
   components: { Pagination },
   filters: {
     formatType(_type) {
@@ -313,7 +313,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listSource(this.listQuery)
+      listTask(this.listQuery)
         .then(response => {
           this.list = response.data.data.list
           this.total = response.data.data.total
@@ -359,7 +359,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          createSource(this.dataForm)
+          createTask(this.dataForm)
             .then(response => {
               this.list.unshift(response.data.data)
               this.dialogFormVisible = false
@@ -393,7 +393,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          updateSource(this.dataForm)
+          updateTask(this.dataForm)
             .then(() => {
               for (const v of this.list) {
                 if (v.id === this.dataForm.id) {
@@ -419,7 +419,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteSource(row.id)
+      deleteTask(row.id)
         .then(response => {
           this.$notify.success({
             title: '成功',
