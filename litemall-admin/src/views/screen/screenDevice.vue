@@ -19,27 +19,53 @@
         <template slot-scope="scope">{{ scope.row.onlineStatus == 1 ? "在线" : "离线" }}</template>
       </el-table-column>
       <el-table-column align="center" label="屏幕亮度" prop="brightness" />
-      <el-table-column align="center" label="修改时间" prop="updateTime">
+      <el-table-column align="center" label="修改时间" prop="updateTime" width="180">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="350" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="550" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
           <el-button type="primary" size="mini" @click="handleclearTask(scope.row)">停止节目</el-button>
           <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
           <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
-          <el-button v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button
+            v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']"
+            type="primary"
+            size="mini"
+            @click="handleUpdate(scope.row)"
+          >编辑
+          </el-button>
           <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
-          <el-button v-permission="['POST /admin/screen/screenDevice/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button
+            v-permission="['POST /admin/screen/screenDevice/deleteById']"
+            type="danger"
+            size="mini"
+            @click="handleDelete(scope.row)"
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="dataForm"
+        status-icon
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:60px;"
+      >
         <el-form-item label="音量" prop="volume">
           <el-input v-model="dataForm.volume" />
         </el-form-item>
@@ -62,8 +88,15 @@
 
     <!-- 截屏 -->
     <el-dialog :visible.sync="screenshotFormVisible" title="截屏">
-      <el-form ref="screenshotForm" :model="screenshotForm" status-icon label-position="left" label-width="100px" style="width: 500px;height: 400px; margin-left:50px;">
-        <el-form-item label="截屏内容" prop="content" />
+      <el-form
+        ref="screenshotForm"
+        :model="screenshotForm"
+        status-icon
+        label-position="left"
+        label-width="100px"
+        style="width: 500px;height: 400px; margin-left:50px;"
+      >
+        <div id="imgContent" />
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="screenshot">截屏</el-button>
@@ -142,12 +175,10 @@ export default {
         update: '编辑',
         create: '创建'
       },
-      rules: {
-      },
+      rules: {},
       downloadLoading: false,
       screenshotForm: {
-        cardId: undefined,
-        content: undefined
+        cardId: undefined
       },
       screenshotFormVisible: false
     }
@@ -341,14 +372,17 @@ export default {
         })
     },
     handleScreenshot(row) {
-      this.screenshotForm = { cardId: row.cardId, content: '' }
+      this.screenshotForm = { cardId: row.cardId }
       this.screenshotFormVisible = true
     },
-
     screenshot() {
       getScreenshot(this.screenshotForm.cardId).then(response => {
-        this.screenshotForm.content = response.data.data.result
-        console.log(this.screenshotForm.content)
+        var content = response.data.data.result
+        // 给img容器引入base64的图片
+        var img = new Image()
+        img.src = 'data:image/jpeg;base64,' + content
+        document.getElementById('imgContent').innerHTML = ''
+        document.getElementById('imgContent').appendChild(img)
         this.$notify.success({
           title: '成功',
           message: '截屏成功'
