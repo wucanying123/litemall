@@ -198,6 +198,16 @@ public class ScreenDeviceController {
         return screenService.reboot(cardId);
     }
 
+    @ApiOperation(value = "停止直播")
+    @PostMapping(value = "/stopLiveVideo")
+    public ResponseUtil<Object> stopLiveVideo(String cardId) {
+        if (StringUtilsXD.isEmpty(cardId)) {
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.stopLiveVideo(cardId);
+    }
+
     @ApiOperation(value = "清屏")
     @PostMapping(value = "/clearScreen")
     public ResponseUtil<Object> clearScreen(String cardId) {
@@ -206,5 +216,25 @@ public class ScreenDeviceController {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
         }
         return screenService.clearScreen(cardId);
+    }
+
+    @ApiOperation(value = "停止节目，清除播放器节目数据和文件")
+    @PostMapping(value = "/clearPlayerTask")
+    public ResponseUtil<Object> clearPlayerTask(String cardId) {
+        if (StringUtilsXD.isEmpty(cardId)) {
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.clearPlayerTask(cardId);
+    }
+
+    @ApiOperation(value = "获取截图", notes = "返回截图为base64编码的字符串（字符串中含有较多的\\n换行符，需要用正则去掉才能正常显示，格式为png")
+    @PostMapping(value = "/getScreenshot")
+    public ResponseUtil<Object> getScreenshot(String cardId) {
+        if (StringUtilsXD.isEmpty(cardId)) {
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.getScreenshot(cardId);
     }
 }

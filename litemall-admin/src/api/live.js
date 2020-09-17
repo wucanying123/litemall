@@ -52,13 +52,3 @@ export function playLive(id, cardId) {
     }
   })
 }
-
-export function stopLiveVideo(cardId) {
-  return request({
-    url: '/screen/live/stopLiveVideo',
-    method: 'post',
-    params: {
-      cardId: cardId
-    }
-  })
-}

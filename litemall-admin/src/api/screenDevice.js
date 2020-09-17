@@ -68,3 +68,34 @@ export function clearScreen(cardId) {
     }
   })
 }
+
+export function clearPlayerTask(cardId) {
+  return request({
+    url: '/screen/screenDevice/clearPlayerTask',
+    method: 'post',
+    params: {
+      cardId: cardId
+    }
+  })
+}
+
+export function stopLiveVideo(cardId) {
+  return request({
+    url: '/screen/screenDevice/stopLiveVideo',
+    method: 'post',
+    params: {
+      cardId: cardId
+    }
+  })
+}
+
+export function getScreenshot(cardId) {
+  return request({
+    url: '/screen/screenDevice/getScreenshot',
+    method: 'post',
+    params: {
+      cardId: cardId
+    }
+  })
+}
+

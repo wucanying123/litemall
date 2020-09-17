@@ -102,7 +102,9 @@
 </style>
 
 <script>
-import { listLive, createLive, updateLive, deleteLive, playLive, stopLiveVideo } from '@/api/live'
+import { listLive, createLive, updateLive, deleteLive, playLive } from '@/api/live'
+import { stopLiveVideo } from '@/api/screenDevice'
+
 import { selectOnlineDevice } from '@/api/screenDevice'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'

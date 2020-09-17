@@ -22,10 +22,13 @@
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="350" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
+          <el-button type="primary" size="mini" @click="handleclearTask(scope.row)">停止节目</el-button>
+          <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
           <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
+          <el-button v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
           <el-button v-permission="['POST /admin/screen/screenDevice/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -43,9 +46,9 @@
         <el-form-item label="屏幕亮度" prop="brightness">
           <el-input v-model="dataForm.brightness" />
         </el-form-item>
-        <el-form-item label="屏幕状态" prop="onlineStatus">
-          <el-radio-group v-model="dataForm.onlineStatus">
-            <el-radio :value="false">关屏</el-radio>
+        <el-form-item label="屏幕状态" prop="screenOpenStatus">
+          <el-radio-group v-model="dataForm.screenOpenStatus">
+            <el-radio :label="false">关屏</el-radio>
             <el-radio :label="true">亮屏</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -57,6 +60,16 @@
       </div>
     </el-dialog>
 
+    <!-- 截屏 -->
+    <el-dialog :visible.sync="screenshotFormVisible" title="截屏">
+      <el-form ref="screenshotForm" :model="screenshotForm" status-icon label-position="left" label-width="100px" style="width: 500px;height: 400px; margin-left:50px;">
+        <el-form-item label="截屏内容" prop="content" />
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="screenshot">截屏</el-button>
+        <el-button @click="screenshotFormVisible = false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -69,9 +82,19 @@
 </style>
 
 <script>
-import { listScreenDevice, createScreenDevice, updateScreenDevice, deleteScreenDevice, reboot, clearScreen } from '@/api/screenDevice'
+import {
+  listScreenDevice,
+  createScreenDevice,
+  updateScreenDevice,
+  deleteScreenDevice,
+  reboot,
+  clearScreen,
+  clearPlayerTask,
+  stopLiveVideo,
+  getScreenshot
+} from '@/api/screenDevice'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'ScreenDevice',
@@ -121,7 +144,12 @@ export default {
       },
       rules: {
       },
-      downloadLoading: false
+      downloadLoading: false,
+      screenshotForm: {
+        cardId: undefined,
+        content: undefined
+      },
+      screenshotFormVisible: false
     }
   },
   computed: {
@@ -280,6 +308,52 @@ export default {
             message: response.data.errmsg
           })
         })
+    },
+    handleclearTask(row) {
+      clearPlayerTask(row.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '清屏成功'
+          })
+          this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    stopLive(row) {
+      stopLiveVideo(row.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '停止成功'
+          })
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handleScreenshot(row) {
+      this.screenshotForm = { cardId: row.cardId, content: '' }
+      this.screenshotFormVisible = true
+    },
+
+    screenshot() {
+      getScreenshot(this.screenshotForm.cardId).then(response => {
+        this.screenshotForm.content = response.data.data.result
+        console.log(this.screenshotForm.content)
+        this.$notify.success({
+          title: '成功',
+          message: '截屏成功'
+        })
+      })
     }
   }
 }

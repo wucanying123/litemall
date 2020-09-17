@@ -166,14 +166,4 @@ public class LiveController {
         }
         return screenService.playLiveVideo(id,cardId);
     }
-
-    @ApiOperation(value = "停止直播")
-    @PostMapping(value = "/stopLiveVideo")
-    public ResponseUtil<Object> stopLiveVideo(String cardId) {
-        if(StringUtilsXD.isEmpty(cardId)){
-            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
-        }
-        return screenService.stopLiveVideo(cardId);
-    }
 }
