@@ -12,7 +12,7 @@ public class Layer implements Serializable {
 
     Boolean isRepeat;//若干isRepeat=true，当前layer下的sources根据时间最长的一个layer重复显示，通常设置为false
 
-    List<Source> sources;//素材数据
+    List<PlaySource> sources;//素材数据
 
     //----------------扩展字段----------------
     String id;

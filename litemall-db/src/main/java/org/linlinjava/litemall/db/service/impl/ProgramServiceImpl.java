@@ -4,22 +4,30 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.ProgramMapper;
+import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.LayerService;
+import org.linlinjava.litemall.db.service.PlaySourceService;
 import org.linlinjava.litemall.db.service.ProgramService;
+import org.linlinjava.litemall.db.service.SourceService;
 import org.linlinjava.litemall.db.util.DateUtil;
-import org.linlinjava.litemall.db.domain.Program;
+import org.linlinjava.litemall.db.util.ResponseUtil;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProgramServiceImpl implements ProgramService {
 
     @Autowired
     private ProgramMapper programMapper;
+    @Autowired
+    private LayerService layerService;
+    @Autowired
+    private PlaySourceService playSourceService;
 
 
     private static Logger logger = LoggerFactory.getLogger(ProgramServiceImpl.class);
@@ -85,5 +93,32 @@ public class ProgramServiceImpl implements ProgramService {
             logger.error("deleteById error and msg={}", e);
         }
         return n;
+    }   
+    
+    @Override
+    public Program readProgram(String programId) {
+        Program program = selectProgramById(programId);
+        String layerIds = program.getLayersIds();
+        Map<String, Object> data = new HashMap<>(2);
+        List<Layer> layerList  = new ArrayList<>();
+        if(StringUtilsXD.isNotEmpty(layerIds)) {
+            String[]  layersIdArray = layerIds.split(",");
+            for(String layerId :layersIdArray){
+                Layer layer = layerService.selectLayerById(layerId);
+                String playSourceIds = layer.getSourcesIds();
+                List<PlaySource> playSourceList  = new ArrayList<>();
+                if(StringUtilsXD.isNotEmpty(playSourceIds)) {
+                    String[]  playSourceIdArray = playSourceIds.split(",");
+                    for(String playSourceId :playSourceIdArray){
+                        PlaySource playSource = playSourceService.selectPlaySourceById(playSourceId);
+                        playSourceList.add(playSource);
+                    }
+                }
+                layer.setSources(playSourceList);
+                layerList.add(layer);
+                program.setLayers(layerList);
+            }
+        }
+        return program;
     }
 }

@@ -3,6 +3,8 @@ package org.linlinjava.litemall.db.service;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Program;
 
+import javax.validation.constraints.NotNull;
+
 public interface ProgramService {
 
     /**
@@ -48,4 +50,6 @@ public interface ProgramService {
      * @currentdate:2020年9月2日
      */
     int deleteById(String id);
+
+    Program readProgram(String id);
 }

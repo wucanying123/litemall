@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.linlinjava.litemall.db.domain.LitemallAdmin;
-import org.linlinjava.litemall.db.domain.Program;
+import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ProgramService;
@@ -15,6 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/admin/screen/program")
@@ -46,6 +51,18 @@ public class ProgramController {
             logger.error("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit, e);
         }
         return responseUtil;
+    }
+
+    @GetMapping("/readProgram")
+    public Object readProgram(@NotNull String id) {
+        Program program = programService.readProgram(id);
+        Map<String, Object> data = new HashMap<>(2);
+        data.put("program", program);
+        if(null !=program.getLayers() && program.getLayers().size() >0 ) {
+            List<PlaySource> playSourceList = program.getLayers().get(0).getSources();
+            data.put("playSourceList", playSourceList);
+        }
+        return data;
     }
 
     /**

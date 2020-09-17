@@ -35,6 +35,8 @@ public class ScreenServiceImpl implements ScreenService {
     private TaskMapper taskMapper;
     @Autowired
     private LiveService liveService;
+    @Autowired
+    private PlaySourceMapper playSourceMapper;
 
     private static Logger logger = LoggerFactory.getLogger(ScreenServiceImpl.class);
 
@@ -554,18 +556,18 @@ public class ScreenServiceImpl implements ScreenService {
                     if (null != layers && layers.size() > 0) {
                         for (Layer layer : layers) {
                             layer.setRepeat(layer.getIsRepeat());
-                            List<Source> sources = new ArrayList<>();
-                            String sourcesIds = layer.getSourcesIds();
-                            if (null != sourcesIds && sourcesIds.length() > 0) {
-                                List<String> sourcesIdsList = Arrays.asList(sourcesIds.split(","));
-                                for (String sourcesId : sourcesIdsList) {
-                                    Source source = sourceMapper.selectByPrimaryKey(sourcesId);
-                                    if (null != source) {
-                                        source.setLeft(source.getTheLeft());
-                                        sources.add(source);
+                            List<PlaySource> playSources = new ArrayList<>();
+                            String playSourcesIds = layer.getSourcesIds();
+                            if (null != playSourcesIds && playSourcesIds.length() > 0) {
+                                List<String> playSourcesIdsList = Arrays.asList(playSourcesIds.split(","));
+                                for (String playSourcesId : playSourcesIdsList) {
+                                    PlaySource playSource = playSourceMapper.selectByPrimaryKey(playSourcesId);
+                                    if (null != playSource) {
+                                        playSource.setLeft(playSource.getTheLeft());
+                                        playSources.add(playSource);
                                     }
                                 }
-                                layer.setSources(sources);
+                                layer.setSources(playSources);
                             }
                         }
                     }

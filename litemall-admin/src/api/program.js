@@ -16,14 +16,6 @@ export function createProgram(data) {
   })
 }
 
-export function readProgram(data) {
-  return request({
-    url: '/screen/program/selectProgramById',
-    method: 'get',
-    data
-  })
-}
-
 export function updateProgram(data) {
   return request({
     url: '/screen/program/updateProgramById',
@@ -39,5 +31,13 @@ export function deleteProgram(id) {
     params: {
       id: id
     }
+  })
+}
+
+export function readProgram(query) {
+  return request({
+    url: '/screen/program/readProgram',
+    method: 'get',
+    params: query
   })
 }
