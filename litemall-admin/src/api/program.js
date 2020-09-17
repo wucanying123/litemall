@@ -41,3 +41,11 @@ export function readProgram(query) {
     params: query
   })
 }
+
+export function updateSimpleProgramById(data) {
+  return request({
+    url: '/screen/program/updateSimpleProgramById',
+    method: 'post',
+    data
+  })
+}

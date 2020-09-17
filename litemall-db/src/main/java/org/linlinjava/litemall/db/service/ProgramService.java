@@ -52,4 +52,6 @@ public interface ProgramService {
     int deleteById(String id);
 
     Program readProgram(String id);
+
+    void updatePlaySources(Program program);
 }

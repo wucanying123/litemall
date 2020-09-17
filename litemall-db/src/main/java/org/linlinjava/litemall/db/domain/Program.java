@@ -25,4 +25,5 @@ public class Program implements Serializable {
     String layersIds;
     Long updateTime;//修改时间
     Integer userid;//用户id
+    String[] playSource;//播放资源id,仅作用于简易节目
 }

@@ -3,6 +3,7 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.linlinjava.litemall.db.dao.ProgramMapper;
 import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.service.LayerService;
@@ -85,6 +86,20 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
+    public void updatePlaySources(Program program){
+        if(program.getPlaySource() != null){
+            String[] playSource = program.getPlaySource();
+            Program program1 = readProgram(program.get_id());
+            String layerIds = program1.getLayersIds();
+            List<String> layerIdList = Arrays.asList(layerIds.split(","));
+            String layerId = layerIdList.get(0);
+            Layer layer = layerService.selectLayerById(layerId);
+            layer.setSourcesIds(String.join(",",playSource));
+            layerService.updateLayerById(layer);
+        }
+    }
+
+    @Override
     public int deleteById(String id) {
         int n = 0;
         try {
@@ -113,8 +128,8 @@ public class ProgramServiceImpl implements ProgramService {
                         PlaySource playSource = playSourceService.selectPlaySourceById(playSourceId);
                         playSourceList.add(playSource);
                     }
+                    layer.setSources(playSourceList);
                 }
-                layer.setSources(playSourceList);
                 layerList.add(layer);
                 program.setLayers(layerList);
             }

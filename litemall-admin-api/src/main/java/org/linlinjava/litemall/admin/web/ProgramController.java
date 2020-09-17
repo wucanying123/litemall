@@ -58,11 +58,19 @@ public class ProgramController {
         Program program = programService.readProgram(id);
         Map<String, Object> data = new HashMap<>(2);
         data.put("program", program);
+        List<PlaySource> playSourceList = null;
         if(null !=program.getLayers() && program.getLayers().size() >0 ) {
-            List<PlaySource> playSourceList = program.getLayers().get(0).getSources();
-            data.put("playSourceList", playSourceList);
+            playSourceList = program.getLayers().get(0).getSources();
+            if(null != playSourceList && playSourceList.size() >0) {
+                String[] playSource = new String[playSourceList.size()];
+                for (int i = 0; i < playSourceList.size(); i++) {
+                    playSource[i] = playSourceList.get(i).getId();
+                }
+                program.setPlaySource(playSource);
+            }
         }
-        return data;
+        data.put("playSourceList", playSourceList);
+        return ResponseUtil.ok(data);
     }
 
     /**
@@ -136,6 +144,34 @@ public class ProgramController {
             }
         } catch (Exception e) {
             logger.error("updateProgramById and program:{}", JSON.toJSONString(program), e);
+
+        }
+        return responseUtil;
+    }
+
+
+    /**
+     * @Description: 编辑简易节目
+     * @title
+     * @author IngaWu
+     * @currentdate:2020年9月2日
+     */
+    @ApiOperation(value = "编辑简易节目")
+    @PostMapping(value = "/updateSimpleProgramById")
+    public ResponseUtil<Program> updateSimpleProgramById(@RequestBody Program program) {
+        logger.info("updateSimpleProgramById and program:{}", JSON.toJSONString(program));
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
+        if (StringUtilsXD.isBlank(program.get_id())) {
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
+        try {
+            int n = programService.updateProgramById(program);
+            programService.updatePlaySources(program);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("updateSimpleProgramById and program:{}", JSON.toJSONString(program), e);
 
         }
         return responseUtil;
