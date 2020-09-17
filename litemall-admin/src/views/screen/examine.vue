@@ -32,9 +32,8 @@
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <div v-if="scope.row.passStatus !== 4">
-            <el-button v-permission="['POST /admin/screen/examine/updateExamineById']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           </div>
-          <!--          <el-button v-permission="['POST /admin/screen/examine/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>

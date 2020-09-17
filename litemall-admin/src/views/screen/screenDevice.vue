@@ -29,7 +29,6 @@
           <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
           <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
           <el-button
-            v-permission="['POST /admin/screen/screenDevice/updateScreenDeviceById']"
             type="primary"
             size="mini"
             @click="handleUpdate(scope.row)"
@@ -37,7 +36,6 @@
           </el-button>
           <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
           <el-button
-            v-permission="['POST /admin/screen/screenDevice/deleteById']"
             type="danger"
             size="mini"
             @click="handleDelete(scope.row)"
