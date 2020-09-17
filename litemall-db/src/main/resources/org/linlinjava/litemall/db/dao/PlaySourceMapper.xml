@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.linlinjava.litemall.db.dao.PlaySourceMapper">
+  <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.PlaySource">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="maxPlayTime" jdbcType="INTEGER" property="maxPlayTime" />
+    <result column="_type" jdbcType="VARCHAR" property="_type" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="mime" jdbcType="VARCHAR" property="mime" />
+    <result column="size" jdbcType="BIGINT" property="size" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="enabledBy" jdbcType="VARCHAR" property="enabledBy" />
+    <result column="mediaGroup" jdbcType="VARCHAR" property="mediaGroup" />
+    <result column="deletedBy" jdbcType="VARCHAR" property="deletedBy" />
+    <result column="deleted" jdbcType="VARCHAR" property="deleted" />
+    <result column="newName" jdbcType="VARCHAR" property="newName" />
+    <result column="oldFilePath" jdbcType="VARCHAR" property="oldFilePath" />
+    <result column="fileExt" jdbcType="VARCHAR" property="fileExt" />
+    <result column="playTime" jdbcType="INTEGER" property="playTime" />
+    <result column="timeSpan" jdbcType="INTEGER" property="timeSpan" />
+    <result column="theLeft" jdbcType="INTEGER" property="theLeft" />
+    <result column="top" jdbcType="INTEGER" property="top" />
+    <result column="width" jdbcType="INTEGER" property="width" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="entryEffect" jdbcType="VARCHAR" property="entryEffect" />
+    <result column="exitEffect" jdbcType="VARCHAR" property="exitEffect" />
+    <result column="entryEffectTimeSpan" jdbcType="INTEGER" property="entryEffectTimeSpan" />
+    <result column="exitEffectTimeSpan" jdbcType="INTEGER" property="exitEffectTimeSpan" />
+    <result column="shade" jdbcType="INTEGER" property="shade" />
+    <result column="opacity" jdbcType="INTEGER" property="opacity" />
+    <result column="showBg" jdbcType="BIT" property="showBg" />
+    <result column="bgColor" jdbcType="VARCHAR" property="bgColor" />
+    <result column="showHourScale" jdbcType="BIT" property="showHourScale" />
+    <result column="scaleHourColor" jdbcType="VARCHAR" property="scaleHourColor" />
+    <result column="showMinScale" jdbcType="BIT" property="showMinScale" />
+    <result column="scaleMinColor" jdbcType="VARCHAR" property="scaleMinColor" />
+    <result column="scaleStyle" jdbcType="INTEGER" property="scaleStyle" />
+    <result column="showScaleNum" jdbcType="BIT" property="showScaleNum" />
+    <result column="pinStyle" jdbcType="INTEGER" property="pinStyle" />
+    <result column="pinHourColor" jdbcType="VARCHAR" property="pinHourColor" />
+    <result column="pinMinColor" jdbcType="VARCHAR" property="pinMinColor" />
+    <result column="pinSecColor" jdbcType="VARCHAR" property="pinSecColor" />
+    <result column="showSecond" jdbcType="BIT" property="showSecond" />
+    <result column="backgroundColor" jdbcType="VARCHAR" property="backgroundColor" />
+    <result column="speed" jdbcType="INTEGER" property="speed" />
+    <result column="lineHeight" jdbcType="REAL" property="lineHeight" />
+    <result column="timezone" jdbcType="INTEGER" property="timezone" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="center" jdbcType="BIT" property="center" />
+    <result column="html" jdbcType="VARCHAR" property="html" />
+    <result column="sUrl" jdbcType="VARCHAR" property="sUrl" />
+    <result column="sInterval" jdbcType="INTEGER" property="sInterval" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="code" jdbcType="BIGINT" property="code" />
+    <result column="createTime" jdbcType="BIGINT" property="createTime" />
+    <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
+    deletedBy, deleted, newName, oldFilePath, fileExt, playTime, timeSpan, theLeft, top,
+    width, height, entryEffect, exitEffect, entryEffectTimeSpan, exitEffectTimeSpan,
+    shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
+    scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
+    backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
+    city, code, createTime, updateTime, userid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from playsource
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from playsource
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="org.linlinjava.litemall.db.domain.PlaySource">
+    insert into playsource
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="maxPlayTime != null">
+        maxPlayTime,
+      </if>
+      <if test="_type != null">
+        _type,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="mime != null">
+        mime,
+      </if>
+      <if test="size != null">
+        size,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="enabledBy != null">
+        enabledBy,
+      </if>
+      <if test="mediaGroup != null">
+        mediaGroup,
+      </if>
+      <if test="deletedBy != null">
+        deletedBy,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="newName != null">
+        newName,
+      </if>
+      <if test="oldFilePath != null">
+        oldFilePath,
+      </if>
+      <if test="fileExt != null">
+        fileExt,
+      </if>
+      <if test="playTime != null">
+        playTime,
+      </if>
+      <if test="timeSpan != null">
+        timeSpan,
+      </if>
+      <if test="theLeft != null">
+        theLeft,
+      </if>
+      <if test="top != null">
+        top,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="entryEffect != null">
+        entryEffect,
+      </if>
+      <if test="exitEffect != null">
+        exitEffect,
+      </if>
+      <if test="entryEffectTimeSpan != null">
+        entryEffectTimeSpan,
+      </if>
+      <if test="exitEffectTimeSpan != null">
+        exitEffectTimeSpan,
+      </if>
+      <if test="shade != null">
+        shade,
+      </if>
+      <if test="opacity != null">
+        opacity,
+      </if>
+      <if test="showBg != null">
+        showBg,
+      </if>
+      <if test="bgColor != null">
+        bgColor,
+      </if>
+      <if test="showHourScale != null">
+        showHourScale,
+      </if>
+      <if test="scaleHourColor != null">
+        scaleHourColor,
+      </if>
+      <if test="showMinScale != null">
+        showMinScale,
+      </if>
+      <if test="scaleMinColor != null">
+        scaleMinColor,
+      </if>
+      <if test="scaleStyle != null">
+        scaleStyle,
+      </if>
+      <if test="showScaleNum != null">
+        showScaleNum,
+      </if>
+      <if test="pinStyle != null">
+        pinStyle,
+      </if>
+      <if test="pinHourColor != null">
+        pinHourColor,
+      </if>
+      <if test="pinMinColor != null">
+        pinMinColor,
+      </if>
+      <if test="pinSecColor != null">
+        pinSecColor,
+      </if>
+      <if test="showSecond != null">
+        showSecond,
+      </if>
+      <if test="backgroundColor != null">
+        backgroundColor,
+      </if>
+      <if test="speed != null">
+        speed,
+      </if>
+      <if test="lineHeight != null">
+        lineHeight,
+      </if>
+      <if test="timezone != null">
+        timezone,
+      </if>
+      <if test="language != null">
+        language,
+      </if>
+      <if test="center != null">
+        center,
+      </if>
+      <if test="html != null">
+        html,
+      </if>
+      <if test="sUrl != null">
+        sUrl,
+      </if>
+      <if test="sInterval != null">
+        sInterval,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="maxPlayTime != null">
+        #{maxPlayTime,jdbcType=INTEGER},
+      </if>
+      <if test="_type != null">
+        #{_type,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="mime != null">
+        #{mime,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=BIGINT},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="enabledBy != null">
+        #{enabledBy,jdbcType=VARCHAR},
+      </if>
+      <if test="mediaGroup != null">
+        #{mediaGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedBy != null">
+        #{deletedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=VARCHAR},
+      </if>
+      <if test="newName != null">
+        #{newName,jdbcType=VARCHAR},
+      </if>
+      <if test="oldFilePath != null">
+        #{oldFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExt != null">
+        #{fileExt,jdbcType=VARCHAR},
+      </if>
+      <if test="playTime != null">
+        #{playTime,jdbcType=INTEGER},
+      </if>
+      <if test="timeSpan != null">
+        #{timeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="theLeft != null">
+        #{theLeft,jdbcType=INTEGER},
+      </if>
+      <if test="top != null">
+        #{top,jdbcType=INTEGER},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="entryEffect != null">
+        #{entryEffect,jdbcType=VARCHAR},
+      </if>
+      <if test="exitEffect != null">
+        #{exitEffect,jdbcType=VARCHAR},
+      </if>
+      <if test="entryEffectTimeSpan != null">
+        #{entryEffectTimeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="exitEffectTimeSpan != null">
+        #{exitEffectTimeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="shade != null">
+        #{shade,jdbcType=INTEGER},
+      </if>
+      <if test="opacity != null">
+        #{opacity,jdbcType=INTEGER},
+      </if>
+      <if test="showBg != null">
+        #{showBg,jdbcType=BIT},
+      </if>
+      <if test="bgColor != null">
+        #{bgColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showHourScale != null">
+        #{showHourScale,jdbcType=BIT},
+      </if>
+      <if test="scaleHourColor != null">
+        #{scaleHourColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showMinScale != null">
+        #{showMinScale,jdbcType=BIT},
+      </if>
+      <if test="scaleMinColor != null">
+        #{scaleMinColor,jdbcType=VARCHAR},
+      </if>
+      <if test="scaleStyle != null">
+        #{scaleStyle,jdbcType=INTEGER},
+      </if>
+      <if test="showScaleNum != null">
+        #{showScaleNum,jdbcType=BIT},
+      </if>
+      <if test="pinStyle != null">
+        #{pinStyle,jdbcType=INTEGER},
+      </if>
+      <if test="pinHourColor != null">
+        #{pinHourColor,jdbcType=VARCHAR},
+      </if>
+      <if test="pinMinColor != null">
+        #{pinMinColor,jdbcType=VARCHAR},
+      </if>
+      <if test="pinSecColor != null">
+        #{pinSecColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showSecond != null">
+        #{showSecond,jdbcType=BIT},
+      </if>
+      <if test="backgroundColor != null">
+        #{backgroundColor,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null">
+        #{speed,jdbcType=INTEGER},
+      </if>
+      <if test="lineHeight != null">
+        #{lineHeight,jdbcType=REAL},
+      </if>
+      <if test="timezone != null">
+        #{timezone,jdbcType=INTEGER},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="center != null">
+        #{center,jdbcType=BIT},
+      </if>
+      <if test="html != null">
+        #{html,jdbcType=VARCHAR},
+      </if>
+      <if test="sUrl != null">
+        #{sUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sInterval != null">
+        #{sInterval,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.PlaySource">
+    update playsource
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="maxPlayTime != null">
+        maxPlayTime = #{maxPlayTime,jdbcType=INTEGER},
+      </if>
+      <if test="_type != null">
+        _type = #{_type,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="mime != null">
+        mime = #{mime,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=BIGINT},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
+      <if test="enabledBy != null">
+        enabledBy = #{enabledBy,jdbcType=VARCHAR},
+      </if>
+      <if test="mediaGroup != null">
+        mediaGroup = #{mediaGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedBy != null">
+        deletedBy = #{deletedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=VARCHAR},
+      </if>
+      <if test="newName != null">
+        newName = #{newName,jdbcType=VARCHAR},
+      </if>
+      <if test="oldFilePath != null">
+        oldFilePath = #{oldFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExt != null">
+        fileExt = #{fileExt,jdbcType=VARCHAR},
+      </if>
+      <if test="playTime != null">
+        playTime = #{playTime,jdbcType=INTEGER},
+      </if>
+      <if test="timeSpan != null">
+        timeSpan = #{timeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="theLeft != null">
+        theLeft = #{theLeft,jdbcType=INTEGER},
+      </if>
+      <if test="top != null">
+        top = #{top,jdbcType=INTEGER},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="entryEffect != null">
+        entryEffect = #{entryEffect,jdbcType=VARCHAR},
+      </if>
+      <if test="exitEffect != null">
+        exitEffect = #{exitEffect,jdbcType=VARCHAR},
+      </if>
+      <if test="entryEffectTimeSpan != null">
+        entryEffectTimeSpan = #{entryEffectTimeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="exitEffectTimeSpan != null">
+        exitEffectTimeSpan = #{exitEffectTimeSpan,jdbcType=INTEGER},
+      </if>
+      <if test="shade != null">
+        shade = #{shade,jdbcType=INTEGER},
+      </if>
+      <if test="opacity != null">
+        opacity = #{opacity,jdbcType=INTEGER},
+      </if>
+      <if test="showBg != null">
+        showBg = #{showBg,jdbcType=BIT},
+      </if>
+      <if test="bgColor != null">
+        bgColor = #{bgColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showHourScale != null">
+        showHourScale = #{showHourScale,jdbcType=BIT},
+      </if>
+      <if test="scaleHourColor != null">
+        scaleHourColor = #{scaleHourColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showMinScale != null">
+        showMinScale = #{showMinScale,jdbcType=BIT},
+      </if>
+      <if test="scaleMinColor != null">
+        scaleMinColor = #{scaleMinColor,jdbcType=VARCHAR},
+      </if>
+      <if test="scaleStyle != null">
+        scaleStyle = #{scaleStyle,jdbcType=INTEGER},
+      </if>
+      <if test="showScaleNum != null">
+        showScaleNum = #{showScaleNum,jdbcType=BIT},
+      </if>
+      <if test="pinStyle != null">
+        pinStyle = #{pinStyle,jdbcType=INTEGER},
+      </if>
+      <if test="pinHourColor != null">
+        pinHourColor = #{pinHourColor,jdbcType=VARCHAR},
+      </if>
+      <if test="pinMinColor != null">
+        pinMinColor = #{pinMinColor,jdbcType=VARCHAR},
+      </if>
+      <if test="pinSecColor != null">
+        pinSecColor = #{pinSecColor,jdbcType=VARCHAR},
+      </if>
+      <if test="showSecond != null">
+        showSecond = #{showSecond,jdbcType=BIT},
+      </if>
+      <if test="backgroundColor != null">
+        backgroundColor = #{backgroundColor,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null">
+        speed = #{speed,jdbcType=INTEGER},
+      </if>
+      <if test="lineHeight != null">
+        lineHeight = #{lineHeight,jdbcType=REAL},
+      </if>
+      <if test="timezone != null">
+        timezone = #{timezone,jdbcType=INTEGER},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="center != null">
+        center = #{center,jdbcType=BIT},
+      </if>
+      <if test="html != null">
+        html = #{html,jdbcType=VARCHAR},
+      </if>
+      <if test="sUrl != null">
+        sUrl = #{sUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sInterval != null">
+        sInterval = #{sInterval,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteById" parameterType="String">
+    delete from playsource
+    where
+    id in
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <select id="selectPlaySourcePage" parameterType="org.linlinjava.litemall.db.domain.PlaySource" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from playsource where 1=1
+    <if test="playSource != null and playSource._type != null and playSource._type != '' " >
+      and _type = #{playSource._type}
+    </if>
+    <if test="playSource != null and playSource.name != null and playSource.name != '' " >
+      and name LIKE concat(concat('%',#{playSource.name}),'%')
+    </if>
+    and id in(SELECT examine.detail_id from examine where examine.pass_status = 4)
+    order by updateTime desc ,createTime desc
+  </select>
+</mapper>
