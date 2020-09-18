@@ -65,7 +65,7 @@ public class ProgramController {
                 String[] playSource = new String[playSourceList.size()];
                 for (int i = 0; i < playSourceList.size(); i++) {
                     if(null != playSourceList.get(i)) {
-                        playSource[i] = playSourceList.get(i).getId();
+                        playSource[i] = playSourceList.get(i).getSourceId();
                     }
                 }
                 program.setPlaySource(playSource);

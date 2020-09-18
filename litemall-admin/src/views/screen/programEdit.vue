@@ -372,6 +372,7 @@ export default {
     },
     handleDelete(row) {
       for (var index = 0; index < this.program.playSource.length; index++) {
+        console.log(this.program.playSource)
         if (row.sourceId === this.program.playSource[index]) {
           this.program.playSource.splice(index, 1)
         }
