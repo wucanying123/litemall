@@ -57,6 +57,9 @@
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
     <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="source_id" jdbcType="VARCHAR" property="sourceId" />
+    <result column="layer_id" jdbcType="VARCHAR" property="layerId" />
+    <result column="program_id" jdbcType="VARCHAR" property="programId" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -65,7 +68,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime, userid
+    city, code, createTime, updateTime, userid, source_id, layer_id, program_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -245,6 +248,15 @@
       <if test="userid != null">
         userid,
       </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+      <if test="layerId != null">
+        layer_id,
+      </if>
+      <if test="programId != null">
+        program_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -411,6 +423,15 @@
       </if>
       <if test="userid != null">
         #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="layerId != null">
+        #{layerId,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        #{programId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -579,6 +600,15 @@
       <if test="userid != null">
         userid = #{userid,jdbcType=INTEGER},
       </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="layerId != null">
+        layer_id = #{layerId,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        program_id = #{programId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -600,6 +630,39 @@
     <if test="playSource != null and playSource.name != null and playSource.name != '' " >
       and name LIKE concat(concat('%',#{playSource.name}),'%')
     </if>
+    <if test="playSource != null and playSource.sourceId != null and playSource.sourceId != '' " >
+      and source_id = #{playSource.sourceId}
+    </if>
+    <if test="playSource != null and playSource.layerId != null and playSource.layerId != '' " >
+      and layer_id = #{playSource.layerId}
+    </if>
+    <if test="playSource != null and playSource.programId != null and playSource.programId != '' " >
+      and program_id = #{playSource.programId}
+    </if>
     order by updateTime desc ,createTime desc
+  </select>
+  <select id="selectBySourceIdAndLayerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from playsource
+    where 1 = 1
+    <if test="sourceId != null">
+      and source_id = #{sourceId,jdbcType=VARCHAR}
+    </if>
+    <if test="layerId != null">
+      and layer_id = #{layerId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectBySourceIdAndProgramId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from playsource
+    where 1 = 1
+    <if test="sourceId != null">
+      and source_id = #{sourceId,jdbcType=VARCHAR}
+    </if>
+    <if test="programId != null">
+      and program_id = #{programId,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>

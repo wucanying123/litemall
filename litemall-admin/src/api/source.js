@@ -32,12 +32,12 @@ export function updateSource(data) {
   })
 }
 
-export function deleteSource(id) {
+export function deleteSource(sourceId) {
   return request({
     url: '/screen/source/deleteById',
     method: 'post',
     params: {
-      id: id
+      sourceId: sourceId
     }
   })
 }

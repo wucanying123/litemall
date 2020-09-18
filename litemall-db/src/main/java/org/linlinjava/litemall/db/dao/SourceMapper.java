@@ -11,7 +11,7 @@ public interface SourceMapper {
 
     List<Source> selectSourcePage(@Param("source") Source source);
 
-    Source selectByPrimaryKey(String id);
+    Source selectByPrimaryKey(String sourceId);
 
     int insertSelective(Source source);
 
@@ -19,5 +19,5 @@ public interface SourceMapper {
 
     int deleteByIdBatch(String[] ids);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String sourceId);
 }

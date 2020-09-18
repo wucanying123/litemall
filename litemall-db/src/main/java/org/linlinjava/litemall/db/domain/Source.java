@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class Source implements Serializable {
-    String id;//素材id，不能为空，不能与其他id重复
+    String sourceId;//素材id，不能为空，不能与其他id重复
     String name;//名称
 
     String url;

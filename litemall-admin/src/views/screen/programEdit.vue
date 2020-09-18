@@ -144,7 +144,7 @@
 </style>
 
 <script>
-import { listPlaySource } from '@/api/playSource'
+import { listSource } from '@/api/source'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSimpleProgramById } from '@/api/program'
@@ -306,7 +306,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      listPlaySource(this.listQuery).then(response => {
+      listSource(this.listQuery).then(response => {
         this.list = response.data.data.list
         this.total = response.data.data.total
         this.listLoading = false
@@ -342,19 +342,19 @@ export default {
       const newPlaySourceIds = []
       const newPlaySourceList = []
       this.selectedlist.forEach(item => {
-        const id = item.id
+        const sourceId = item.sourceId
         let found = false
         if (this.program != null) {
           if (this.program.playSource != null) {
             this.program.playSource.forEach(playSourceId => {
-              if (id === playSourceId) {
+              if (sourceId === playSourceId) {
                 found = true
               }
             })
           }
         }
         if (!found) {
-          newPlaySourceIds.push(id)
+          newPlaySourceIds.push(sourceId)
           newPlaySourceList.push(item)
         }
       })
@@ -372,12 +372,12 @@ export default {
     },
     handleDelete(row) {
       for (var index = 0; index < this.program.playSource.length; index++) {
-        if (row.id === this.program.playSource[index]) {
+        if (row.sourceId === this.program.playSource[index]) {
           this.program.playSource.splice(index, 1)
         }
       }
       for (var index2 = 0; index2 < this.playSourceList.length; index2++) {
-        if (row.id === this.playSourceList[index2].id) {
+        if (row.sourceId === this.playSourceList[index2].sourceId) {
           this.playSourceList.splice(index2, 1)
         }
       }

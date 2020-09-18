@@ -165,7 +165,7 @@ public class TestServiceImpl implements TestService {
         vedioSource.setNewName(null);
         vedioSource.setOldFilePath(null);
         vedioSource.setFileExt(".mp4");
-        vedioSource.setId(UUID.randomUUID().toString().replace("-", ""));
+        vedioSource.setSourceId(UUID.randomUUID().toString().replace("-", ""));
         vedioSource.setPlayTime(0);
         vedioSource.setTimeSpan(VideoUtil.getPlayTime(file).intValue());
         vedioSource.setMaxPlayTime(VideoUtil.getPlayTime(file).intValue());
@@ -204,7 +204,7 @@ public class TestServiceImpl implements TestService {
         source1.setNewName(null);
         source1.setOldFilePath(null);
         source1.setFileExt(".jpg");
-        source1.setId(UUID.randomUUID().toString().replace("-", ""));
+        source1.setSourceId(UUID.randomUUID().toString().replace("-", ""));
         source1.setPlayTime(0);
         source1.setTimeSpan(10);
         source1.setMaxPlayTime(10);
@@ -272,7 +272,7 @@ public class TestServiceImpl implements TestService {
         if(null != sources && sources.size() >0){
             List<String> idList = new ArrayList<>();
             for(Source source : sources){
-                String id = source.getId();
+                String id = source.getSourceId();
                 idList.add(id);
             }
             sourcesIds = String.join("," , idList);

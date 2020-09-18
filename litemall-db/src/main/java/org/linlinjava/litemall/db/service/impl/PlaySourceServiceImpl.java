@@ -50,6 +50,17 @@ public class PlaySourceServiceImpl implements PlaySourceService {
     }
 
     @Override
+    public List<PlaySource> selectPlaySourceList(PlaySource playSource) {
+        List<PlaySource> list = null;
+        try {
+            list = playSourceMapper.selectPlaySourcePage(playSource);
+        } catch (Exception e) {
+            logger.error("selectPlaySourcePage error and msg={}", e);
+        }
+        return list;
+    }
+
+    @Override
     public PlaySource selectPlaySourceById(String playSourceId) {
         PlaySource playSource = null;
         try {
@@ -113,5 +124,27 @@ public class PlaySourceServiceImpl implements PlaySourceService {
             logger.error("deleteById error and msg={}", e);
         }
         return n;
+    }
+
+    @Override
+    public PlaySource selectBySourceIdAndLayerId(String sourceId,String layerId) {
+        PlaySource playSource = null;
+        try {
+            playSource = playSourceMapper.selectBySourceIdAndLayerId(sourceId,layerId);
+        } catch (Exception e) {
+            logger.error("selectBySourceIdAndLayerId error and msg={}", e);
+        }
+        return playSource;
+    }
+
+    @Override
+    public PlaySource selectBySourceIdAndProgramId(String sourceId,String programId) {
+        PlaySource playSource = null;
+        try {
+            playSource = playSourceMapper.selectBySourceIdAndProgramId(sourceId,programId);
+        } catch (Exception e) {
+            logger.error("selectBySourceIdAndProgramId error and msg={}", e);
+        }
+        return playSource;
     }
 }

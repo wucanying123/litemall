@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>-->
+          <!--                    <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>-->
           <el-button v-permission="['POST /admin/screen/source/deleteById']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -273,7 +273,7 @@ export default {
         _type: undefined
       },
       dataForm: {
-        id: undefined,
+        sourceId: undefined,
         name: undefined,
         _type: undefined,
         url: undefined
@@ -331,7 +331,7 @@ export default {
     },
     resetForm() {
       this.dataForm = {
-        id: undefined,
+        sourceId: undefined,
         name: undefined,
         _type: '',
         url: undefined
@@ -396,7 +396,7 @@ export default {
           updateSource(this.dataForm)
             .then(() => {
               for (const v of this.list) {
-                if (v.id === this.dataForm.id) {
+                if (v.id === this.dataForm.sourceId) {
                   const index = this.list.indexOf(v)
                   this.list.splice(index, 1, this.dataForm)
                   break
@@ -419,7 +419,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteSource(row.id)
+      deleteSource(row.sourceId)
         .then(response => {
           this.$notify.success({
             title: '成功',

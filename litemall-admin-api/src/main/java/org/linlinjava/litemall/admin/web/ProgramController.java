@@ -58,13 +58,15 @@ public class ProgramController {
         Program program = programService.readProgram(id);
         Map<String, Object> data = new HashMap<>(2);
         data.put("program", program);
-        List<PlaySource> playSourceList = null;
+        List<PlaySource> playSourceList = new ArrayList<>();
         if(null !=program.getLayers() && program.getLayers().size() >0 ) {
             playSourceList = program.getLayers().get(0).getSources();
             if(null != playSourceList && playSourceList.size() >0) {
                 String[] playSource = new String[playSourceList.size()];
                 for (int i = 0; i < playSourceList.size(); i++) {
-                    playSource[i] = playSourceList.get(i).getId();
+                    if(null != playSourceList.get(i)) {
+                        playSource[i] = playSourceList.get(i).getId();
+                    }
                 }
                 program.setPlaySource(playSource);
             }
@@ -166,6 +168,8 @@ public class ProgramController {
         }
         try {
             int n = programService.updateProgramById(program);
+            String[] sourceIdList = program.getPlaySource();
+            String a = String.join(",", sourceIdList);
             programService.updatePlaySources(program);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

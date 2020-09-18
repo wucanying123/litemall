@@ -63,7 +63,7 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public int insertSource(Source source) {
         int n = 0;
-        source.setId(UUID.randomUUID().toString().replace("-", ""));
+        source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
             source.setCreateTime(cuttentTime);
@@ -77,7 +77,7 @@ public class SourceServiceImpl implements SourceService {
             Examine examine = new Examine();
             examine.setPassStatus(1);
             examine.setType(3);
-            examine.setDetailId(source.getId());
+            examine.setDetailId(source.getSourceId());
             examine.setDetailName(source.getName());
             examineService.insertExamine(examine);
         } catch (Exception e) {
@@ -93,8 +93,8 @@ public class SourceServiceImpl implements SourceService {
             source.setUpdateTime(DateUtil.getDateline());
             n = sourceMapper.updateByPrimaryKeySelective(source);
             //同步修改名称到审核表
-            if (StringUtilsXD.isNotEmpty(source.getId()) && StringUtilsXD.isNotEmpty(source.getName())) {
-                examineService.updateExamineDetailName(source.getId(),source.getName());
+            if (StringUtilsXD.isNotEmpty(source.getSourceId()) && StringUtilsXD.isNotEmpty(source.getName())) {
+                examineService.updateExamineDetailName(source.getSourceId(),source.getName());
             }
         } catch (Exception e) {
             logger.error("updateSourceById error and msg={}", e);

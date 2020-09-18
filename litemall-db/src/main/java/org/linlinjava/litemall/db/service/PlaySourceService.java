@@ -1,7 +1,10 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.linlinjava.litemall.db.domain.PlaySource;
+
+import java.util.List;
 
 public interface PlaySourceService {
 
@@ -14,6 +17,14 @@ public interface PlaySourceService {
      * @currentdate:2020年9月2日
      */
     PageInfo<PlaySource> selectPlaySourcePage(PlaySource playSource,Integer pageNum,Integer pageSize);
+
+    /**
+     * @Description: 获取播放资源列表
+     * @title selectPlaySourceList
+     * @auther IngaWu
+     * @currentdate:2020年9月2日
+     */
+    List<PlaySource> selectPlaySourceList(PlaySource playSource);
 
     /**
      * @Description: 通过播放资源id查看播放资源详情
@@ -48,4 +59,24 @@ public interface PlaySourceService {
      * @currentdate:2020年9月2日
      */
     int deleteById(String id);
+
+    /**
+     * @Description: 通过资源id和层id查看播放资源详情
+     * @Title: selectBySourceIdAndLayerId
+     * @param sourceId 资源id
+     * @param layerId 层id
+     * @auther IngaWu
+     * @currentdate:2020年9月18日
+     */
+    PlaySource selectBySourceIdAndLayerId(String sourceId,String layerId);
+
+    /**
+     * @Description: 通过资源id和节目id查看播放资源详情
+     * @Title: selectBySourceIdAndLayerId
+     * @param sourceId 资源id
+     * @param programId 节目id
+     * @auther IngaWu
+     * @currentdate:2020年9月18日
+     */
+    PlaySource selectBySourceIdAndProgramId(String sourceId,String programId);
 }

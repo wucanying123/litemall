@@ -110,7 +110,7 @@ public class SourceController {
     public ResponseUtil<Source> updateSourceById(@RequestBody Source source) {
         logger.info("updateSourceById and source:{}", JSON.toJSONString(source));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
-        if (StringUtilsXD.isBlank(source.getId())) {
+        if (StringUtilsXD.isBlank(source.getSourceId())) {
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
         }
         try {
@@ -126,7 +126,7 @@ public class SourceController {
     }
 
     /**
-     * @param id 资源id
+     * @param sourceId 资源id
      * @Description: 删除资源
      * @Title: deleteById
      * @auther IngaWu
@@ -134,16 +134,16 @@ public class SourceController {
      */
     @ApiOperation(value = "删除资源")
     @PostMapping(value = "/deleteById")
-    public ResponseUtil<Source> deleteById(@RequestParam(value = "id") String id) {
-        logger.info("deleteById and id={}", JSON.toJSONString(id));
+    public ResponseUtil<Source> deleteById(@RequestParam(value = "sourceId") String sourceId) {
+        logger.info("deleteById and sourceId={}", JSON.toJSONString(sourceId));
         ResponseUtil<Source> responseUtil = new ResponseUtil<>();
         try {
-            int n = sourceService.deleteById(id);
+            int n = sourceService.deleteById(sourceId);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
+            logger.error("deleteById and sourceId={}", JSON.toJSONString(sourceId), e);
         }
         return responseUtil;
     }
