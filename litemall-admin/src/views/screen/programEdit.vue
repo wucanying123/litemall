@@ -24,14 +24,25 @@
         <!-- 查询结果 -->
         <el-table :data="playSourceList" border fit highlight-current-row>
 
-          <el-table-column align="center" label="资源ID" prop="id" />
-          <el-table-column align="center" property="picUrl" label="图片">
+          <el-table-column align="center" label="名称" prop="name" />
+
+          <el-table-column align="center" label="内容" prop="url">
             <template slot-scope="scope">
-              <img :src="scope.row.picUrl" width="60">
+              <div v-if="scope.row._type === 'Video'">
+                <video :src="scope.row.url" controls="controls" width="200" height="90" />
+              </div>
+              <div v-if="scope.row._type === 'Image'">
+                <img v-if="scope.row.url" :src="scope.row.url" width="100" height="90">
+              </div>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="资源名称" prop="name" />
-          <el-table-column align="center" label="资源介绍" prop="brief" />
+          <el-table-column align="center" label="素材时长" prop="maxPlayTime">
+            <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
+          </el-table-column>
+          <el-table-column align="center" label="类型" prop="_type">
+            <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
+          </el-table-column>
+          <el-table-column align="center" label="格式" prop="fileExt" />
           <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
@@ -60,13 +71,26 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
-          <el-table-column align="center" label="资源ID" prop="id" />
-          <el-table-column align="center" property="picUrl" label="图片">
+          <el-table-column align="center" label="名称" prop="name" />
+
+          <el-table-column align="center" label="内容" prop="url">
             <template slot-scope="scope">
-              <img :src="scope.row.picUrl" width="40">
+              <div v-if="scope.row._type === 'Video'">
+                <video :src="scope.row.url" controls="controls" width="200" height="90" />
+              </div>
+              <div v-if="scope.row._type === 'Image'">
+                <img v-if="scope.row.url" :src="scope.row.url" width="100" height="90">
+              </div>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="资源名称" prop="name" />
+          <el-table-column align="center" label="素材时长" prop="maxPlayTime">
+            <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
+          </el-table-column>
+
+          <el-table-column align="center" label="类型" prop="_type">
+            <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
+          </el-table-column>
+          <el-table-column align="center" label="格式" prop="fileExt" />
         </el-table>
         <pagination
           v-show="total>0"
@@ -79,7 +103,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addVisiable = false">取消</el-button>
-        <el-button type="primary" @click="confirmAdd">确定</el-button>
+        <el-button type="primary" @click="confirmAdd">确定添加</el-button>
       </div>
     </el-dialog>
 
@@ -125,13 +149,106 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSimpleProgramById } from '@/api/program'
 
+const defaultTypeOptions = [
+  {
+    label: '',
+    value: ''
+  },
+  {
+    label: '视频',
+    value: 'Video'
+  },
+  {
+    label: '图片',
+    value: 'Image'
+  }
+  // ,
+  // {
+  //   label: '时钟',
+  //   value: 'AnalogClock'
+  // },
+  // {
+  //   label: '数字时钟',
+  //   value: 'DigitalClock'
+  // },
+  // {
+  //   label: '倒计时',
+  //   value: 'Countdown'
+  // },
+  // {
+  //   label: 'Flash',
+  //   value: 'Flash'
+  // },
+  // {
+  //   label: '天气预报',
+  //   value: 'Weather'
+  // },
+  // {
+  //   label: '多行文本',
+  //   value: 'MultiText'
+  // }
+]
+
 export default {
   name: 'ProgramEdit',
   components: { Pagination },
+  filters: {
+    formatType(_type) {
+      for (let i = 0; i < defaultTypeOptions.length; i++) {
+        if (_type === defaultTypeOptions[i].value) {
+          return defaultTypeOptions[i].label
+        }
+      }
+      return ''
+    },
+    secondToDate(msd) {
+      var time = msd
+      // eslint-disable-next-line eqeqeq
+      if (time != null && time != '') {
+        if (time > 60 && time < 60 * 60) {
+          time = parseInt(time / 60.0) + '分钟' + parseInt((parseFloat(time / 60.0) -
+            parseInt(time / 60.0)) * 60) + '秒'
+        } else if (time >= 60 * 60 && time < 60 * 60 * 24) {
+          time = parseInt(time / 3600.0) + '小时' + parseInt((parseFloat(time / 3600.0) -
+            parseInt(time / 3600.0)) * 60) + '分钟' +
+            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
+        } else if (time >= 60 * 60 * 24) {
+          time = parseInt(time / 3600.0 / 24) + '天' + parseInt((parseFloat(time / 3600.0 / 24) -
+            parseInt(time / 3600.0 / 24)) * 24) + '小时' + parseInt((parseFloat(time / 3600.0) -
+            parseInt(time / 3600.0)) * 60) + '分钟' +
+            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
+        } else {
+          time = parseInt(time) + '秒'
+        }
+      }
+      return time
+    },
+    timestampToTime(timestamp) {
+      if (timestamp != null) {
+        var date = new Date(timestamp * 1000)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        const y = date.getFullYear()
+        let MM = date.getMonth() + 1
+        MM = MM < 10 ? ('0' + MM) : MM
+        let d = date.getDate()
+        d = d < 10 ? ('0' + d) : d
+        let h = date.getHours()
+        h = h < 10 ? ('0' + h) : h
+        let m = date.getMinutes()
+        m = m < 10 ? ('0' + m) : m
+        let s = date.getSeconds()
+        s = s < 10 ? ('0' + s) : s
+        return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+      }
+    }
+  },
   data() {
     return {
       id: 0,
-      program: {},
+      program: {
+        playSource: []
+      },
       playSourceList: [],
       addVisiable: false,
       list: [],
@@ -140,10 +257,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 5,
-        id: undefined,
-        name: undefined,
-        sort: 'add_time',
-        order: 'desc'
+        name: undefined
       },
       selectedlist: [],
       rules: {
@@ -180,6 +294,7 @@ export default {
       readProgram({ id: this.id })
         .then(response => {
           this.program = response.data.data.program
+          this.program.playSource = response.data.data.program.playSource
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
         })
@@ -215,15 +330,13 @@ export default {
       this.listQuery = {
         page: 1,
         limit: 5,
-        id: undefined,
-        name: undefined,
-        sort: 'add_time',
-        order: 'desc'
+        name: undefined
       }
       this.list = []
       this.total = 0
       this.selectedlist = []
       this.addVisiable = true
+      this.getList()
     },
     confirmAdd() {
       const newPlaySourceIds = []
@@ -231,11 +344,15 @@ export default {
       this.selectedlist.forEach(item => {
         const id = item.id
         let found = false
-        this.program.playSource.forEach(playSourceId => {
-          if (id === playSourceId) {
-            found = true
+        if (this.program != null) {
+          if (this.program.playSource != null) {
+            this.program.playSource.forEach(playSourceId => {
+              if (id === playSourceId) {
+                found = true
+              }
+            })
           }
-        })
+        }
         if (!found) {
           newPlaySourceIds.push(id)
           newPlaySourceList.push(item)
@@ -243,8 +360,13 @@ export default {
       })
 
       if (newPlaySourceIds.length > 0) {
-        this.program.playSource = this.program.playSource.concat(newPlaySourceIds)
-        this.playSourceList = this.playSourceList.concat(newPlaySourceList)
+        if (this.program.playSource != null) {
+          this.program.playSource = this.program.playSource.concat(newPlaySourceIds)
+          this.playSourceList = this.playSourceList.concat(newPlaySourceList)
+        } else {
+          this.program.playSource = newPlaySourceIds
+          this.playSourceList = newPlaySourceList
+        }
       }
       this.addVisiable = false
     },
@@ -261,13 +383,13 @@ export default {
       }
     },
     handleCancel() {
-      this.$router.push({ path: '/promotion/program' })
+      this.$router.push({ path: '/screen/program' })
     },
     handleConfirm() {
       this.$refs['program'].validate(valid => {
         if (valid) {
           updateSimpleProgramById(this.program).then(response => {
-            this.$router.push({ path: '/promotion/program' })
+            this.$router.push({ path: '/screen/program' })
           })
             .catch(response => {
               this.$notify.error({

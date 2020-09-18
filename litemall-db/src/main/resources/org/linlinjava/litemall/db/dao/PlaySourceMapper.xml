@@ -600,7 +600,6 @@
     <if test="playSource != null and playSource.name != null and playSource.name != '' " >
       and name LIKE concat(concat('%',#{playSource.name}),'%')
     </if>
-    and id in(SELECT examine.detail_id from examine where examine.pass_status = 4)
     order by updateTime desc ,createTime desc
   </select>
 </mapper>
