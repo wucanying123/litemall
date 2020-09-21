@@ -59,6 +59,9 @@
 
     <el-dialog :visible.sync="addVisiable" title="添加资源">
       <div class="search">
+        <el-select v-model="listQuery._type" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
+          <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
+        </el-select>
         <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入资源名称" />
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
         <el-table
@@ -245,6 +248,7 @@ export default {
   },
   data() {
     return {
+      typeOptions: Object.assign({}, defaultTypeOptions),
       id: 0,
       program: {
         playSource: []
@@ -257,7 +261,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 5,
-        name: undefined
+        name: undefined,
+        _type: undefined
       },
       selectedlist: [],
       rules: {
@@ -330,7 +335,8 @@ export default {
       this.listQuery = {
         page: 1,
         limit: 5,
-        name: undefined
+        name: undefined,
+        _type: undefined
       }
       this.list = []
       this.total = 0
