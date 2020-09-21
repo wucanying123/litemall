@@ -14,7 +14,7 @@
         <el-input v-model="program.name" />
       </el-form-item>
       <el-form-item label="节目宽" prop="width">
-        <el-input v-model="program.name" />
+        <el-input v-model="program.width" />
       </el-form-item>
       <el-form-item label="节目宽" prop="height">
         <el-input v-model="program.height" />
