@@ -46,12 +46,12 @@ public class ItemController {
     public ResponseUtil selectItemPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Item item = null;
-        logger.info("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit);
+        logger.info("selectItemPage and item={},page={},limit={}", JSON.toJSONString(item), page, limit);
         try {
             PageInfo<Item> pageList = itemService.selectItemPage(item, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectItemPage and item={},page={},limit", JSON.toJSONString(item), page, limit, e);
+            logger.error("selectItemPage and item={},page={},limit={}", JSON.toJSONString(item), page, limit, e);
         }
         return responseUtil;
     }

@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Examine;
+import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.service.ExamineService;
+import org.linlinjava.litemall.db.service.LitemallAdminService;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.TaskMapper;
 import org.linlinjava.litemall.db.domain.Task;
@@ -25,6 +27,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
     @Autowired
     private ExamineService examineService;
+    @Autowired
+    private LitemallAdminService adminService;
 
 
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -37,6 +41,13 @@ public class TaskServiceImpl implements TaskService {
             List<Task> list = taskMapper.selectTaskPage(task);
             String jsonString = JSON.toJSONString(list);
             page = new PageInfo<>(list);
+            List<Task> taskList = page.getList();
+            if(null != taskList && taskList.size()>0) {
+                for(Task task1 :taskList) {
+                    LitemallAdmin admin = adminService.findById(task1.getUserid());
+                    task1.setUserName(admin.getUsername());
+                }
+            }
         } catch (Exception e) {
             logger.error("selectTaskPage error and msg={}", e);
         }

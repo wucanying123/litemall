@@ -43,12 +43,12 @@ public class ScreenDeviceController {
     public ResponseUtil selectScreenDevicePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         ScreenDevice screenDevice = null;
-        logger.info("selectScreenDevicePage and screenDevice={},page={},limit", JSON.toJSONString(screenDevice), page, limit);
+        logger.info("selectScreenDevicePage and screenDevice={},page={},limit={}", JSON.toJSONString(screenDevice), page, limit);
         try {
             PageInfo<ScreenDevice> pageList = screenDeviceService.selectScreenDevicePage(screenDevice, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectScreenDevicePage and screenDevice={},page={},limit", JSON.toJSONString(screenDevice), page, limit, e);
+            logger.error("selectScreenDevicePage and screenDevice={},page={},limit={}", JSON.toJSONString(screenDevice), page, limit, e);
         }
         return responseUtil;
     }

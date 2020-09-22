@@ -42,12 +42,12 @@ public class ExamineController {
         examine.setDetailName(detailName);
         examine.setType(type);
         examine.setPassStatus(passStatus);
-        logger.info("selectExaminePage and examine={},page={},limit", JSON.toJSONString(examine), page, limit);
+        logger.info("selectExaminePage and examine={},page={},limit={}", JSON.toJSONString(examine), page, limit);
         try {
             PageInfo<Examine> pageList = examineService.selectExaminePage(examine, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectExaminePage and examine={},page={},limit", JSON.toJSONString(examine), page, limit, e);
+            logger.error("selectExaminePage and examine={},page={},limit={}", JSON.toJSONString(examine), page, limit, e);
         }
         return responseUtil;
     }

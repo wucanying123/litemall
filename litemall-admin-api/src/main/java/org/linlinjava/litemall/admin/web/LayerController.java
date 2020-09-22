@@ -38,12 +38,12 @@ public class LayerController {
     public ResponseUtil selectLayerPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Layer layer = null;
-        logger.info("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit);
+        logger.info("selectLayerPage and layer={},page={},limit={}", JSON.toJSONString(layer), page, limit);
         try {
             PageInfo<Layer> pageList = layerService.selectLayerPage(layer, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectLayerPage and layer={},page={},limit", JSON.toJSONString(layer), page, limit, e);
+            logger.error("selectLayerPage and layer={},page={},limit={}", JSON.toJSONString(layer), page, limit, e);
         }
         return responseUtil;
     }

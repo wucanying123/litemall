@@ -37,12 +37,12 @@ public class CommandController {
     public ResponseUtil selectCommandPage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Command command = null;
-        logger.info("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit);
+        logger.info("selectCommandPage and command={},page={},limit={}", JSON.toJSONString(command), page, limit);
         try {
             PageInfo<Command> pageList = commandService.selectCommandPage(command, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectCommandPage and command={},page={},limit", JSON.toJSONString(command), page, limit, e);
+            logger.error("selectCommandPage and command={},page={},limit={}", JSON.toJSONString(command), page, limit, e);
         }
         return responseUtil;
     }

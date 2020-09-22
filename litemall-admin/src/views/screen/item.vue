@@ -3,12 +3,25 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入直播名称" />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
-      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
-        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleSearch">添加节目</el-button>
+      <!-- 查询结果 -->
+      <el-table :data="programList" border fit highlight-current-row>
+
+        <el-table-column align="center" label="名称" prop="name" />
+        <el-table-column align="width" label="节目宽" prop="width" />
+        <el-table-column align="height" label="节目高" prop="height" />
+        <el-table-column align="center" label="修改时间" prop="updateTime">
+          <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
+        </el-table-column>
+
+        <el-table-column align="center" label="格式" prop="fileExt" />
+        <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button type="danger" size="mini" @click="handleDeleteSelection(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopItem">停止直播</el-button>
     </div>
 
@@ -24,6 +37,7 @@
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
+
       <el-table-column align="center" label="操作" width="330" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
@@ -31,6 +45,7 @@
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
+
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
@@ -68,7 +83,30 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
-        <el-button v-else type="primary" @click="updateData">确定</el-button>
+        <el-button v-else type="primary" @click="handleConfirm2">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="addVisiable" title="添加节目">
+      <div class="search">
+        <el-input v-model="listQueryProgram.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入节目名称" />
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleProgramFilter">查找</el-button>
+        <el-table v-loading="listLoadingProgram" :data="listProgram" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" />
+          <el-table-column align="center" label="名称" prop="name" />
+          <el-table-column align="width" label="节目宽" prop="width" />
+          <el-table-column align="height" label="节目高" prop="height" />
+          <el-table-column align="center" label="修改时间" prop="updateTime">
+            <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="totalProgram>0" :total="totalProgram" :page.sync="listQueryProgram.page" :limit.sync="listQueryProgram.limit" @pagination="getList" />
+
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addVisiable = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddProgram">确定1</el-button>
+        <el-button type="primary" @click="handleConfirm">确定2</el-button>
       </div>
     </el-dialog>
 
@@ -102,10 +140,12 @@
 </style>
 
 <script>
-import { listItem, createItem, updateItem, deleteItem, playItem } from '@/api/item'
+import { listItem, createItem, updateItem, deleteItem } from '@/api/item'
+import { updateTask } from '@/api/task'
 import { stopItemVideo } from '@/api/screenDevice'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import { listProgram } from '@/api/program' // Secondary package based on el-pagination
 
 export default {
   name: 'Item',
@@ -132,7 +172,6 @@ export default {
   data() {
     return {
       list: [],
-      cardList: [],
       cardId: undefined,
       total: 0,
       listLoading: true,
@@ -169,7 +208,22 @@ export default {
         ]
       },
       downloadLoading: false,
-      brandList: []
+      brandList: [],
+      programList: [],
+      addVisiable: false,
+      listQueryProgram: {
+        pageProgram: 1,
+        limitProgram: 20,
+        type: undefined,
+        name: undefined
+      },
+      listProgram: [],
+      totalProgram: 0,
+      listLoadingProgram: false,
+      selectedlist: [],
+      item: {
+        program: []
+      }
     }
   },
   computed: {
@@ -264,22 +318,21 @@ export default {
         })
     },
     handlePlay(row) {
-      playItem(row.id, this.cardId)
-        .then(response => {
-          this.$notify.success({
-            title: '成功',
-            message: '播放成功'
-          })
-        })
+    },
+    handleUpdate(row) {
+      this.$router.push({ path: '/screen/schedule', query: { itemId: row._id }})
+    },
+    handleConfirm() {
+      console.log(this.item)
+      updateTask(this.item).then(response => {
+        location.reload()
+      })
         .catch(response => {
           this.$notify.error({
             title: '失败',
             message: response.data.errmsg
           })
         })
-    },
-    handleUpdate(row) {
-      this.$router.push({ path: '/screen/schedule', query: { itemId: row._id }})
     },
     updateData() {
       this.$refs['dataForm'].validate(valid => {
@@ -324,6 +377,81 @@ export default {
             message: response.data.errmsg
           })
         })
+    },
+    handleSearch() {
+      this.listQueryProgram = {
+        pageProgram: 1,
+        limitProgram: 5,
+        name: undefined
+      }
+      this.listProgram = []
+      this.totalProgram = 0
+      this.selectedlist = []
+      this.addVisiable = true
+      this.getProgramList()
+    },
+    handleProgramFilter() {
+      this.listQueryProgram.pageProgram = 1
+      this.getProgramList()
+    },
+    handleDeleteSelection(row) {
+      for (var index = 0; index < this.item.program.length; index++) {
+        if (row._id === this.item.program[index]) {
+          this.item.program.splice(index, 1)
+        }
+      }
+      for (var index2 = 0; index2 < this.programList.length; index2++) {
+        if (row._id === this.programList[index2]._id) {
+          this.programList.splice(index2, 1)
+        }
+      }
+    },
+    confirmAddProgram() {
+      const newProgramIds = []
+      const newProgramList = []
+      this.selectedlist.forEach(item => {
+        const _id = item._id
+        let found = false
+        if (this.item != null) {
+          if (this.item.program != null) {
+            this.item.program.forEach(programId => {
+              if (_id === programId) {
+                found = true
+              }
+            })
+          }
+        }
+        if (!found) {
+          newProgramIds.push(_id)
+          newProgramList.push(item)
+        }
+      })
+
+      if (newProgramIds.length > 0) {
+        if (this.item.program != null) {
+          this.item.program = this.item.program.concat(newProgramIds)
+          this.programList = this.programList.concat(newProgramList)
+        } else {
+          this.item.program = newProgramIds
+          this.programList = newProgramList
+        }
+      }
+      this.addVisiable = false
+    },
+    getProgramList() {
+      this.listLoadingProgram = true
+      listProgram(this.listQueryProgram).then(response => {
+        this.listProgram = response.data.data.list
+        this.totalProgram = response.data.data.total
+        this.listLoadingProgram = false
+      }).catch(() => {
+        this.listProgram = []
+        this.totalProgram = 0
+        this.listLoadingProgram = false
+      })
+    },
+    handleSelectionChange(val) {
+      this.selectedlist = val
     }
   }
 }

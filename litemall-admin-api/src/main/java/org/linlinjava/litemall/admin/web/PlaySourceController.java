@@ -39,12 +39,12 @@ public class PlaySourceController {
         PlaySource playSource = new PlaySource();
         playSource.setName(name);
         playSource.set_type(_type);
-        logger.info("selectPlaySourcePage and playSource={},page={},limit", JSON.toJSONString(playSource), page, limit);
+        logger.info("selectPlaySourcePage and playSource={},page={},limit={}", JSON.toJSONString(playSource), page, limit);
         try {
             PageInfo<PlaySource> pageList = playSourceService.selectPlaySourcePage(playSource, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectPlaySourcePage and playSource={},page={},limit", JSON.toJSONString(playSource), page, limit, e);
+            logger.error("selectPlaySourcePage and playSource={},page={},limit={}", JSON.toJSONString(playSource), page, limit, e);
         }
         return responseUtil;
     }

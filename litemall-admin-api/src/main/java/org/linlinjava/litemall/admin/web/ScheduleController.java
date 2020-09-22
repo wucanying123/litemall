@@ -44,12 +44,12 @@ public class ScheduleController {
     public ResponseUtil selectSchedulePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Schedule schedule = null;
-        logger.info("selectSchedulePage and schedule={},page={},limit", JSON.toJSONString(schedule), page, limit);
+        logger.info("selectSchedulePage and schedule={},page={},limit={}", JSON.toJSONString(schedule), page, limit);
         try {
             PageInfo<Schedule> pageList = scheduleService.selectSchedulePage(schedule, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectSchedulePage and schedule={},page={},limit", JSON.toJSONString(schedule), page, limit, e);
+            logger.error("selectSchedulePage and schedule={},page={},limit={}", JSON.toJSONString(schedule), page, limit, e);
         }
         return responseUtil;
     }

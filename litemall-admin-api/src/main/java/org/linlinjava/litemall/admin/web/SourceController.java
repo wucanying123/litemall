@@ -39,12 +39,12 @@ public class SourceController {
         Source source = new Source();
         source.setName(name);
         source.set_type(_type);
-        logger.info("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit);
+        logger.info("selectSourcePage and source={},page={},limit={}", JSON.toJSONString(source), page, limit);
         try {
             PageInfo<Source> pageList = sourceService.selectSourcePage(source, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectSourcePage and source={},page={},limit", JSON.toJSONString(source), page, limit, e);
+            logger.error("selectSourcePage and source={},page={},limit={}", JSON.toJSONString(source), page, limit, e);
         }
         return responseUtil;
     }

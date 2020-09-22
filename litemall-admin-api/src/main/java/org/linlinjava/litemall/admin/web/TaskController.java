@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Task;
 import org.linlinjava.litemall.db.util.ResponseUtil;
@@ -34,16 +35,16 @@ public class TaskController {
      */
     @ApiOperation(value = "获取任务列表")
     @GetMapping("/selectTaskPage")
-    public ResponseUtil selectTaskPage(String taskId, String name, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseUtil selectTaskPage(String name, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Task task = new Task();
         task.setName(name);
-        logger.info("selectTaskPage and task={},page={},limit", JSON.toJSONString(task), page, limit);
+        logger.info("selectTaskPage and task={},page={},limit={}", JSON.toJSONString(task), page, limit);
         try {
             PageInfo<Task> pageList = taskService.selectTaskPage(task, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectTaskPage and task={},page={},limit", JSON.toJSONString(task), page, limit, e);
+            logger.error("selectTaskPage and task={},page={},limit={}", JSON.toJSONString(task), page, limit, e);
         }
         return responseUtil;
     }
@@ -106,21 +107,21 @@ public class TaskController {
      */
     @ApiOperation(value = "编辑任务")
     @PostMapping(value = "/updateTaskById")
-    public ResponseUtil<Task> updateTaskById(@RequestBody Task task) {
-        logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
+    public ResponseUtil<Task> updateTaskById(@RequestBody Item item) {
+//        logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
-        if (StringUtilsXD.isBlank(task.get_id())) {
-            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
-        }
-        try {
-            int n = taskService.updateTaskById(task);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
-        } catch (Exception e) {
-            logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
-
-        }
+//        if (StringUtilsXD.isBlank(task.get_id())) {
+//            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+//        }
+//        try {
+//            int n = taskService.updateTaskById(task);
+//            if (n == 1) {
+//                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+//            }
+//        } catch (Exception e) {
+//            logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
+//
+//        }
         return responseUtil;
     }
 

@@ -43,12 +43,12 @@ public class ProgramController {
         ResponseUtil responseUtil = new ResponseUtil();
         Program program = new Program();
         program.setName(name);
-        logger.info("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit);
+        logger.info("selectProgramPage and program={},page={},limit={}", JSON.toJSONString(program), page, limit);
         try {
             PageInfo<Program> pageList = programService.selectProgramPage(program, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectProgramPage and program={},page={},limit", JSON.toJSONString(program), page, limit, e);
+            logger.error("selectProgramPage and program={},page={},limit={}", JSON.toJSONString(program), page, limit, e);
         }
         return responseUtil;
     }

@@ -25,4 +25,6 @@ public class Item implements Serializable {
     Long createTime;//创建时间
     Long updateTime;//修改时间
     Integer userid;//用户id
+
+    String[] program;
 }

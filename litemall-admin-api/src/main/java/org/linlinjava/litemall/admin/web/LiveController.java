@@ -40,12 +40,12 @@ public class LiveController {
     public ResponseUtil selectLivePage(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false) Integer limit) {
         ResponseUtil responseUtil = new ResponseUtil();
         Live live = null;
-        logger.info("selectLivePage and live={},page={},limit", JSON.toJSONString(live), page, limit);
+        logger.info("selectLivePage and live={},page={},limit={}", JSON.toJSONString(live), page, limit);
         try {
             PageInfo<Live> pageList = liveService.selectLivePage(live, StringUtilsXD.checkPageNumParam(page), StringUtilsXD.checkPageSizeParam(limit));
             return responseUtil.succeedPage(pageList);
         } catch (Exception e) {
-            logger.error("selectLivePage and live={},page={},limit", JSON.toJSONString(live), page, limit, e);
+            logger.error("selectLivePage and live={},page={},limit={}", JSON.toJSONString(live), page, limit, e);
         }
         return responseUtil;
     }
