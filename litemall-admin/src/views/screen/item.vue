@@ -82,7 +82,7 @@
           <el-table-column align="center" label="名称" prop="name" />
           <el-table-column align="width" label="节目宽" prop="width" />
           <el-table-column align="height" label="节目高" prop="height" />
-          <el-table-column align="center" label="修改时间" prop="updateTime">
+          <el-table-column align="center" label="修改时间1" prop="updateTime">
             <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
           </el-table-column>
         </el-table>

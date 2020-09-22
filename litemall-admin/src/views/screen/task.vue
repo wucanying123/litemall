@@ -5,6 +5,10 @@
     <div class="filter-container">
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
+      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
+        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleclearTask">停止节目</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -16,8 +20,9 @@
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
       <el-table-column align="center" label="创建者" prop="userName" />
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放任务</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑任务</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -71,7 +76,9 @@
 <script>
 import { listTask, updateTask, deleteTask } from '@/api/task'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import { clearPlayerTask, selectOnlineDevice } from '@/api/screenDevice'
+import { playTask } from '@/api/task' // Secondary package based on el-pagination
 
 export default {
   name: 'Task',
@@ -120,7 +127,9 @@ export default {
           { required: true, message: '名称不能为空', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      cardList: [],
+      cardId: undefined
     }
   },
   computed: {
@@ -132,6 +141,7 @@ export default {
   },
   created() {
     this.getList()
+    this.handleCardList()
   },
   methods: {
     getList() {
@@ -147,6 +157,11 @@ export default {
           this.total = 0
           this.listLoading = false
         })
+    },
+    handleCardList() {
+      selectOnlineDevice().then(response => {
+        this.cardList = response.data.data.list
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -199,6 +214,37 @@ export default {
             message: '删除成功'
           })
           this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handleclearTask() {
+      clearPlayerTask(this.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '停止成功'
+          })
+          this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handlePlay(row) {
+      playTask(row._id, this.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '播放成功'
+          })
         })
         .catch(response => {
           this.$notify.error({

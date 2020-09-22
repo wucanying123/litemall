@@ -18,8 +18,9 @@
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -80,7 +81,8 @@
 <script>
 import { listProgram, createProgram, updateProgram, deleteProgram } from '@/api/program'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import { insertQuickTask } from '@/api/task' // Secondary package based on el-pagination
 
 export default {
   name: 'Program',
@@ -246,6 +248,21 @@ export default {
             message: '删除成功'
           })
           this.getList()
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
+    handleCreateTask(row) {
+      insertQuickTask(row.name, row._id)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '创建成功'
+          })
         })
         .catch(response => {
           this.$notify.error({

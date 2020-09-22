@@ -56,4 +56,12 @@ public interface TaskService {
      * @currentdate:2020年9月2日
      */
     int deleteById(String id);
+
+    /**
+     * @Description: 快速创建任务
+     * @Title: insertQuickTask
+     * @auther IngaWu
+     * @currentdate:2020年9月22日
+     */
+    int insertQuickTask(String programName,String programId,Integer userId);
 }

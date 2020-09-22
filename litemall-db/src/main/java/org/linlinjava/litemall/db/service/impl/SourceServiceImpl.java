@@ -72,6 +72,7 @@ public class SourceServiceImpl implements SourceService {
             if (null == source.getMaxPlayTime()) {
                 source.setMaxPlayTime(10);
             }
+            source.setEnabled(true);
             n = sourceMapper.insertSelective(source);
             //同步添加到审核表
             Examine examine = new Examine();

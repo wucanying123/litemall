@@ -4,6 +4,7 @@ import net.sf.json.JSONObject;
 import org.linlinjava.litemall.db.dao.*;
 import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.service.LiveService;
+import org.linlinjava.litemall.db.service.PlaySourceService;
 import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.util.*;
 import org.slf4j.Logger;
@@ -37,6 +38,8 @@ public class ScreenServiceImpl implements ScreenService {
     private LiveService liveService;
     @Autowired
     private PlaySourceMapper playSourceMapper;
+    @Autowired
+    private PlaySourceService playSourceService;
 
     private static Logger logger = LoggerFactory.getLogger(ScreenServiceImpl.class);
 
@@ -511,8 +514,7 @@ public class ScreenServiceImpl implements ScreenService {
      */
     public ResponseUtil<Object> playXixunTask(String taskId,String cardId) {
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-
-        Task task =readTask(taskId);
+        Task task = readTask(taskId);
         RequestData requestData = new RequestData();
         requestData.setType("commandXixunPlayer");
         Command command = new Command();
@@ -571,7 +573,7 @@ public class ScreenServiceImpl implements ScreenService {
                             if (null != playSourcesIds && playSourcesIds.length() > 0) {
                                 List<String> playSourcesIdsList = Arrays.asList(playSourcesIds.split(","));
                                 for (String playSourcesId : playSourcesIdsList) {
-                                    PlaySource playSource = playSourceMapper.selectByPrimaryKey(playSourcesId);
+                                    PlaySource playSource = playSourceService.selectBySourceIdAndLayerId(playSourcesId, layer.getId());
                                     if (null != playSource) {
                                         playSource.setLeft(playSource.getTheLeft());
                                         playSources.add(playSource);

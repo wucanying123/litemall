@@ -16,6 +16,17 @@ export function createTask(data) {
   })
 }
 
+export function insertQuickTask(programName, programId) {
+  return request({
+    url: '/screen/task/insertQuickTask',
+    method: 'post',
+    params: {
+      programName: programName,
+      programId: programId
+    }
+  })
+}
+
 export function readTask(data) {
   return request({
     url: '/screen/task/selectTaskById',
@@ -46,6 +57,17 @@ export function deleteTask(id) {
     method: 'post',
     params: {
       id: id
+    }
+  })
+}
+
+export function playTask(id, cardId) {
+  return request({
+    url: '/screen/task/playTask',
+    method: 'post',
+    params: {
+      id: id,
+      cardId: cardId
     }
   })
 }

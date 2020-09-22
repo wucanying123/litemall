@@ -250,10 +250,6 @@ export default {
         }
       })
     },
-    handleDetail(row) {
-      this.userDetail = row
-      this.userDialogVisible = true
-    },
     stopLive() {
       stopLiveVideo(this.cardId)
         .then(response => {

@@ -3,12 +3,7 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入定时名称" />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
-      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
-        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -136,7 +131,6 @@ export default {
     return {
       uploadPath,
       list: [],
-      cardList: [],
       cardId: undefined,
       total: 0,
       listLoading: true,
@@ -204,10 +198,6 @@ export default {
           this.total = 0
           this.listLoading = false
         })
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
     },
     resetForm() {
       this.dataForm = {

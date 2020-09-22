@@ -7,6 +7,7 @@ import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Task;
+import org.linlinjava.litemall.db.service.ScreenService;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.TaskService;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private ScreenService screenService;
 
     private static Logger logger = LoggerFactory.getLogger(TaskController.class);
 
@@ -164,6 +167,49 @@ public class TaskController {
             }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
+        }
+        return responseUtil;
+    }
+
+    /**
+     * @Description: 播放任务
+     * @Title: playTask
+     * @param id 任务id
+     * @auther IngaWu
+     * @currentdate:2020年9月22日
+     */
+    @ApiOperation(value = "播放任务")
+    @PostMapping(value = "/playTask")
+    public ResponseUtil<Object> playTask(@RequestParam(value = "id") String id,String cardId) {
+        logger.info("playTask and id={}", JSON.toJSONString(id));
+        if(StringUtilsXD.isEmpty(cardId)){
+            ResponseUtil<Object> responseUtil = new ResponseUtil<>();
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
+        }
+        return screenService.playXixunTask(id,cardId);
+    }
+
+    /**
+     * @Description: 快速创建任务
+     * @Title: insertQuickTask
+     * @auther IngaWu
+     * @currentdate:2020年9月22日
+     */
+    @ApiOperation(value = "快速创建任务")
+    @PostMapping(value = "/insertQuickTask")
+    public ResponseUtil<Task> insertQuickTask(@RequestParam(value = "programName") String programName,@RequestParam(value = "programId") String programId) {
+        logger.info("insertQuickTask and programId:{}", programId);
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
+        try {
+            Subject currentUser = SecurityUtils.getSubject();
+            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            Integer userId = admin.getId();
+            int n = taskService.insertQuickTask(programName,programId,userId);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("insertQuickTask and programId:{}", programId, e);
         }
         return responseUtil;
     }

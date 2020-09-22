@@ -124,15 +124,7 @@ public class TaskServiceImpl implements TaskService {
                     String itemId = item.get_id();
                     if (null == item.get_id()) {
                         Program program = item.get_program();
-                        item.setProgramId(program.get_id());
-                        item.setVersion(0);//TODO
-                        item.setRepeatTimes(1);
-                        item.setPriority(0);
-                        item.set_id(UUID.randomUUID().toString().replace("-", ""));
-                        long cuttentTime = DateUtil.getDateline();
-                        item.setCreateTime(cuttentTime);
-                        item.setUpdateTime(cuttentTime);
-                        itemMapper.insertSelective(item);
+                        item = createItemByProgramId(program.get_id());
                         itemId = item.get_id();
                     }
                     itemIdList.add(itemId);
@@ -151,6 +143,20 @@ public class TaskServiceImpl implements TaskService {
         return n;
     }
 
+    private Item createItemByProgramId(String programId) {
+        Item item = new Item();
+        item.setProgramId(programId);
+        item.setVersion(2);
+        item.setRepeatTimes(1);
+        item.setPriority(0);
+        item.set_id(UUID.randomUUID().toString().replace("-", ""));
+        long cuttentTime = DateUtil.getDateline();
+        item.setCreateTime(cuttentTime);
+        item.setUpdateTime(cuttentTime);
+        itemMapper.insertSelective(item);
+        return item;
+    }
+
     @Override
     public int deleteById(String id) {
         int n = 0;
@@ -160,6 +166,23 @@ public class TaskServiceImpl implements TaskService {
             examineService.deleteByDetailId(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
+        }
+        return n;
+    }
+
+    @Override
+    public int insertQuickTask(String programName,String programId, Integer userId) {
+        int n = 0;
+        try {
+            Task task = new Task();
+            task.setUserid(userId);
+            task.setName(programName+"_Task");
+            Item item = createItemByProgramId(programId);
+            String itemIdStr = item.get_id();
+            task.setItemsIds(itemIdStr);
+            n = insertTask(task);
+        } catch (Exception e) {
+            logger.error("insertQuickTask error and msg={}", e);
         }
         return n;
     }

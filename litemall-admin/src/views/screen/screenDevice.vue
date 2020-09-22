@@ -343,7 +343,7 @@ export default {
         .then(response => {
           this.$notify.success({
             title: '成功',
-            message: '清屏成功'
+            message: '停止成功'
           })
           this.getList()
         })
