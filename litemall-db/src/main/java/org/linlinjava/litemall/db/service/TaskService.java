@@ -41,6 +41,14 @@ public interface TaskService {
     int updateTaskById(Task task);
 
     /**
+     * @Description: 编辑完整任务
+     * @title updateTaskTotalById
+     * @author IngaWu
+     * @currentdate:2020年9月22日
+     */
+    int updateTaskTotalById(Task task);
+
+    /**
      * @Description: 删除任务
      * @Title: deleteById
      * @param id 任务id

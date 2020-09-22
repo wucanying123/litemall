@@ -133,7 +133,7 @@ public class ItemController {
     }
 
     /**
-     * @param id 项目id
+     * @param itemId 项目id
      * @Description: 删除项目
      * @Title: deleteById
      * @auther IngaWu
@@ -141,16 +141,16 @@ public class ItemController {
      */
     @ApiOperation(value = "删除项目")
     @PostMapping(value = "/deleteById")
-    public ResponseUtil<Item> deleteById(@RequestParam(value = "id") String id) {
-        logger.info("deleteById and id={}", JSON.toJSONString(id));
+    public ResponseUtil<Item> deleteById(@RequestParam(value = "taskId") String taskId,@RequestParam(value = "itemId") String itemId) {
+        logger.info("deleteById and id={}", JSON.toJSONString(itemId));
         ResponseUtil<Item> responseUtil = new ResponseUtil<>();
         try {
-            int n = itemService.deleteById(id);
+            int n = itemService.deleteById(taskId,itemId);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
-            logger.error("deleteById and id={}", JSON.toJSONString(id), e);
+            logger.error("deleteById and itemId={}", JSON.toJSONString(itemId), e);
         }
         return responseUtil;
     }
@@ -167,8 +167,8 @@ public class ItemController {
     public Object selectListByTaskId(@RequestParam(value = "taskId") String taskId) {
         logger.info("selectListByTaskId and taskId={}", taskId);
         List<Item> items = new ArrayList<>();
+        Task task = taskService.selectTaskById(taskId);
         try {
-            Task task = taskService.selectTaskById(taskId);
             String itemsIds = task.getItemsIds();
             if (null != itemsIds && itemsIds.length() > 0) {
                 List<String> itemsIdsList = Arrays.asList(itemsIds.split(","));
@@ -186,9 +186,10 @@ public class ItemController {
                     item.set_program(program);
                 }
             }
+            task.setItems(items);
         } catch (Exception e) {
             logger.error("selectListByTaskId and taskId={}", taskId, e);
         }
-        return ResponseUtil.okList(items);
+        return ResponseUtil.ok(task);
     }
 }

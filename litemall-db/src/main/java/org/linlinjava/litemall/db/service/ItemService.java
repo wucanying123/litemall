@@ -43,9 +43,9 @@ public interface ItemService {
     /**
      * @Description: 删除项目
      * @Title: deleteById
-     * @param id 项目id
+     * @param itemId 项目id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    int deleteById(String id);
+    int deleteById(String taskId,String itemId);
 }

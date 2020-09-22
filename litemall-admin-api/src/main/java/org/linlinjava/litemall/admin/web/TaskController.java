@@ -107,21 +107,41 @@ public class TaskController {
      */
     @ApiOperation(value = "编辑任务")
     @PostMapping(value = "/updateTaskById")
-    public ResponseUtil<Task> updateTaskById(@RequestBody Item item) {
-//        logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
+    public ResponseUtil<Task> updateTaskById(@RequestBody Task task) {
+        logger.info("updateTaskById and task:{}", JSON.toJSONString(task));
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
-//        if (StringUtilsXD.isBlank(task.get_id())) {
-//            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
-//        }
-//        try {
-//            int n = taskService.updateTaskById(task);
-//            if (n == 1) {
-//                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-//            }
-//        } catch (Exception e) {
-//            logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
-//
-//        }
+        if (StringUtilsXD.isBlank(task.get_id())) {
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
+        try {
+            int n = taskService.updateTaskById(task);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("updateTaskById and task:{}", JSON.toJSONString(task), e);
+
+        }
+        return responseUtil;
+    }
+
+    @ApiOperation(value = "编辑完整任务")
+    @PostMapping(value = "/updateTaskTotalById")
+    public ResponseUtil<Task> updateTaskTotalById(@RequestBody Task task) {
+        logger.info("updateTaskTotalById and task:{}", JSON.toJSONString(task));
+        ResponseUtil<Task> responseUtil = new ResponseUtil<>();
+        if (StringUtilsXD.isBlank(task.get_id())) {
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
+        try {
+            int n = taskService.updateTaskTotalById(task);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("updateTaskTotalById and task:{}", JSON.toJSONString(task), e);
+
+        }
         return responseUtil;
     }
 

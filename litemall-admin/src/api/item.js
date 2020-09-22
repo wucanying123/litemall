@@ -32,12 +32,13 @@ export function updateItem(data) {
   })
 }
 
-export function deleteItem(id) {
+export function deleteItem(taskId, itemId) {
   return request({
     url: '/screen/item/deleteById',
     method: 'post',
     params: {
-      id: id
+      taskId: taskId,
+      itemId: itemId
     }
   })
 }

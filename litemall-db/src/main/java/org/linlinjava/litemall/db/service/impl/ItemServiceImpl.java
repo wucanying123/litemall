@@ -3,23 +3,28 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.linlinjava.litemall.db.domain.Task;
+import org.linlinjava.litemall.db.service.TaskService;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.ItemMapper;
 import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.service.ItemService;
+import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private TaskService taskService;
 
 
     private static Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
@@ -77,10 +82,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public int deleteById(String id) {
+    public int deleteById(String taskId,String itemId) {
         int n = 0;
         try {
-            n = itemMapper.deleteByPrimaryKey(id);
+            n = itemMapper.deleteByPrimaryKey(itemId);
+            Task task = taskService.selectTaskById(taskId);
+            if(null != task && StringUtilsXD.isNotEmpty(task.getItemsIds())) {
+                String itemIds = task.getItemsIds();
+                List<String> itemIdList = Arrays.asList(itemIds.split(","));
+                Set<String> deleteItemIdList = new HashSet<>();
+                deleteItemIdList.add(itemId);
+                Set<String> itemIdSet = new HashSet(itemIdList);
+                Set<String> subItemIdSet = new HashSet<String>();
+                subItemIdSet.addAll(itemIdSet);
+                subItemIdSet.removeAll(deleteItemIdList);
+                List<String> newItemIdList = new ArrayList<>();
+                if (null != subItemIdSet && subItemIdSet.size() > 0) {
+                    for (String str : subItemIdSet) {
+                        newItemIdList.add(str);
+                    }
+                }
+                String itemIdStr = StringUtils.join(newItemIdList.toArray(), ",");
+                task.setItemsIds(itemIdStr);
+                n = taskService.updateTaskById(task);
+            }
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }

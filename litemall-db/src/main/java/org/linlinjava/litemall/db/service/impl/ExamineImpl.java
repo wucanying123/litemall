@@ -169,8 +169,11 @@ public class ExamineImpl implements ExamineService {
         Examine searchExamine = new Examine();
         searchExamine.setDetailId(detailId);
         Examine examine= examineMapper.selecByDetailId(detailId);
-        examine.setDetailName(detailName);
-        int n = examineMapper.updateByPrimaryKeySelective(examine);
+        int n = 0;
+        if(null != examine) {
+            examine.setDetailName(detailName);
+            n = examineMapper.updateByPrimaryKeySelective(examine);
+        }
         return n;
     }
 }

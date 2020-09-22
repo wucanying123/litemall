@@ -3,13 +3,14 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.linlinjava.litemall.db.domain.Examine;
-import org.linlinjava.litemall.db.domain.LitemallAdmin;
+import org.apache.commons.lang3.StringUtils;
+import org.linlinjava.litemall.db.dao.ItemMapper;
+import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.service.ExamineService;
+import org.linlinjava.litemall.db.service.ItemService;
 import org.linlinjava.litemall.db.service.LitemallAdminService;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.TaskMapper;
-import org.linlinjava.litemall.db.domain.Task;
 import org.linlinjava.litemall.db.service.TaskService;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,10 @@ public class TaskServiceImpl implements TaskService {
     private ExamineService examineService;
     @Autowired
     private LitemallAdminService adminService;
+    @Autowired
+    private ItemService itemService;
+    @Autowired
+    private ItemMapper itemMapper;
 
 
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -42,8 +48,8 @@ public class TaskServiceImpl implements TaskService {
             String jsonString = JSON.toJSONString(list);
             page = new PageInfo<>(list);
             List<Task> taskList = page.getList();
-            if(null != taskList && taskList.size()>0) {
-                for(Task task1 :taskList) {
+            if (null != taskList && taskList.size() > 0) {
+                for (Task task1 : taskList) {
                     LitemallAdmin admin = adminService.findById(task1.getUserid());
                     task1.setUserName(admin.getUsername());
                 }
@@ -97,7 +103,47 @@ public class TaskServiceImpl implements TaskService {
             n = taskMapper.updateByPrimaryKeySelective(task);
             //同步修改名称到审核表
             if (StringUtilsXD.isNotEmpty(task.get_id()) && StringUtilsXD.isNotEmpty(task.getName())) {
-                examineService.updateExamineDetailName(task.get_id(),task.getName());
+                examineService.updateExamineDetailName(task.get_id(), task.getName());
+            }
+        } catch (Exception e) {
+            logger.error("updateTaskById error and msg={}", e);
+        }
+        return n;
+    }
+
+    @Override
+    public int updateTaskTotalById(Task task) {
+        int n = 0;
+        try {
+            task.setUpdateTime(DateUtil.getDateline());
+            task.setCmdId(UUID.randomUUID().toString().replace("-", ""));
+            List<Item> itemList = task.getItems();
+            List<String> itemIdList = new ArrayList<>();
+            if (null != itemList && itemList.size() > 0) {
+                for (Item item : itemList) {
+                    String itemId = item.get_id();
+                    if (null == item.get_id()) {
+                        Program program = item.get_program();
+                        item.setProgramId(program.get_id());
+                        item.setVersion(0);//TODO
+                        item.setRepeatTimes(1);
+                        item.setPriority(0);
+                        item.set_id(UUID.randomUUID().toString().replace("-", ""));
+                        long cuttentTime = DateUtil.getDateline();
+                        item.setCreateTime(cuttentTime);
+                        item.setUpdateTime(cuttentTime);
+                        itemMapper.insertSelective(item);
+                        itemId = item.get_id();
+                    }
+                    itemIdList.add(itemId);
+                }
+            }
+            String itemIdStr = StringUtils.join(itemIdList.toArray(), ",");
+            task.setItemsIds(itemIdStr);
+            n = taskMapper.updateByPrimaryKeySelective(task);
+            //同步修改名称到审核表
+            if (StringUtilsXD.isNotEmpty(task.get_id()) && StringUtilsXD.isNotEmpty(task.getName())) {
+                examineService.updateExamineDetailName(task.get_id(), task.getName());
             }
         } catch (Exception e) {
             logger.error("updateTaskById error and msg={}", e);

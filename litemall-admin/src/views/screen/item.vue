@@ -5,7 +5,7 @@
     <div class="filter-container">
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleSearch">添加节目</el-button>
       <!-- 查询结果 -->
-      <el-table :data="programList" border fit highlight-current-row>
+      <el-table v-show="false" :data="programList" border fit highlight-current-row>
 
         <el-table-column align="center" label="名称" prop="name" />
         <el-table-column align="width" label="节目宽" prop="width" />
@@ -21,8 +21,6 @@
           </template>
         </el-table-column>
       </el-table>
-
-      <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="stopItem">停止直播</el-button>
     </div>
 
     <!-- 查询结果 -->
@@ -40,8 +38,8 @@
 
       <el-table-column align="center" label="操作" width="330" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑定时</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleSchedule(scope.row)">定时</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -53,15 +51,9 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dataForm.name" />
-        </el-form-item>
-        <el-form-item label="直播地址" prop="url">
-          <el-input v-model="dataForm.url" />
-        </el-form-item>
-        <el-form-item label="宽" prop="width">
+        <el-form-item label="重复次数" prop="repeatTimes">
           <el-input
-            v-model="dataForm.width"
+            v-model="dataForm.repeatTimes"
             type="number"
             min="0"
             step="1"
@@ -69,21 +61,14 @@
             on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
           />
         </el-form-item>
-        <el-form-item label="高" prop="height">
-          <el-input
-            v-model="dataForm.height"
-            type="number"
-            min="0"
-            step="1"
-            size="2"
-            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
-          />
+        <el-form-item label="优先级" prop="priority">
+          <el-input v-model="dataForm.priority" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
-        <el-button v-else type="primary" @click="handleConfirm2">确定</el-button>
+        <el-button v-else type="primary" @click="updateData">确定</el-button>
       </div>
     </el-dialog>
 
@@ -93,6 +78,7 @@
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleProgramFilter">查找</el-button>
         <el-table v-loading="listLoadingProgram" :data="listProgram" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />
+          <el-table-column align="center" label="节目id" prop="_id" />
           <el-table-column align="center" label="名称" prop="name" />
           <el-table-column align="width" label="节目宽" prop="width" />
           <el-table-column align="height" label="节目高" prop="height" />
@@ -105,8 +91,8 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addVisiable = false">取消</el-button>
-        <el-button type="primary" @click="confirmAddProgram">确定1</el-button>
-        <el-button type="primary" @click="handleConfirm">确定2</el-button>
+        <!--        <el-button type="primary" @click="confirmAddProgram">确定1</el-button>-->
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
       </div>
     </el-dialog>
 
@@ -141,8 +127,7 @@
 
 <script>
 import { listItem, createItem, updateItem, deleteItem } from '@/api/item'
-import { updateTask } from '@/api/task'
-import { stopItemVideo } from '@/api/screenDevice'
+import { updateTaskTotalById } from '@/api/task'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 import { listProgram } from '@/api/program' // Secondary package based on el-pagination
@@ -182,10 +167,8 @@ export default {
       },
       dataForm: {
         id: undefined,
-        name: undefined,
-        url: undefined,
-        width: undefined,
-        height: undefined
+        repeatTimes: undefined,
+        priority: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -221,6 +204,11 @@ export default {
       totalProgram: 0,
       listLoadingProgram: false,
       selectedlist: [],
+      task: {
+        items: {
+          _program: {}
+        }
+      },
       item: {
         program: []
       }
@@ -245,8 +233,9 @@ export default {
       this.listLoading = true
       listItem(this.listQuery)
         .then(response => {
-          this.list = response.data.data.list
-          this.total = response.data.data.total
+          this.task = response.data.data
+          this.list = response.data.data.items
+          this.total = response.data.data.items.length
           this.listLoading = false
         })
         .catch(() => {
@@ -262,10 +251,8 @@ export default {
     resetForm() {
       this.dataForm = {
         id: undefined,
-        name: undefined,
-        url: undefined,
-        width: undefined,
-        height: undefined
+        repeatTimes: undefined,
+        priority: undefined
       }
     },
     handleCreate() {
@@ -302,29 +289,20 @@ export default {
       this.userDetail = row
       this.userDialogVisible = true
     },
-    stopItem() {
-      stopItemVideo(this.cardId)
-        .then(response => {
-          this.$notify.success({
-            title: '成功',
-            message: '停止成功'
-          })
-        })
-        .catch(response => {
-          this.$notify.error({
-            title: '失败',
-            message: response.data.errmsg
-          })
-        })
-    },
-    handlePlay(row) {
-    },
     handleUpdate(row) {
+      this.dataForm = Object.assign({}, row)
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleSchedule(row) {
       this.$router.push({ path: '/screen/schedule', query: { itemId: row._id }})
     },
     handleConfirm() {
-      console.log(this.item)
-      updateTask(this.item).then(response => {
+      this.confirmAddProgram()
+      updateTaskTotalById(this.task).then(response => {
         location.reload()
       })
         .catch(response => {
@@ -363,7 +341,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteItem(row.id)
+      deleteItem(this.$route.query.taskId, row._id)
         .then(response => {
           this.$notify.success({
             title: '成功',
@@ -409,13 +387,23 @@ export default {
     confirmAddProgram() {
       const newProgramIds = []
       const newProgramList = []
+      const newItemList = []
       this.selectedlist.forEach(item => {
         const _id = item._id
         let found = false
-        if (this.item != null) {
-          if (this.item.program != null) {
-            this.item.program.forEach(programId => {
-              if (_id === programId) {
+        // if (this.item != null) {
+        //   if (this.item.program != null) {
+        //     this.item.program.forEach(programId => {
+        //       if (_id === programId) {
+        //         found = true
+        //       }
+        //     })
+        //   }
+        // }
+        if (this.task != null) {
+          if (this.task.items != null) {
+            this.task.items.forEach(item => {
+              if (_id === item._program._id) {
                 found = true
               }
             })
@@ -424,6 +412,8 @@ export default {
         if (!found) {
           newProgramIds.push(_id)
           newProgramList.push(item)
+          var newItem = { _program: item }
+          newItemList.push(newItem)
         }
       })
 
@@ -431,9 +421,11 @@ export default {
         if (this.item.program != null) {
           this.item.program = this.item.program.concat(newProgramIds)
           this.programList = this.programList.concat(newProgramList)
+          this.task.items = this.task.items.concat(newItemList)
         } else {
           this.item.program = newProgramIds
           this.programList = newProgramList
+          this.task.items = newItemList
         }
       }
       this.addVisiable = false

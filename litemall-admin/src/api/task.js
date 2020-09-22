@@ -32,6 +32,14 @@ export function updateTask(data) {
   })
 }
 
+export function updateTaskTotalById(data) {
+  return request({
+    url: '/screen/task/updateTaskTotalById',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteTask(id) {
   return request({
     url: '/screen/task/deleteById',

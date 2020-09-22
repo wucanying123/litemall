@@ -30,7 +30,7 @@
       <el-table-column align="center" label="操作" width="330" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑定时</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
