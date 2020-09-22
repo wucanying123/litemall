@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.linlinjava.litemall.db.domain.Item;
-import org.linlinjava.litemall.db.domain.LitemallAdmin;
+import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.ProgramService;
+import org.linlinjava.litemall.db.service.TaskService;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ItemService;
@@ -16,11 +17,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/admin/screen/item")
 public class ItemController {
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private ProgramService programService;
 
     private static Logger logger = LoggerFactory.getLogger(ItemController.class);
 
@@ -144,5 +153,42 @@ public class ItemController {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
+    }
+
+
+    /**
+     * @Description: 通过任务id获取项目列表
+     * @title selectListByTaskId
+     * @auther IngaWu
+     * @currentdate:2020年9月22日
+     */
+    @ApiOperation(value = "通过任务id获取项目列表")
+    @GetMapping("/selectListByTaskId")
+    public Object selectListByTaskId(@RequestParam(value = "taskId") String taskId) {
+        logger.info("selectListByTaskId and taskId={}", taskId);
+        List<Item> items = new ArrayList<>();
+        try {
+            Task task = taskService.selectTaskById(taskId);
+            String itemsIds = task.getItemsIds();
+            if (null != itemsIds && itemsIds.length() > 0) {
+                List<String> itemsIdsList = Arrays.asList(itemsIds.split(","));
+                for (String itemId : itemsIdsList) {
+                    Item item = itemService.selectItemById(itemId);
+                    if (null != item) {
+                        items.add(item);
+                    }
+                }
+            }
+            if (null != items && items.size() > 0) {
+                for (Item item : items) {
+                    //节目
+                    Program program = programService.selectProgramById(item.getProgramId());
+                    item.set_program(program);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("selectListByTaskId and taskId={}", taskId, e);
+        }
+        return ResponseUtil.okList(items);
     }
 }

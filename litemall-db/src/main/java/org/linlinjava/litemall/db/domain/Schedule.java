@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class Schedule extends Source implements Serializable {
+public class Schedule implements Serializable {
      String dateType; //定时日期范围，如果此项值等于DateType.Range， 表示定时项的日期范围：从 startDate 到 endDate。 如果此项值等于DateType.All， 表示日期范围为：永久
      Long startDate;//定时开始日期，例："2015-10-27"， DateType.Range时有效
      Long endDate; // 定时结束日期，例："2015-11-18"，此值在dateType等于DateType.Range时有效

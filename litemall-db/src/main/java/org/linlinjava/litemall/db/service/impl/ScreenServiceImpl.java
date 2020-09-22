@@ -512,16 +512,26 @@ public class ScreenServiceImpl implements ScreenService {
     public ResponseUtil<Object> playXixunTask(String taskId,String cardId) {
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
 
-        Task task = taskMapper.selectByPrimaryKey(taskId);
-        if (null == task) {
-            return responseUtil;
-        }
+        Task task =readTask(taskId);
         RequestData requestData = new RequestData();
         requestData.setType("commandXixunPlayer");
         Command command = new Command();
         command.set_type("PlayXixunTask");
         command.setId(UUID.randomUUID().toString().replace("-", ""));
         command.setPreDownloadURL("http://192.168.1.108:8081/file/download?id=");
+        command.setTask(task);
+        command.setTaskId(taskId);
+        requestData.setCommand(command);
+        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData);
+        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        return responseUtil;
+    }
+
+    public Task readTask(String taskId){
+        Task task = taskMapper.selectByPrimaryKey(taskId);
+        if (null == task) {
+            return null;
+        }
         List<Item> items = new ArrayList<>();
         String itemsIds = task.getItemsIds();
         if (null != itemsIds && itemsIds.length() > 0) {
@@ -575,34 +585,36 @@ public class ScreenServiceImpl implements ScreenService {
                 }
                 item.set_program(program);
                 //定时列表
-                String scheduleIds = item.getSchedulesIds();
-                if (null != scheduleIds && scheduleIds.length() > 0) {
-                    List<String> scheduleIdsList = Arrays.asList(scheduleIds.split(","));
-                    List<Schedule> schedules = new ArrayList<>();
-                    for (String scheduleId : scheduleIdsList) {
-                        Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
-                        if (null != schedule) {
-                            schedules.add(schedule);
-                        }
-                    }
-                    if (null != schedules && schedules.size() > 0) {
-                        List<ScheduleVO> scheduleVOList = new ArrayList<>();
-                        for (Schedule schedule1 : schedules) {
-                            ScheduleVO vo = tranToScheduleVO(schedule1);
-                            scheduleVOList.add(vo);
-                        }
-                        item.setSchedules(scheduleVOList);
-                    }
-                }
+                List<ScheduleVO> scheduleVOList = readItemSchedule(item);
+                item.setSchedules(scheduleVOList);
+
             }
         }
         task.setItems(items);
-        command.setTask(task);
-        command.setTaskId(taskId);
-        requestData.setCommand(command);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData);
-        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
-        return responseUtil;
+        return task;
+    }
+
+
+    public List<ScheduleVO> readItemSchedule(Item item){
+        List<ScheduleVO> scheduleVOList = new ArrayList<>();
+        String scheduleIds = item.getSchedulesIds();
+        if (null != scheduleIds && scheduleIds.length() > 0) {
+            List<String> scheduleIdsList = Arrays.asList(scheduleIds.split(","));
+            List<Schedule> schedules = new ArrayList<>();
+            for (String scheduleId : scheduleIdsList) {
+                Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
+                if (null != schedule) {
+                    schedules.add(schedule);
+                }
+            }
+            if (null != schedules && schedules.size() > 0) {
+                for (Schedule schedule1 : schedules) {
+                    ScheduleVO vo = tranToScheduleVO(schedule1);
+                    scheduleVOList.add(vo);
+                }
+            }
+        }
+        return scheduleVOList;
     }
 
 

@@ -323,7 +323,6 @@ public class TestServiceImpl implements TestService {
         schedule.setTimeType(TimeType.All.toString());
         schedule.setFilterType(FilterType.Week.toString());
         schedule.setWeekFilter("0,1,2,3,4,5,6");
-        schedule.setLanguage("zh-CN");
         scheduleMapper.insertSelective(schedule);
 
 //        Schedule schedule1 = new Schedule();

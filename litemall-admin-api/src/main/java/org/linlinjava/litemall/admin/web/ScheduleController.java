@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.linlinjava.litemall.db.domain.LitemallAdmin;
-import org.linlinjava.litemall.db.domain.Schedule;
+import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.service.*;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
-import org.linlinjava.litemall.db.service.ScheduleService;
 import io.swagger.annotations.ApiOperation;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
@@ -16,11 +15,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/admin/screen/schedule")
 public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
+    @Autowired
+    private ScreenService screenService;
+    @Autowired
+    private ItemService itemService;
 
     private static Logger logger = LoggerFactory.getLogger(ScheduleController.class);
 
@@ -144,5 +151,26 @@ public class ScheduleController {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
         }
         return responseUtil;
+    }
+
+    /**
+     * @Description: 通过项目id获取定时列表
+     * @title selectListByItemId
+     * @auther IngaWu
+     * @currentdate:2020年9月22日
+     */
+    @ApiOperation(value = "通过项目id获取定时列表")
+    @GetMapping("/selectListByItemId")
+    public Object selectListByItemId(@RequestParam(value = "itemId") String itemId) {
+        logger.info("selectListByItemId and itemId={}", itemId);
+        List<ScheduleVO> scheduleVOList = new ArrayList<>();
+        try {
+            Item item = itemService.selectItemById(itemId);
+            scheduleVOList = screenService.readItemSchedule(item);
+            item.setSchedules(scheduleVOList);
+        } catch (Exception e) {
+            logger.error("selectListByItemId and itemId={}", itemId, e);
+        }
+        return ResponseUtil.okList(scheduleVOList);
     }
 }

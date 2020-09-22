@@ -115,6 +115,26 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'item',
+        component: () => import('@/views/screen/item'),
+        name: 'item',
+        meta: {
+          title: '编辑任务详情',
+          noCache: true
+        },
+        hidden: true
+      },
+      {
+        path: 'schedule',
+        component: () => import('@/views/screen/schedule'),
+        name: 'schedule',
+        meta: {
+          title: '定时列表',
+          noCache: true
+        },
+        hidden: true
+      },
+      {
         path: 'program-edit',
         component: () => import('@/views/screen/programEdit'),
         name: 'programEdit',

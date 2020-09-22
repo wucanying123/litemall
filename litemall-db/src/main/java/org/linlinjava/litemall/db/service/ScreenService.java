@@ -1,8 +1,11 @@
 package org.linlinjava.litemall.db.service;//package org.linlinjava.litemall.db.service;
 
+import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.domain.Schedule;
 import org.linlinjava.litemall.db.domain.ScheduleVO;
 import org.linlinjava.litemall.db.util.ResponseUtil;
+
+import java.util.List;
 
 /**
  * 智慧路灯屏幕相关操作
@@ -155,6 +158,12 @@ public interface ScreenService {
      * 播放熙讯任务
      */
     ResponseUtil<Object> playXixunTask(String taskId,String cardId);
+
+
+    /**
+     * 查看项目定时
+     */
+    List<ScheduleVO> readItemSchedule(Item item);
 
     /**
      * 把schedule的属性转换类型成ScheduleVO

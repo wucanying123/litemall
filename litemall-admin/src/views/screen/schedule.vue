@@ -3,22 +3,34 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
+      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入定时名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
+      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
+        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
     </div>
 
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="名称" prop="name" />
-      <el-table-column align="center" label="itemsIds" prop="itemsIds" />
+      <el-table-column align="center" label="定时日期范围" prop="dateType" />
+
+      <el-table-column align="center" label="定时开始日期" prop="startDate" />
+      <el-table-column align="center" label="定时结束日期" prop="endDate" />
+      <el-table-column align="center" label="定时时间范围" prop="timeType" />
+      <el-table-column align="center" label="定时开始时间" prop="startTime" />
+      <el-table-column align="center" label="定时结束时间" prop="endTime" />
+      <el-table-column align="center" label="过滤类型" prop="filterType" />
+      <el-table-column align="center" label="过滤星期几" prop="weekFilter" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
+
+      <el-table-column align="center" label="操作" width="330" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑任务</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑定时</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -31,6 +43,29 @@
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" />
+        </el-form-item>
+        <el-form-item label="定时地址" prop="url">
+          <el-input v-model="dataForm.url" />
+        </el-form-item>
+        <el-form-item label="宽" prop="width">
+          <el-input
+            v-model="dataForm.width"
+            type="number"
+            min="0"
+            step="1"
+            size="2"
+            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+          />
+        </el-form-item>
+        <el-form-item label="高" prop="height">
+          <el-input
+            v-model="dataForm.height"
+            type="number"
+            min="0"
+            step="1"
+            size="2"
+            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -70,12 +105,13 @@
 </style>
 
 <script>
-import { listTask, createTask, updateTask, deleteTask } from '@/api/task'
+import { listSchedule, createSchedule, updateSchedule, deleteSchedule, playSchedule } from '@/api/schedule'
+import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
-  name: 'Task',
+  name: 'Schedule',
   components: { Pagination },
   filters: {
     timestampToTime(timestamp) {
@@ -98,17 +134,23 @@ export default {
   },
   data() {
     return {
+      uploadPath,
       list: [],
+      cardList: [],
+      cardId: undefined,
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined
+        itemId: undefined
       },
       dataForm: {
         id: undefined,
-        name: undefined
+        name: undefined,
+        url: undefined,
+        width: undefined,
+        height: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -119,9 +161,19 @@ export default {
       rules: {
         name: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        url: [
+          { required: true, message: '定时地址不能为空', trigger: 'blur' }
+        ],
+        width: [
+          { required: true, message: '宽不能为空', trigger: 'blur' }
+        ],
+        height: [
+          { required: true, message: '高不能为空', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      brandList: []
     }
   },
   computed: {
@@ -132,12 +184,16 @@ export default {
     }
   },
   created() {
+    if (this.$route.query.itemId == null) {
+      return
+    }
+    this.listQuery.itemId = this.$route.query.itemId
     this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      listTask(this.listQuery)
+      listSchedule(this.listQuery)
         .then(response => {
           this.list = response.data.data.list
           this.total = response.data.data.total
@@ -157,8 +213,9 @@ export default {
       this.dataForm = {
         id: undefined,
         name: undefined,
-        _type: '',
-        url: undefined
+        url: undefined,
+        width: undefined,
+        height: undefined
       }
     },
     handleCreate() {
@@ -172,7 +229,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          createTask(this.dataForm)
+          createSchedule(this.dataForm)
             .then(response => {
               this.list.unshift(response.data.data)
               this.dialogFormVisible = false
@@ -191,13 +248,37 @@ export default {
         }
       })
     },
+    handleDetail(row) {
+      this.userDetail = row
+      this.userDialogVisible = true
+    },
+    handlePlay(row) {
+      playSchedule(row.id, this.cardId)
+        .then(response => {
+          this.$notify.success({
+            title: '成功',
+            message: '播放成功'
+          })
+        })
+        .catch(response => {
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
+    },
     handleUpdate(row) {
-      this.$router.push({ path: '/screen/item', query: { taskId: row._id }})
+      this.dataForm = Object.assign({}, row)
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
     },
     updateData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          updateTask(this.dataForm)
+          updateSchedule(this.dataForm)
             .then(() => {
               for (const v of this.list) {
                 if (v.id === this.dataForm.id) {
@@ -223,7 +304,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteTask(row._id)
+      deleteSchedule(row.id)
         .then(response => {
           this.$notify.success({
             title: '成功',
