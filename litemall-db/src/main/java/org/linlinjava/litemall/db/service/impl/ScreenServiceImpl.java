@@ -637,12 +637,12 @@ public class ScreenServiceImpl implements ScreenService {
         }
 
         if (null != schedule.getStartDate()) {
-            String startDate = DateUtil.toString(schedule.getStartDate(), "yyyy-MM-dd");
+            String startDate = schedule.getStartDate();
             vo.setStartDate(startDate);
         }
 
         if (null != schedule.getEndDate()) {
-            String endDate = DateUtil.toString(schedule.getEndDate(), "yyyy-MM-dd");
+            String endDate =schedule.getEndDate();
             vo.setEndDate(endDate);
         }
 
@@ -657,12 +657,12 @@ public class ScreenServiceImpl implements ScreenService {
         }
 
         if (null != schedule.getStartTime()) {
-            String startTime = DateUtil.toString(schedule.getStartTime(), "yyyy-MM-dd HH:mm:ss");
+            String startTime = schedule.getStartTime();
             vo.setStartTime(startTime);
         }
 
         if (null != schedule.getEndTime()) {
-            String endTime = DateUtil.toString(schedule.getEndTime(), "yyyy-MM-dd HH:mm:ss");
+            String endTime = schedule.getEndTime();
             vo.setEndTime(endTime);
         }
 

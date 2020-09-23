@@ -10,7 +10,6 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="定时日期范围" prop="dateType" />
-
       <el-table-column align="center" label="定时开始日期" prop="startDate" />
       <el-table-column align="center" label="定时结束日期" prop="endDate" />
       <el-table-column align="center" label="定时时间范围" prop="timeType" />
@@ -36,31 +35,75 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dataForm.name" />
+        <el-form-item label="定时日期范围" prop="dateType">
+          <el-radio-group v-model="dataForm.dateType">
+            <el-radio :label="1">永久</el-radio>
+            <el-radio :label="2">指定日期</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="定时地址" prop="url">
-          <el-input v-model="dataForm.url" />
-        </el-form-item>
-        <el-form-item label="宽" prop="width">
-          <el-input
-            v-model="dataForm.width"
-            type="number"
-            min="0"
-            step="1"
-            size="2"
-            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+        <el-form-item label="定时开始日期" prop="startDate">
+          <el-date-picker
+            v-model="dataForm.startDate"
+            type="date"
+            placeholder="选择开始日期"
+            style="width: 60%;"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
           />
         </el-form-item>
-        <el-form-item label="高" prop="height">
-          <el-input
-            v-model="dataForm.height"
-            type="number"
-            min="0"
-            step="1"
-            size="2"
-            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+        <el-form-item label="定时结束日期" prop="endDate">
+          <el-date-picker
+            v-model="dataForm.endDate"
+            type="date"
+            placeholder="选择结束日期"
+            style="width: 60%;"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+            :picker-options="endDatePicker"
           />
+        </el-form-item>
+        <el-form-item label="定时时间范围" prop="timeType">
+          <el-radio-group v-model="dataForm.timeType">
+            <el-radio :label="1">全天</el-radio>
+            <el-radio :label="2">指定时间</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="定时开始时间" prop="startTime">
+          <el-time-picker
+            v-model="dataForm.startTime"
+            class="date-box"
+            format="HH:mm"
+            value-format="HH:mm"
+            :picker-options="{
+              selectableRange:`00:00:00 -${dataForm.endTime ? dataForm.endTime+':00' : '23:59:00'}`
+            }"
+          />
+        </el-form-item>
+        <el-form-item label="定时结束时间" prop="endTime">
+          <el-time-picker
+            v-model="dataForm.endTime"
+            format="HH:mm"
+            value-format="HH:mm"
+            :picker-options="{
+              selectableRange: `${dataForm.startTime ? dataForm.startTime+':00' : '00:00:00'}-23:59:00`
+            }"
+          />
+        </el-form-item>
+        <el-form-item label="过滤类型" prop="filterType">
+          <el-radio-group v-model="dataForm.filterType">
+            <el-radio :label="1">无指定</el-radio>
+            <el-radio :label="2">指定星期</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="过滤星期几" prop="weekFilterArray">
+          <el-select v-model="dataForm.weekFilterArray" multiple placeholder="请选择">
+            <el-option
+              v-for="item in weekOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -105,6 +148,41 @@ import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 
+const defaultWeekOptions = [
+  {
+    label: '',
+    value: ''
+  },
+  {
+    label: '星期一',
+    value: '1'
+  },
+  {
+    label: '星期二',
+    value: '2'
+  },
+  {
+    label: '星期三',
+    value: '3'
+  },
+  {
+    label: '星期四',
+    value: '4'
+  },
+  {
+    label: '星期五',
+    value: '5'
+  },
+  {
+    label: '星期六',
+    value: '6'
+  },
+  {
+    label: '星期日',
+    value: '0'
+  }
+]
+
 export default {
   name: 'Schedule',
   components: { Pagination },
@@ -129,6 +207,7 @@ export default {
   },
   data() {
     return {
+      weekOptions: Object.assign({}, defaultWeekOptions),
       uploadPath,
       list: [],
       cardId: undefined,
@@ -140,12 +219,18 @@ export default {
         itemId: undefined
       },
       dataForm: {
-        id: undefined,
-        name: undefined,
-        url: undefined,
-        width: undefined,
-        height: undefined
+        dateType: undefined,
+        startDate: undefined,
+        endDate: undefined,
+        timeType: undefined,
+        startTime: undefined,
+        endTime: undefined,
+        filterType: undefined,
+        weekFilter: undefined
       },
+      // startDatePicker:this.beginDate(),
+      endDatePicker: this.processDate(),
+
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -153,18 +238,9 @@ export default {
         create: '创建'
       },
       rules: {
-        name: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
-        ],
-        url: [
-          { required: true, message: '定时地址不能为空', trigger: 'blur' }
-        ],
-        width: [
-          { required: true, message: '宽不能为空', trigger: 'blur' }
-        ],
-        height: [
-          { required: true, message: '高不能为空', trigger: 'blur' }
-        ]
+        // name: [
+        //   { required: true, message: '名称不能为空', trigger: 'blur' }
+        // ],
       },
       downloadLoading: false,
       brandList: []
@@ -185,6 +261,27 @@ export default {
     this.getList()
   },
   methods: {
+    formatRole(roleId) {
+      for (let i = 0; i < this.weekOptions.length; i++) {
+        if (roleId === this.weekOptions[i].value) {
+          return this.weekOptions[i].label
+        }
+      }
+      return ''
+    },
+    processDate() { // 提出结束时间必须大于提出开始时间
+      const self = this
+      return {
+        disabledDate(time) {
+          if (self.dataForm.startDate) {
+            return new Date(self.dataForm.startDate).getTime() > time.getTime()
+          } else {
+            return time.getTime() > Date.now()
+            // 开始时间不选时，结束时间最大值小于等于当天
+          }
+        }
+      }
+    },
     getList() {
       this.listLoading = true
       listSchedule(this.listQuery)

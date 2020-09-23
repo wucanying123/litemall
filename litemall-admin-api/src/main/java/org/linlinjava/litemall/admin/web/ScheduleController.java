@@ -53,7 +53,7 @@ public class ScheduleController {
         }
         return responseUtil;
     }
-
+    
     /**
      * @Description: 通过定时id查看定时详情
      * @param scheduleId 定时id
@@ -71,6 +71,13 @@ public class ScheduleController {
         }
         try {
             Schedule schedule = scheduleService.selectScheduleById(scheduleId);
+            if(null != schedule && null != schedule.getDateType()){
+                if(schedule.getDateType().equals(DateType.All.toString())){
+                    schedule.setDateType("1");
+                }else if(schedule.getDateType().equals(DateType.Range.toString())){
+                    schedule.setDateType("2");
+                }
+            }
             responseUtil.setData(schedule);
             responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
         } catch (Exception e) {
@@ -91,6 +98,18 @@ public class ScheduleController {
         logger.info("insertSchedule and schedule:{}", JSON.toJSONString(schedule));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
+            if(null != schedule.getDateType()){
+                if(schedule.getDateType().equals("1")){
+                    schedule.setDateType(DateType.All.toString());
+                }else if(schedule.getDateType().equals("2")){
+                    schedule.setDateType(DateType.Range.toString());
+                }
+            }
+            List<String> weekFilterArray = schedule.getWeekFilterArray();
+            if(null != weekFilterArray && weekFilterArray.size() >0){
+                String weekFilter = weekFilterArray.toString();
+                schedule.setWeekFilter(weekFilter);
+            }
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             schedule.setUserid(admin.getId());

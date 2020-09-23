@@ -4,11 +4,11 @@
   <resultMap id="BaseResultMap" type="org.linlinjava.litemall.db.domain.Schedule">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="dateType" jdbcType="VARCHAR" property="dateType" />
-    <result column="startDate" jdbcType="BIGINT" property="startDate" />
-    <result column="endDate" jdbcType="BIGINT" property="endDate" />
+    <result column="startDate" jdbcType="VARCHAR" property="startDate" />
+    <result column="endDate" jdbcType="VARCHAR" property="endDate" />
     <result column="timeType" jdbcType="VARCHAR" property="timeType" />
-    <result column="startTime" jdbcType="BIGINT" property="startTime" />
-    <result column="endTime" jdbcType="BIGINT" property="endTime" />
+    <result column="startTime" jdbcType="VARCHAR" property="startTime" />
+    <result column="endTime" jdbcType="VARCHAR" property="endTime" />
     <result column="filterType" jdbcType="VARCHAR" property="filterType" />
     <result column="weekFilter" jdbcType="VARCHAR" property="weekFilter" />
     <result column="monthFilter" jdbcType="VARCHAR" property="monthFilter" />
@@ -81,19 +81,19 @@
         #{dateType,jdbcType=VARCHAR},
       </if>
       <if test="startDate != null">
-        #{startDate,jdbcType=BIGINT},
+        #{startDate,jdbcType=VARCHAR},
       </if>
       <if test="endDate != null">
-        #{endDate,jdbcType=BIGINT},
+        #{endDate,jdbcType=VARCHAR},
       </if>
       <if test="timeType != null">
         #{timeType,jdbcType=VARCHAR},
       </if>
       <if test="startTime != null">
-        #{startTime,jdbcType=BIGINT},
+        #{startTime,jdbcType=VARCHAR},
       </if>
       <if test="endTime != null">
-        #{endTime,jdbcType=BIGINT},
+        #{endTime,jdbcType=VARCHAR},
       </if>
       <if test="filterType != null">
         #{filterType,jdbcType=VARCHAR},
@@ -122,19 +122,19 @@
         dateType = #{dateType,jdbcType=VARCHAR},
       </if>
       <if test="startDate != null">
-        startDate = #{startDate,jdbcType=BIGINT},
+        startDate = #{startDate,jdbcType=VARCHAR},
       </if>
       <if test="endDate != null">
-        endDate = #{endDate,jdbcType=BIGINT},
+        endDate = #{endDate,jdbcType=VARCHAR},
       </if>
       <if test="timeType != null">
         timeType = #{timeType,jdbcType=VARCHAR},
       </if>
       <if test="startTime != null">
-        startTime = #{startTime,jdbcType=BIGINT},
+        startTime = #{startTime,jdbcType=VARCHAR},
       </if>
       <if test="endTime != null">
-        endTime = #{endTime,jdbcType=BIGINT},
+        endTime = #{endTime,jdbcType=VARCHAR},
       </if>
       <if test="filterType != null">
         filterType = #{filterType,jdbcType=VARCHAR},

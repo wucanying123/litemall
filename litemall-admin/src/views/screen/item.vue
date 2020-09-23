@@ -78,11 +78,11 @@
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleProgramFilter">查找</el-button>
         <el-table v-loading="listLoadingProgram" :data="listProgram" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />
-          <el-table-column align="center" label="节目id" prop="_id" />
+          <!--          <el-table-column align="center" label="节目id" prop="_id" />-->
           <el-table-column align="center" label="名称" prop="name" />
           <el-table-column align="width" label="节目宽" prop="width" />
           <el-table-column align="height" label="节目高" prop="height" />
-          <el-table-column align="center" label="修改时间1" prop="updateTime">
+          <el-table-column align="center" label="修改时间" prop="updateTime">
             <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
           </el-table-column>
         </el-table>

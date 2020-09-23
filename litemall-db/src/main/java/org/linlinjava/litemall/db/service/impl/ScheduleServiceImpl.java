@@ -3,6 +3,7 @@ package org.linlinjava.litemall.db.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.linlinjava.litemall.db.domain.DateType;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.ScheduleMapper;
 import org.linlinjava.litemall.db.domain.Schedule;
@@ -32,6 +33,18 @@ public class ScheduleServiceImpl implements ScheduleService {
             List<Schedule> list = scheduleMapper.selectSchedulePage(schedule);
             String jsonString = JSON.toJSONString(list);
             page = new PageInfo<>(list);
+            List<Schedule> pageList= page.getList();
+            if(null != pageList && pageList.size() >0){
+                for(Schedule schedule1: pageList){
+                    if(null != schedule1.getDateType()){
+                        if(schedule1.getDateType().equals(DateType.All.toString())){
+                            schedule1.setDateType("1");
+                        }else if(schedule1.getDateType().equals(DateType.Range.toString())){
+                            schedule1.setDateType("2");
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.error("selectSchedulePage error and msg={}", e);
         }

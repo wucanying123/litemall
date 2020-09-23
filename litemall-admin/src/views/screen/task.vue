@@ -15,7 +15,7 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
-      <el-table-column align="center" label="itemsIds" prop="itemsIds" />
+      <!--      <el-table-column align="center" label="itemsIds" prop="itemsIds" />-->
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>

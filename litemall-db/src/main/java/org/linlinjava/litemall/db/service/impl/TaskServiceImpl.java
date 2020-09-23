@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -161,6 +162,14 @@ public class TaskServiceImpl implements TaskService {
     public int deleteById(String id) {
         int n = 0;
         try {
+            Task task = selectTaskById(id);
+            if(null != task && StringUtilsXD.isNotEmpty(task.getItemsIds())) {
+                String itemIds = task.getItemsIds();
+                List<String> itemIdList = Arrays.asList(itemIds.split(","));
+                for(String itemId:itemIdList){
+                    itemService.deleteById(id,itemId);
+                }
+            }
             n = taskMapper.deleteByPrimaryKey(id);
             //同步删除审核表数据
             examineService.deleteByDetailId(id);
