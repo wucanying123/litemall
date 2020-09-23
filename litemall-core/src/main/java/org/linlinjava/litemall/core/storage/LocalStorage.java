@@ -3,6 +3,8 @@ package org.linlinjava.litemall.core.storage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.linlinjava.litemall.core.storage.config.ServerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -19,6 +21,9 @@ import java.util.stream.Stream;
  * 服务器本地对象存储服务
  */
 public class LocalStorage implements Storage {
+
+    @Autowired
+    private ServerConfig serverConfig;
 
 
     private final Log logger = LogFactory.getLog(LocalStorage.class);
@@ -105,7 +110,8 @@ public class LocalStorage implements Storage {
 
     @Override
     public String generateUrl(String keyName) {
-
-        return address + keyName;
+        String url = address + keyName;
+        String fileUrl = serverConfig.getUrl() + "/file/" + keyName;
+        return fileUrl;
     }
 }

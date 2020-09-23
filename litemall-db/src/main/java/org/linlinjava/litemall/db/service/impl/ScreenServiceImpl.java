@@ -606,7 +606,7 @@ public class ScreenServiceImpl implements ScreenService {
             for (String scheduleId : scheduleIdsList) {
                 Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
                 if (null != schedule) {
-                    if(null != schedule.getWeekFilter()){
+                    if(StringUtilsXD.isNotEmpty(schedule.getWeekFilter())){
                         String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
                         List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
                         List<Integer> weekIntList = new ArrayList<>();
@@ -688,7 +688,7 @@ public class ScreenServiceImpl implements ScreenService {
             vo.setFilterType(equalFilterType);
         }
 
-        if (null != schedule.getWeekFilter()) {
+        if (StringUtilsXD.isNotEmpty(schedule.getWeekFilter())) {
             String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
             List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
             List<Integer> weekIntList = new ArrayList<>();
@@ -700,14 +700,22 @@ public class ScreenServiceImpl implements ScreenService {
             vo.setWeekFilter(weekIntList);
         }
 
-        if (null != schedule.getMonthFilter()) {
-            List<String> monthStrList = Arrays.asList(schedule.getMonthFilter().split(","));
+        if (StringUtilsXD.isNotEmpty(schedule.getMonthFilter())) {
+            String monthFilterStr = schedule.getMonthFilter().replaceAll("[\\[\\]]","");
+            List<String> monthStrList = Arrays.asList(monthFilterStr.split(","));
             List<Integer> monthIntList = new ArrayList<>();
             for (String str : monthStrList) {
                 Integer intMonth = Integer.parseInt(str);
                 monthIntList.add(intMonth);
             }
             vo.setMonthFilter(monthIntList);
+        }
+
+        if(null != schedule.getCreateTime()){
+            vo.setCreateTime(schedule.getCreateTime());
+        }
+        if(null != schedule.getUpdateTime()){
+            vo.setUpdateTime(schedule.getUpdateTime());
         }
 
         vo.setId(schedule.getId());

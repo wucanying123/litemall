@@ -194,6 +194,23 @@ public class ProgramServiceImpl implements ProgramService {
         BeanUtils.copyProperties(source, playSource);
         PlaySource existPlaySource = playSourceService.selectBySourceIdAndLayerId(sourceId, layerId);
         if (null == existPlaySource) {
+            playSource.setPlayTime(0);
+            playSource.setTimeSpan(10);
+            playSource.setLeft(0);
+            playSource.setTop(0);
+            playSource.setWidth(256);
+            playSource.setHeight(128);
+            playSource.setEntryEffect("None");
+            playSource.setExitEffect("None");
+            playSource.setEntryEffectTimeSpan(0);
+            playSource.setExitEffectTimeSpan(0);
+            playSource.setShowBg(false);
+            playSource.setShowHourScale(false);
+            playSource.setShowMinScale(false);
+            playSource.setShowScaleNum(false);
+            playSource.setShowSecond(false);
+            playSource.setCenter(false);
+
             playSource.setProgramId(programId);
             playSource.setSourceId(sourceId);
             playSource.setLayerId(layerId);

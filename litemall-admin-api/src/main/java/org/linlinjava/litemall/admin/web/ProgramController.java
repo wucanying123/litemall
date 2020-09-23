@@ -168,8 +168,8 @@ public class ProgramController {
         }
         try {
             int n = programService.updateProgramById(program);
-            String[] sourceIdList = program.getPlaySource();
-            String a = String.join(",", sourceIdList);
+//            String[] sourceIdList = program.getPlaySource();
+//            String a = String.join(",", sourceIdList);
             programService.updatePlaySources(program);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);

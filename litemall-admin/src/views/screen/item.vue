@@ -28,7 +28,7 @@
 
       <el-table-column align="center" label="节目id" prop="programId" />
       <el-table-column align="center" label="节目名称" prop="_program.name" />
-      <el-table-column align="center" label="定时id" prop="schedulesIds" />
+      <!--      <el-table-column align="center" label="定时id" prop="schedulesIds" />-->
       <el-table-column align="center" label="版本" prop="version" />
       <el-table-column align="center" label="重复次数" prop="repeatTimes" />
       <el-table-column align="center" label="优先级" prop="priority" />

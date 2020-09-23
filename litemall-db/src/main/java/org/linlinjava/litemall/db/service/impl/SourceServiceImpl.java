@@ -5,14 +5,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.SourceMapper;
 import org.linlinjava.litemall.db.domain.Examine;
+import org.linlinjava.litemall.db.domain.LitemallStorage;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.ExamineService;
+import org.linlinjava.litemall.db.service.LitemallStorageService;
 import org.linlinjava.litemall.db.service.SourceService;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +28,8 @@ public class SourceServiceImpl implements SourceService {
     private SourceMapper sourceMapper;
     @Autowired
     private ExamineService examineService;
+    @Autowired
+    private LitemallStorageService litemallStorageService;
 
 
     private static Logger logger = LoggerFactory.getLogger(SourceServiceImpl.class);
@@ -72,7 +77,7 @@ public class SourceServiceImpl implements SourceService {
             if (null == source.getMaxPlayTime()) {
                 source.setMaxPlayTime(10);
             }
-            source.setEnabled(true);
+            source = updateSourceOption(source);
             n = sourceMapper.insertSelective(source);
             //同步添加到审核表
             Examine examine = new Examine();
@@ -87,10 +92,30 @@ public class SourceServiceImpl implements SourceService {
         return n;
     }
 
+
+    private Source updateSourceOption(Source source){
+        String url = source.getUrl();
+        if(StringUtilsXD.isNotEmpty(url)) {
+            url = url.trim();
+            String key = url.substring(url.lastIndexOf("/")+1);
+            String fileExt = key.substring(key.lastIndexOf("."));
+            source.setFileExt(fileExt);
+            LitemallStorage storage = litemallStorageService.findByKey(key);
+            if(null != storage){
+                Long size = storage.getSize().longValue();
+                source.setSize(size);
+                source.setMime(storage.getType());
+            }
+        }
+        source.setEnabled(true);
+        return source;
+    }
+
     @Override
     public int updateSourceById(Source source) {
         int n = 0;
         try {
+            source = updateSourceOption(source);
             source.setUpdateTime(DateUtil.getDateline());
             n = sourceMapper.updateByPrimaryKeySelective(source);
             //同步修改名称到审核表
