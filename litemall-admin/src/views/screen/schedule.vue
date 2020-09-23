@@ -9,14 +9,25 @@
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-      <el-table-column align="center" label="定时日期范围" prop="dateType" />
+      <el-table-column align="center" label="定时日期范围" prop="dateType">
+        <template slot-scope="scope">{{ scope.row.dateType == "Range" ? "指定日期" : "永久" }}</template>
+      </el-table-column>
       <el-table-column align="center" label="定时开始日期" prop="startDate" />
       <el-table-column align="center" label="定时结束日期" prop="endDate" />
-      <el-table-column align="center" label="定时时间范围" prop="timeType" />
+      <el-table-column align="center" label="定时日期范围" prop="timeType">
+        <template slot-scope="scope">{{ scope.row.timeType == "Range" ? "指定时间" : "全天" }}</template>
+      </el-table-column>
       <el-table-column align="center" label="定时开始时间" prop="startTime" />
       <el-table-column align="center" label="定时结束时间" prop="endTime" />
-      <el-table-column align="center" label="过滤类型" prop="filterType" />
-      <el-table-column align="center" label="过滤星期几" prop="weekFilter" />
+      <el-table-column align="center" label="过滤类型" prop="filterType">
+        <template slot-scope="scope">{{ scope.row.filterType | formatFilterType }}</template>
+      </el-table-column>
+      <el-table-column align="center" label="过滤星期几" prop="weekFilterArray">
+        <template slot-scope="scope">
+          <el-tag v-for="weekId in scope.row.weekFilterArray" :key="weekId" type="primary" style="margin-right: 20px;"> {{ formatWeek(weekId) }} </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
@@ -36,75 +47,81 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
         <el-form-item label="定时日期范围" prop="dateType">
-          <el-radio-group v-model="dataForm.dateType">
-            <el-radio :label="1">永久</el-radio>
-            <el-radio :label="2">指定日期</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="定时开始日期" prop="startDate">
-          <el-date-picker
-            v-model="dataForm.startDate"
-            type="date"
-            placeholder="选择开始日期"
-            style="width: 60%;"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
-          />
-        </el-form-item>
-        <el-form-item label="定时结束日期" prop="endDate">
-          <el-date-picker
-            v-model="dataForm.endDate"
-            type="date"
-            placeholder="选择结束日期"
-            style="width: 60%;"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
-            :picker-options="endDatePicker"
-          />
-        </el-form-item>
-        <el-form-item label="定时时间范围" prop="timeType">
-          <el-radio-group v-model="dataForm.timeType">
-            <el-radio :label="1">全天</el-radio>
-            <el-radio :label="2">指定时间</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="定时开始时间" prop="startTime">
-          <el-time-picker
-            v-model="dataForm.startTime"
-            class="date-box"
-            format="HH:mm"
-            value-format="HH:mm"
-            :picker-options="{
-              selectableRange:`00:00:00 -${dataForm.endTime ? dataForm.endTime+':00' : '23:59:00'}`
-            }"
-          />
-        </el-form-item>
-        <el-form-item label="定时结束时间" prop="endTime">
-          <el-time-picker
-            v-model="dataForm.endTime"
-            format="HH:mm"
-            value-format="HH:mm"
-            :picker-options="{
-              selectableRange: `${dataForm.startTime ? dataForm.startTime+':00' : '00:00:00'}-23:59:00`
-            }"
-          />
-        </el-form-item>
-        <el-form-item label="过滤类型" prop="filterType">
-          <el-radio-group v-model="dataForm.filterType">
-            <el-radio :label="1">无指定</el-radio>
-            <el-radio :label="2">指定星期</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="过滤星期几" prop="weekFilterArray">
-          <el-select v-model="dataForm.weekFilterArray" multiple placeholder="请选择">
-            <el-option
-              v-for="item in weekOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <el-select v-model="dataForm.dateType" placeholder="请选择">
+            <el-option :value="'All'" label="永久" />
+            <el-option :value="'Range'" label="指定日期" />
           </el-select>
         </el-form-item>
+        <div v-if="dataForm.dateType === 'Range'">
+          <el-form-item label="定时开始日期" prop="startDate">
+            <el-date-picker
+              v-model="dataForm.startDate"
+              type="date"
+              placeholder="选择开始日期"
+              style="width: 60%;"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+            />
+          </el-form-item>
+          <el-form-item label="定时结束日期" prop="endDate">
+            <el-date-picker
+              v-model="dataForm.endDate"
+              type="date"
+              placeholder="选择结束日期"
+              style="width: 60%;"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              :picker-options="endDatePicker"
+            />
+          </el-form-item>
+        </div>
+        <el-form-item label="定时时间范围" prop="timeType">
+          <el-select v-model="dataForm.timeType" placeholder="请选择">
+            <el-option :value="'All'" label="全天" />
+            <el-option :value="'Range'" label="指定时间" />
+          </el-select>
+        </el-form-item>
+        <div v-if="dataForm.timeType === 'Range'">
+          <el-form-item label="定时开始时间" prop="startTime">
+            <el-time-picker
+              v-model="dataForm.startTime"
+              class="date-box"
+              format="HH:mm"
+              value-format="HH:mm"
+              :picker-options="{
+                selectableRange:`00:00:00 -${dataForm.endTime ? dataForm.endTime+':00' : '23:59:00'}`
+              }"
+            />
+          </el-form-item>
+          <el-form-item label="定时结束时间" prop="endTime">
+            <el-time-picker
+              v-model="dataForm.endTime"
+              format="HH:mm"
+              value-format="HH:mm"
+              :picker-options="{
+                selectableRange: `${dataForm.startTime ? dataForm.startTime+':00' : '00:00:00'}-23:59:00`
+              }"
+            />
+          </el-form-item>
+        </div>
+        <el-form-item label="过滤类型" prop="filterType">
+          <el-select v-model="dataForm.filterType" placeholder="请选择">
+            <el-option :value="'None'" label="无指定" />
+            <el-option :value="'Week'" label="指定星期" />
+          </el-select>
+        </el-form-item>
+        <div v-if="dataForm.filterType === 'Week'">
+          <el-form-item label="过滤星期几" prop="weekFilterArray">
+            <el-select v-model="dataForm.weekFilterArray" multiple placeholder="请选择">
+              <el-option
+                v-for="item in weekOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -183,6 +200,24 @@ const defaultWeekOptions = [
   }
 ]
 
+const defaultFilterTypeOptions = [
+  {
+    label: '',
+    value: ''
+  },
+  {
+    label: '无指定',
+    value: 'None'
+  },
+  {
+    label: '指定星期',
+    value: 'Week'
+  },
+  {
+    label: '指定月份',
+    value: 'Month'
+  }
+]
 export default {
   name: 'Schedule',
   components: { Pagination },
@@ -203,6 +238,14 @@ export default {
         s = s < 10 ? ('0' + s) : s
         return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
       }
+    },
+    formatFilterType(timeType) {
+      for (let i = 0; i < defaultFilterTypeOptions.length; i++) {
+        if (timeType === defaultFilterTypeOptions[i].value) {
+          return defaultFilterTypeOptions[i].label
+        }
+      }
+      return ''
     }
   },
   data() {
@@ -226,11 +269,10 @@ export default {
         startTime: undefined,
         endTime: undefined,
         filterType: undefined,
-        weekFilter: undefined
+        weekFilter: undefined,
+        weekFilterArray: undefined
       },
-      // startDatePicker:this.beginDate(),
       endDatePicker: this.processDate(),
-
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -261,9 +303,9 @@ export default {
     this.getList()
   },
   methods: {
-    formatRole(roleId) {
-      for (let i = 0; i < this.weekOptions.length; i++) {
-        if (roleId === this.weekOptions[i].value) {
+    formatWeek(weekId) {
+      for (let i = 0; i < 8; i++) {
+        if (weekId === this.weekOptions[i].value) {
           return this.weekOptions[i].label
         }
       }
@@ -316,7 +358,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          createSchedule(this.dataForm)
+          createSchedule(this.dataForm, this.$route.query.itemId)
             .then(response => {
               this.list.unshift(response.data.data)
               this.dialogFormVisible = false
@@ -365,6 +407,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
+          this.dataForm.weekFilter = undefined
           updateSchedule(this.dataForm)
             .then(() => {
               for (const v of this.list) {
@@ -391,7 +434,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteSchedule(row.id)
+      deleteSchedule(row.id, this.$route.query.itemId)
         .then(response => {
           this.$notify.success({
             title: '成功',

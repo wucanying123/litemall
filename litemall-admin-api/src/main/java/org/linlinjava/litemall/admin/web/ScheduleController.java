@@ -94,26 +94,14 @@ public class ScheduleController {
      */
     @ApiOperation(value = "添加定时")
     @PostMapping(value = "/insertSchedule")
-    public ResponseUtil<Schedule> insertSchedule(@RequestBody Schedule schedule) {
+    public ResponseUtil<Schedule> insertSchedule(@RequestBody Schedule schedule,@RequestParam(value = "itemId") String itemId) {
         logger.info("insertSchedule and schedule:{}", JSON.toJSONString(schedule));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
-            if(null != schedule.getDateType()){
-                if(schedule.getDateType().equals("1")){
-                    schedule.setDateType(DateType.All.toString());
-                }else if(schedule.getDateType().equals("2")){
-                    schedule.setDateType(DateType.Range.toString());
-                }
-            }
-            List<String> weekFilterArray = schedule.getWeekFilterArray();
-            if(null != weekFilterArray && weekFilterArray.size() >0){
-                String weekFilter = weekFilterArray.toString();
-                schedule.setWeekFilter(weekFilter);
-            }
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             schedule.setUserid(admin.getId());
-            int n = scheduleService.insertSchedule(schedule);
+            int n = scheduleService.insertSchedule(schedule,itemId);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
@@ -158,11 +146,11 @@ public class ScheduleController {
      */
     @ApiOperation(value = "删除定时")
     @PostMapping(value = "/deleteById")
-    public ResponseUtil<Schedule> deleteById(@RequestParam(value = "id") String id) {
+    public ResponseUtil<Schedule> deleteById(@RequestParam(value = "id") String id,@RequestParam(value = "itemId") String itemId) {
         logger.info("deleteById and id={}", JSON.toJSONString(id));
         ResponseUtil<Schedule> responseUtil = new ResponseUtil<>();
         try {
-            int n = scheduleService.deleteById(id);
+            int n = scheduleService.deleteById(id,itemId);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

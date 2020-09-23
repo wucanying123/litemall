@@ -606,6 +606,16 @@ public class ScreenServiceImpl implements ScreenService {
             for (String scheduleId : scheduleIdsList) {
                 Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
                 if (null != schedule) {
+                    if(null != schedule.getWeekFilter()){
+                        String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
+                        List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
+                        List<Integer> weekIntList = new ArrayList<>();
+                        for (String str : weekStrList) {
+                            Integer intWeek = Integer.parseInt(str);
+                            weekIntList.add(intWeek);
+                        }
+                        schedule.setWeekFilterArray(weekStrList);
+                    }
                     schedules.add(schedule);
                 }
             }
@@ -628,10 +638,10 @@ public class ScreenServiceImpl implements ScreenService {
 
         if (StringUtilsXD.isNotEmpty(schedule.getDateType())) {
             DateType equalDateType = null;
-            for (DateType dateType : DateType.values()) {
-                if (schedule.getTimeType().equals(dateType.name())) {
-                    equalDateType = dateType;
-                }
+            if(schedule.getDateType().equals("All")) {
+                equalDateType = DateType.All;
+            }else if(schedule.getDateType().equals("Range")) {
+                equalDateType = DateType.Range;
             }
             vo.setDateType(equalDateType);
         }
@@ -648,10 +658,10 @@ public class ScreenServiceImpl implements ScreenService {
 
         if (StringUtilsXD.isNotEmpty(schedule.getTimeType())) {
             TimeType equalTimeType = null;
-            for (TimeType timeType : TimeType.values()) {
-                if (schedule.getTimeType().equals(timeType.name())) {
-                    equalTimeType = timeType;
-                }
+            if(schedule.getTimeType().equals("All")) {
+                equalTimeType = TimeType.All;
+            }else if(schedule.getTimeType().equals("Range")) {
+                equalTimeType = TimeType.Range;
             }
             vo.setTimeType(equalTimeType);
         }
@@ -668,21 +678,25 @@ public class ScreenServiceImpl implements ScreenService {
 
         if (StringUtilsXD.isNotEmpty(schedule.getFilterType())) {
             FilterType equalFilterType = null;
-            for (FilterType filterType : FilterType.values()) {
-                if (schedule.getFilterType().equals(filterType.name())) {
-                    equalFilterType = filterType;
-                }
+            if(schedule.getFilterType().equals("None")) {
+                equalFilterType = FilterType.None;
+            }else if(schedule.getFilterType().equals("Week")) {
+                equalFilterType = FilterType.Week;
+            }else if(schedule.getFilterType().equals("Month")) {
+                equalFilterType = FilterType.Month;
             }
             vo.setFilterType(equalFilterType);
         }
 
         if (null != schedule.getWeekFilter()) {
-            List<String> weekStrList = Arrays.asList(schedule.getWeekFilter().split(","));
+            String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
+            List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
             List<Integer> weekIntList = new ArrayList<>();
             for (String str : weekStrList) {
                 Integer intWeek = Integer.parseInt(str);
                 weekIntList.add(intWeek);
             }
+            vo.setWeekFilterArray(weekStrList);
             vo.setWeekFilter(weekIntList);
         }
 

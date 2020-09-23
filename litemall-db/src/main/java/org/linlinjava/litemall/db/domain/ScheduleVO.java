@@ -22,4 +22,6 @@ public class ScheduleVO implements Serializable {
      String id;
      Long createTime;//创建时间
      Long updateTime;//修改时间
+     List<String> weekFilterArray;//仅展示用，过滤星期几，sunday==0  例：[1,6,0] 表示定时项按周一、周六、周日过滤， 此值在filterType等于FilterType.Week时有效
+
 }

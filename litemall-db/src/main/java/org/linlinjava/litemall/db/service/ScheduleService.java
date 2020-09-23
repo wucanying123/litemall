@@ -30,7 +30,7 @@ public interface ScheduleService {
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    int insertSchedule(Schedule schedule);
+    int insertSchedule(Schedule schedule,String itemId);
 
     /**
      * @Description: 编辑定时
@@ -47,5 +47,5 @@ public interface ScheduleService {
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
-    int deleteById(String id);
+    int deleteById(String id, String itemId);
 }

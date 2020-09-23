@@ -8,11 +8,14 @@ export function listSchedule(query) {
   })
 }
 
-export function createSchedule(data) {
+export function createSchedule(data, itemId) {
   return request({
     url: '/screen/schedule/insertSchedule',
     method: 'post',
-    data
+    data,
+    params: {
+      itemId: itemId
+    }
   })
 }
 
@@ -32,12 +35,13 @@ export function updateSchedule(data) {
   })
 }
 
-export function deleteSchedule(id) {
+export function deleteSchedule(id, itemId) {
   return request({
     url: '/screen/schedule/deleteById',
     method: 'post',
     params: {
-      id: id
+      id: id,
+      itemId: itemId
     }
   })
 }
