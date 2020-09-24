@@ -139,7 +139,7 @@ export const asyncRoutes = [
         component: () => import('@/views/screen/programEdit'),
         name: 'programEdit',
         meta: {
-          title: '专题编辑',
+          title: '节目编辑',
           noCache: true
         },
         hidden: true
