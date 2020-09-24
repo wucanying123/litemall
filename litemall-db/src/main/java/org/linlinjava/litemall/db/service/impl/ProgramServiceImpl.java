@@ -156,7 +156,7 @@ public class ProgramServiceImpl implements ProgramService {
 
             //复制Source到PlaySource
             for (String sourceId : sourceIdList) {
-                addPlaysource(newProgram.get_id(), sourceId, layerId,newProgram.getWidth(),newProgram.getHeight());
+                addPlaysource(newProgram.get_id(), sourceId, layerId, newProgram.getWidth(), newProgram.getHeight());
             }
         } else {
             //如果没有资源,删掉该项目下所有层及所有资源
@@ -166,9 +166,9 @@ public class ProgramServiceImpl implements ProgramService {
         }
     }
 
-    private void addPlaysource(String programId, String sourceId, String layerId,Integer playSourceWidth,Integer playSourceHeight) {
-        Source source = sourceService.selectSourceById(sourceId);
+    private void addPlaysource( String programId, String sourceId, String layerId, Integer playSourceWidth, Integer playSourceHeight) {
         PlaySource playSource = new PlaySource();
+        Source source = sourceService.selectSourceById(sourceId);
         BeanUtils.copyProperties(source, playSource);
         PlaySource existPlaySource = playSourceService.selectBySourceIdAndLayerId(sourceId, layerId);
         if (null == existPlaySource) {
@@ -194,8 +194,6 @@ public class ProgramServiceImpl implements ProgramService {
             playSource.setLayerId(layerId);
             playSource.setId(UUID.randomUUID().toString().replace("-", ""));
             playSourceService.insertPlaySource(playSource);
-        } else {
-            playSourceService.updatePlaySourceById(playSource);
         }
     }
 
@@ -258,7 +256,7 @@ public class ProgramServiceImpl implements ProgramService {
             }
         }
         String layerIds = oldProgram.getLayersIds();
-        if(StringUtilsXD.isNotEmpty(layerIds)) {
+        if (StringUtilsXD.isNotEmpty(layerIds)) {
             List<String> layerIdList = Arrays.asList(layerIds.split(","));
             Set<String> layerIdSet = new HashSet(layerIdList);
             Set<String> subLayerIdSet = new HashSet<String>();
@@ -299,15 +297,18 @@ public class ProgramServiceImpl implements ProgramService {
                 List<String> sourceIdList = new ArrayList<>();
                 if (null != sources && sources.size() > 0) {
                     for (PlaySource playSource : sources) {
+                        if(StringUtilsXD.isEmpty(playSource.getId())){
+                            //新增，复制Source到PlaySource
+                            addPlaysource(newProgram.get_id(), playSource.getSourceId(), layer.getId(), newProgram.getWidth(), newProgram.getHeight());
+                        }else {
+                            //修改
+                            playSourceService.updatePlaySourceById(playSource);
+                        }
                         sourceIdList.add(playSource.getSourceId());
                     }
                 }
                 layer.setSourcesIds(String.join(",", sourceIdList));
                 layerService.updateLayerById(layer);
-                //复制Source到PlaySource
-                for (String sourceId : sourceIdList) {
-                    addPlaysource(newProgram.get_id(), sourceId, layer.getId(),newProgram.getWidth(),newProgram.getHeight());
-                }
                 updateLayerIds.add(layer.getId());
             }
             String newProgromLayerIds = String.join(",", updateLayerIds);
@@ -322,7 +323,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     //删掉该项目下所有层及所有资源
-    private void deleteLayerAndSource(Program program){
+    private void deleteLayerAndSource(Program program) {
         List<Layer> searchLayerList = new ArrayList<>();
         String layersIds = program.getLayersIds();
         if (null != layersIds && layersIds.length() > 0) {

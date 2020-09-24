@@ -405,6 +405,9 @@ export default {
       this.$router.push({ path: '/screen/program' })
     },
     handleConfirm() {
+      console.log(this.playSourceList)
+      this.program.layers[0].sources = this.playSourceList
+      console.log(this.program)
       this.$refs['program'].validate(valid => {
         if (valid) {
           updateComplexProgramById(this.program).then(response => {
