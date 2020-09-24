@@ -95,7 +95,7 @@ public class ProgramServiceImpl implements ProgramService {
     public void updatePlaySources(Program newProgram) {
         Program oldProgram = readProgram(newProgram.get_id());
         String[] sourceIdList = newProgram.getPlaySource();
-        if (null != sourceIdList && sourceIdList.length >0) {
+        if (null != sourceIdList && sourceIdList.length > 0) {
             if (StringUtilsXD.isEmpty(oldProgram.getLayersIds())) {
                 //如果有资源，没有层,新建层
                 Layer layer = new Layer();
@@ -121,6 +121,8 @@ public class ProgramServiceImpl implements ProgramService {
                     existLayerIdList.add(existLayerId);
                 }
             }
+
+            //在的层，删除不存在的资源//TODO
 
             String layerIds = oldProgram.getLayersIds();
             List<String> layerIdList = Arrays.asList(layerIds.split(","));
@@ -154,41 +156,17 @@ public class ProgramServiceImpl implements ProgramService {
 
             //复制Source到PlaySource
             for (String sourceId : sourceIdList) {
-                addPlaysource(newProgram.get_id(), sourceId, layerId);
+                addPlaysource(newProgram.get_id(), sourceId, layerId,newProgram.getWidth(),newProgram.getHeight());
             }
         } else {
             //如果没有资源,删掉该项目下所有层及所有资源
             oldProgram.setLayersIds("");
             updateProgramById(oldProgram);
-
-            List<Layer> searchLayerList = new ArrayList<>();
-            String layersIds = newProgram.getLayersIds();
-            if (null != layersIds && layersIds.length() > 0) {
-                List<String> layersIdsList = Arrays.asList(layersIds.split(","));
-                for (String layerId : layersIdsList) {
-                    Layer layer = layerService.selectLayerById(layerId);
-                    if (null != layer) {
-                        searchLayerList.add(layer);
-                    }
-                }
-            }
-            if (null != searchLayerList && searchLayerList.size() > 0) {
-                for (Layer layer : searchLayerList) {
-                    layerService.deleteById(layer.getId());
-                }
-            }
-            PlaySource searchPlaySource = new PlaySource();
-            searchPlaySource.setProgramId(newProgram.get_id());
-            List<PlaySource> searchPlaySourceList = playSourceService.selectPlaySourceList(searchPlaySource);
-            if (null != searchPlaySourceList && searchPlaySourceList.size() > 0) {
-                for (PlaySource playSource : searchPlaySourceList) {
-                    playSourceService.deleteById(playSource.getId());
-                }
-            }
+            deleteLayerAndSource(newProgram);
         }
     }
 
-    protected void addPlaysource(String programId, String sourceId, String layerId) {
+    private void addPlaysource(String programId, String sourceId, String layerId,Integer playSourceWidth,Integer playSourceHeight) {
         Source source = sourceService.selectSourceById(sourceId);
         PlaySource playSource = new PlaySource();
         BeanUtils.copyProperties(source, playSource);
@@ -198,8 +176,8 @@ public class ProgramServiceImpl implements ProgramService {
             playSource.setTimeSpan(10);
             playSource.setLeft(0);
             playSource.setTop(0);
-            playSource.setWidth(256);
-            playSource.setHeight(128);
+            playSource.setWidth(playSourceWidth);
+            playSource.setHeight(playSourceHeight);
             playSource.setEntryEffect("None");
             playSource.setExitEffect("None");
             playSource.setEntryEffectTimeSpan(0);
@@ -226,6 +204,8 @@ public class ProgramServiceImpl implements ProgramService {
         int n = 0;
         try {
             n = programMapper.deleteByPrimaryKey(id);
+            Program program = selectProgramById(id);
+            deleteLayerAndSource(program);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }
@@ -263,5 +243,109 @@ public class ProgramServiceImpl implements ProgramService {
             program.setLayers(layerList);
         }
         return program;
+    }
+
+    @Override
+    public void updateComplexProgramById(Program newProgram) {
+        Program oldProgram = readProgram(newProgram.get_id());
+        List<Layer> newLayers = newProgram.getLayers();
+        Set<String> existLayerIdList = new HashSet<>();
+        if (null != newLayers && newLayers.size() > 0) {
+            for (Layer newlayer : newLayers) {
+                if (StringUtilsXD.isNotEmpty(newlayer.getId())) {
+                    existLayerIdList.add(newlayer.getId());
+                }
+            }
+        }
+        String layerIds = oldProgram.getLayersIds();
+        if(StringUtilsXD.isNotEmpty(layerIds)) {
+            List<String> layerIdList = Arrays.asList(layerIds.split(","));
+            Set<String> layerIdSet = new HashSet(layerIdList);
+            Set<String> subLayerIdSet = new HashSet<String>();
+            subLayerIdSet.addAll(layerIdSet);
+            subLayerIdSet.removeAll(existLayerIdList);
+            if (null == subLayerIdSet && subLayerIdSet.size() > 0) {
+                String newProgromLayerIds = String.join(",", subLayerIdSet);
+                oldProgram.setLayersIds(newProgromLayerIds);
+                updateProgramById(oldProgram);
+                for (String notExistLayerId : subLayerIdSet) {
+                    //不在的层，删了该层及层下所有资源
+                    layerService.deleteById(notExistLayerId);
+                    PlaySource searchPlaySource = new PlaySource();
+                    searchPlaySource.setLayerId(notExistLayerId);
+                    List<PlaySource> searchPlaySourceList = playSourceService.selectPlaySourceList(searchPlaySource);
+                    if (null != searchPlaySourceList && searchPlaySourceList.size() > 0) {
+                        for (PlaySource playSource : searchPlaySourceList) {
+                            playSourceService.deleteById(playSource.getId());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (newLayers != null && newLayers.size() > 0) {
+            List<String> updateLayerIds = new ArrayList<>();
+            for (Layer layer : newLayers) {
+                if (StringUtilsXD.isEmpty(layer.getId())) {
+                    //如果有资源，没有层,新建层
+                    layer.setId(UUID.randomUUID().toString().replace("-", ""));
+                    layer.setIsRepeat(false);
+                    long cuttentTime = DateUtil.getDateline();
+                    layer.setCreateTime(cuttentTime);
+                    layer.setUpdateTime(cuttentTime);
+                    layerMapper.insertSelective(layer);
+                }
+                List<PlaySource> sources = layer.getSources();
+                List<String> sourceIdList = new ArrayList<>();
+                if (null != sources && sources.size() > 0) {
+                    for (PlaySource playSource : sources) {
+                        sourceIdList.add(playSource.getSourceId());
+                    }
+                }
+                layer.setSourcesIds(String.join(",", sourceIdList));
+                layerService.updateLayerById(layer);
+                //复制Source到PlaySource
+                for (String sourceId : sourceIdList) {
+                    addPlaysource(newProgram.get_id(), sourceId, layer.getId(),newProgram.getWidth(),newProgram.getHeight());
+                }
+                updateLayerIds.add(layer.getId());
+            }
+            String newProgromLayerIds = String.join(",", updateLayerIds);
+            oldProgram.setLayersIds(newProgromLayerIds);
+            updateProgramById(oldProgram);
+        } else {
+            //如果没有资源,删掉该项目下所有层及所有资源
+            oldProgram.setLayersIds("");
+            updateProgramById(oldProgram);
+            deleteLayerAndSource(newProgram);
+        }
+    }
+
+    //删掉该项目下所有层及所有资源
+    private void deleteLayerAndSource(Program program){
+        List<Layer> searchLayerList = new ArrayList<>();
+        String layersIds = program.getLayersIds();
+        if (null != layersIds && layersIds.length() > 0) {
+            List<String> layersIdsList = Arrays.asList(layersIds.split(","));
+            for (String layerId : layersIdsList) {
+                Layer layer = layerService.selectLayerById(layerId);
+                if (null != layer) {
+                    searchLayerList.add(layer);
+                }
+            }
+        }
+        if (null != searchLayerList && searchLayerList.size() > 0) {
+            for (Layer layer : searchLayerList) {
+                layerService.deleteById(layer.getId());
+            }
+        }
+        PlaySource searchPlaySource = new PlaySource();
+        searchPlaySource.setProgramId(program.get_id());
+        List<PlaySource> searchPlaySourceList = playSourceService.selectPlaySourceList(searchPlaySource);
+        if (null != searchPlaySourceList && searchPlaySourceList.size() > 0) {
+            for (PlaySource playSource : searchPlaySourceList) {
+                playSourceService.deleteById(playSource.getId());
+            }
+        }
     }
 }

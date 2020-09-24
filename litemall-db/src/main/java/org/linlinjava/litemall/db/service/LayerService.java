@@ -3,6 +3,8 @@ package org.linlinjava.litemall.db.service;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Layer;
 
+import java.util.List;
+
 public interface LayerService {
 
     /**
@@ -14,6 +16,7 @@ public interface LayerService {
      * @currentdate:2020年9月2日
      */
     PageInfo<Layer> selectLayerPage(Layer layer, Integer pageNum, Integer pageSize);
+
 
     /**
      * @param layerId 层id
@@ -48,4 +51,12 @@ public interface LayerService {
      * @currentdate:2020年9月2日
      */
     int deleteById(String id);
+
+    /**
+     * @Description: 获取层列表
+     * @title selectLayerPage
+     * @auther IngaWu
+     * @currentdate:2020年9月24日
+     */
+    List<Layer> selectLayerList(Layer layer);
 }

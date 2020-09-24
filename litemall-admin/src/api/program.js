@@ -49,3 +49,11 @@ export function updateSimpleProgramById(data) {
     data
   })
 }
+
+export function updateComplexProgramById(data) {
+  return request({
+    url: '/screen/program/updateComplexProgramById',
+    method: 'post',
+    data
+  })
+}

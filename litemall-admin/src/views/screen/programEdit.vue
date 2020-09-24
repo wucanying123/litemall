@@ -43,6 +43,11 @@
             <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
           </el-table-column>
           <el-table-column align="center" label="格式" prop="fileExt" />
+          <el-table-column align="center" label="起始播放时间" prop="playTime">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.playTime" />
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
@@ -150,7 +155,7 @@
 import { listSource } from '@/api/source'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { getToken } from '@/utils/auth'
-import { readProgram, updateSimpleProgramById } from '@/api/program'
+import { readProgram, updateComplexProgramById } from '@/api/program'
 
 const defaultTypeOptions = [
   {
@@ -255,9 +260,6 @@ export default {
           sources: {}
         }
       },
-      // program: {
-      //   playSource: []
-      // },
       playSourceList: [],
       addVisiable: false,
       list: [],
@@ -305,9 +307,6 @@ export default {
         .then(response => {
           this.program = response.data.data.program
           this.program.layers = response.data.data.program.layers
-          // console.log(this.program)
-          // console.log(this.program.layers)
-          // this.program.playSource = response.data.data.program.playSource
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
         })
@@ -351,39 +350,17 @@ export default {
       this.selectedlist = []
       this.addVisiable = true
       this.getList()
-      // console.log("打开页面"+this.program)
-      // console.log("打开页面"+this.program.layers)
-      // console.log("打开页面"+this.program.layers.sources)
     },
     confirmAdd() {
       const newPlaySourceIds = []
       const newPlaySourceList = []
-      const newLayerList = []
       this.selectedlist.forEach(item => {
         const sourceId = item.sourceId
         let found = false
-        // if (this.program != null) {
-        //   if (this.program.playSource != null) {
-        //     this.program.playSource.forEach(playSourceId => {
-        //       if (sourceId === playSourceId) {
-        //         found = true
-        //       }
-        //     })
-        //   }
-        // }
         if (this.program != null) {
           if (this.program.layers != null) {
-            console.log(this.program.layers)
-            console.log(this.program.layers[0].sources)
             if (this.program.layers[0].sources != null) {
-              // this.program.layers.forEach(item => {
-              //   if (id === item.sources.id) {
-              //     found = true
-              //   }
-              // })
-
               for (let i = 0; i < this.program.layers[0].sources.length; i++) {
-                console.log(this.program.layers[0].sources[i].sourceId)
                 if (sourceId === this.program.layers[0].sources[i].sourceId) {
                   found = true
                 }
@@ -394,45 +371,30 @@ export default {
         if (!found) {
           newPlaySourceIds.push(sourceId)
           newPlaySourceList.push(item)
-          var newLayer = { sources: item }
-          newLayerList.push(newLayer)
-          console.log(newLayerList)
         }
       })
 
       if (newPlaySourceIds.length > 0) {
-        // if (this.program.playSource != null) {
-        //   // this.program.playSource = this.program.playSource.concat(newPlaySourceIds)
-        //   this.playSourceList = this.playSourceList.concat(newPlaySourceList)
-        //   this.program.layers = this.program.layers.concat(newLayerList)
-        // } else {
-        //   // this.program.playSource = newPlaySourceIds
-        //   this.playSourceList = newPlaySourceList
-        //   this.program.layers = newLayerList
-        // }
-        //
-        console.log(this.program.layers)
         if (this.program.layers != null) {
-          // this.program.playSource = this.program.playSource.concat(newPlaySourceIds)
           this.playSourceList = this.playSourceList.concat(newPlaySourceList)
-          this.program.layers = this.program.layers.concat(newLayerList)
-          console.log(this.program.layers)
+          if (this.program.layers[0].sources != null) {
+            this.program.layers[0].sources = this.program.layers[0].sources.concat(newPlaySourceList)
+          } else {
+            this.program.layers[0].sources = newPlaySourceList
+          }
         } else {
-          // this.program.playSource = newPlaySourceIds
           this.playSourceList = newPlaySourceList
-          this.program.layers = newLayerList
-          console.log(this.program.layers)
+          this.program.layers = { sources: newPlaySourceList }
         }
       }
       this.addVisiable = false
     },
     handleDelete(row) {
-      // for (var index = 0; index < this.program.playSource.length; index++) {
-      //   console.log(this.program.playSource)
-      //   if (row.sourceId === this.program.playSource[index]) {
-      //     this.program.playSource.splice(index, 1)
-      //   }
-      // }
+      for (var index = 0; index < this.program.layers[0].sources.length; index++) {
+        if (row.sourceId === this.program.layers[0].sources[index].sourceId) {
+          this.program.layers[0].sources.splice(index, 1)
+        }
+      }
       for (var index2 = 0; index2 < this.playSourceList.length; index2++) {
         if (row.sourceId === this.playSourceList[index2].sourceId) {
           this.playSourceList.splice(index2, 1)
@@ -445,8 +407,7 @@ export default {
     handleConfirm() {
       this.$refs['program'].validate(valid => {
         if (valid) {
-          console.log(this.program)
-          updateSimpleProgramById(this.program).then(response => {
+          updateComplexProgramById(this.program).then(response => {
             this.$router.push({ path: '/screen/program' })
           })
             .catch(response => {

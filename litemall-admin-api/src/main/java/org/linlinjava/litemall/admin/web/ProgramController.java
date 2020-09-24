@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.util.FastJsonUtils;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.service.ProgramService;
@@ -200,6 +201,33 @@ public class ProgramController {
             }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
+        }
+        return responseUtil;
+    }
+
+    /**
+     * @Description: 编辑高级节目
+     * @title
+     * @author IngaWu
+     * @currentdate:2020年9月2日
+     */
+    @ApiOperation(value = "编辑高级节目")
+    @PostMapping(value = "/updateComplexProgramById")
+    public ResponseUtil<Program> updateComplexProgramById(@RequestBody String programJson) {
+        logger.info("updateComplexProgramById and programJson:{}", JSON.toJSONString(programJson));
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
+        Program program = FastJsonUtils.getJsonToBean(programJson,Program.class);
+        if (StringUtilsXD.isBlank(program.get_id())) {
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
+        try {
+            int n = programService.updateProgramById(program);
+            programService.updateComplexProgramById(program);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("updateComplexProgramById and program:{}", JSON.toJSONString(program), e);
         }
         return responseUtil;
     }

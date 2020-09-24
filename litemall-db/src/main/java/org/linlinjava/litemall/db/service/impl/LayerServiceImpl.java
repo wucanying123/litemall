@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,5 +94,21 @@ public class LayerServiceImpl implements LayerService {
             logger.error("deleteById error and msg={}", e);
         }
         return n;
+    }
+
+    @Override
+    public List<Layer> selectLayerList(Layer layer) {
+        List<Layer> list = new ArrayList<>();
+        try {
+            list = layerMapper.selectLayerPage(layer);
+            if (null != list && list.size() > 0) {
+                for (Layer layer1 : list) {
+                    layer1.setRepeat(layer1.getIsRepeat());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("selectLayerPage error and msg={}", e);
+        }
+        return list;
     }
 }
