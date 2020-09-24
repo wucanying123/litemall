@@ -111,7 +111,7 @@ public class LocalStorage implements Storage {
     @Override
     public String generateUrl(String keyName) {
         String url = address + keyName;
-        String fileUrl = serverConfig.getUrl() + "/file/" + keyName;
+        String fileUrl = serverConfig.getUrl() + "/admin/look/storage/fetch/" + keyName;
         return fileUrl;
     }
 }
