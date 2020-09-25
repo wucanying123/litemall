@@ -6,6 +6,7 @@ import org.linlinjava.litemall.db.domain.LitemallStorage;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.LitemallStorageService;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.VideoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +54,7 @@ public class StorageService {
      * @param contentType   文件类型
      * @param fileName      文件索引名
      */
-    public LitemallStorage store(InputStream inputStream, long contentLength, String contentType, String fileName) {
+    public LitemallStorage store(InputStream inputStream, long contentLength, String contentType, String fileName,Integer playTime) {
         String key = generateKey(fileName);
         storage.store(inputStream, contentLength, contentType, key);
 
@@ -64,6 +65,7 @@ public class StorageService {
         storageInfo.setType(contentType);
         storageInfo.setKey(key);
         storageInfo.setUrl(url);
+        storageInfo.setMaxPlayTime(playTime);
         litemallStorageService.add(storageInfo);
 
         return storageInfo;

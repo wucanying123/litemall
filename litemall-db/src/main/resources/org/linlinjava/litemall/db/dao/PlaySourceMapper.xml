@@ -652,6 +652,7 @@
     <if test="layerId != null">
       and layer_id = #{layerId,jdbcType=VARCHAR}
     </if>
+    limit 1
   </select>
   <select id="selectBySourceIdAndProgramId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select

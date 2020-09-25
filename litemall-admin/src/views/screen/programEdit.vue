@@ -26,7 +26,7 @@
 
           <el-table-column align="center" label="名称" prop="name" />
 
-          <el-table-column align="center" label="内容" prop="url">
+          <el-table-column align="center" label="内容" prop="url" width="130">
             <template slot-scope="scope">
               <div v-if="scope.row._type === 'Video'">
                 <video :src="scope.row.url" controls="controls" width="200" height="90" />
@@ -43,9 +43,15 @@
             <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
           </el-table-column>
           <el-table-column align="center" label="格式" prop="fileExt" />
-          <el-table-column align="center" label="起始播放时间" prop="playTime">
+          <el-table-column align="center" label="起始时间" prop="playTime" />
+          <!--          <el-table-column align="center" label="起始时间" prop="playTime">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <el-input v-model="scope.row.playTime" />-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
+          <el-table-column align="center" label="持续时长" prop="timeSpan">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.playTime" />
+              <el-input v-model="scope.row.timeSpan" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
@@ -309,6 +315,7 @@ export default {
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
+          console.log(this.program)
         })
         .catch(() => {
           this.program = {}
@@ -384,7 +391,7 @@ export default {
           }
         } else {
           this.playSourceList = newPlaySourceList
-          this.program.layers = { sources: newPlaySourceList }
+          this.program.layers = [{ sources: newPlaySourceList }]
         }
       }
       this.addVisiable = false
@@ -407,7 +414,6 @@ export default {
     handleConfirm() {
       console.log(this.playSourceList)
       this.program.layers[0].sources = this.playSourceList
-      console.log(this.program)
       this.$refs['program'].validate(valid => {
         if (valid) {
           updateComplexProgramById(this.program).then(response => {

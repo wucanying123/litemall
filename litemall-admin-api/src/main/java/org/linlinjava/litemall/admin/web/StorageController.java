@@ -10,6 +10,7 @@ import org.linlinjava.litemall.core.validator.Order;
 import org.linlinjava.litemall.core.validator.Sort;
 import org.linlinjava.litemall.db.domain.LitemallStorage;
 import org.linlinjava.litemall.db.service.LitemallStorageService;
+import org.linlinjava.litemall.db.util.VideoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -48,8 +49,13 @@ public class StorageController {
     @PostMapping("/create")
     public Object create(@RequestParam("file") MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
+        String contentType = file.getContentType();
+        Integer playTime = null;
+        if("video/mp4".equals(contentType)) {
+             playTime = VideoUtil.getPlayTime(file).intValue();
+        }
         LitemallStorage litemallStorage = storageService.store(file.getInputStream(), file.getSize(),
-                file.getContentType(), originalFilename);
+                contentType, originalFilename, playTime);
         return ResponseUtil.ok(litemallStorage);
     }
 

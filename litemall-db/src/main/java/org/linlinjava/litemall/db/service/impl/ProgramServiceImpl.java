@@ -11,6 +11,7 @@ import org.linlinjava.litemall.db.service.LayerService;
 import org.linlinjava.litemall.db.service.PlaySourceService;
 import org.linlinjava.litemall.db.service.ProgramService;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
@@ -91,110 +92,104 @@ public class ProgramServiceImpl implements ProgramService {
         return n;
     }
 
-    @Override
-    public void updatePlaySources(Program newProgram) {
-        Program oldProgram = readProgram(newProgram.get_id());
-        String[] sourceIdList = newProgram.getPlaySource();
-        if (null != sourceIdList && sourceIdList.length > 0) {
-            if (StringUtilsXD.isEmpty(oldProgram.getLayersIds())) {
-                //如果有资源，没有层,新建层
-                Layer layer = new Layer();
-                layer.setId(UUID.randomUUID().toString().replace("-", ""));
-                layer.setIsRepeat(false);
-                long cuttentTime = DateUtil.getDateline();
-                layer.setCreateTime(cuttentTime);
-                layer.setUpdateTime(cuttentTime);
-                layerMapper.insertSelective(layer);
-                oldProgram.setLayersIds(layer.getId());
-                updateProgramById(oldProgram);
-                oldProgram = readProgram(newProgram.get_id());
-            }
-            //查出有该资源的该项目所有层，不是该资源的层全部删掉
-            List<PlaySource> existPlaySourceList = new ArrayList<>();
-            Set<String> existLayerIdList = new HashSet<>();
-            //查出有该资源的该项目所有层
-            for (String sourceId : sourceIdList) {
-                PlaySource existPlaySource = playSourceService.selectBySourceIdAndProgramId(sourceId, newProgram.get_id());
-                if (null != existPlaySource) {
-                    existPlaySourceList.add(existPlaySource);
-                    String existLayerId = existPlaySource.getLayerId();
-                    existLayerIdList.add(existLayerId);
-                }
-            }
+//    @Override
+//    public void updatePlaySources(Program newProgram) {
+//        Program oldProgram = readProgram(newProgram.get_id());
+//        String[] sourceIdList = newProgram.getPlaySource();
+//        if (null != sourceIdList && sourceIdList.length > 0) {
+//            if (StringUtilsXD.isEmpty(oldProgram.getLayersIds())) {
+//                //如果有资源，没有层,新建层
+//                Layer layer = new Layer();
+//                layer.setId(UUID.randomUUID().toString().replace("-", ""));
+//                layer.setIsRepeat(false);
+//                long cuttentTime = DateUtil.getDateline();
+//                layer.setCreateTime(cuttentTime);
+//                layer.setUpdateTime(cuttentTime);
+//                layerMapper.insertSelective(layer);
+//                oldProgram.setLayersIds(layer.getId());
+//                updateProgramById(oldProgram);
+//                oldProgram = readProgram(newProgram.get_id());
+//            }
+//            //查出有该资源的该项目所有层，不是该资源的层全部删掉
+//            List<PlaySource> existPlaySourceList = new ArrayList<>();
+//            Set<String> existLayerIdList = new HashSet<>();
+//            //查出有该资源的该项目所有层
+//            for (String sourceId : sourceIdList) {
+//                PlaySource existPlaySource = playSourceService.selectBySourceIdAndProgramId(sourceId, newProgram.get_id());
+//                if (null != existPlaySource) {
+//                    existPlaySourceList.add(existPlaySource);
+//                    String existLayerId = existPlaySource.getLayerId();
+//                    existLayerIdList.add(existLayerId);
+//                }
+//            }
+//
+//            //在的层，删除不存在的资源//TODO
+//
+//            String layerIds = oldProgram.getLayersIds();
+//            List<String> layerIdList = Arrays.asList(layerIds.split(","));
+//            Set<String> layerIdSet = new HashSet(layerIdList);
+//            Set<String> subLayerIdSet = new HashSet<String>();
+//            subLayerIdSet.addAll(layerIdSet);
+//            subLayerIdSet.removeAll(existLayerIdList);
+//            if (null == subLayerIdSet && subLayerIdSet.size() > 0) {
+//                String newProgromLayerIds = String.join(",", subLayerIdSet);
+//                oldProgram.setLayersIds(newProgromLayerIds);
+//                updateProgramById(oldProgram);
+//
+//                for (String notExistLayerId : subLayerIdSet) {
+//                    //不在的层，删了该层及层下所有资源
+//                    layerService.deleteById(notExistLayerId);
+//                    PlaySource searchPlaySource = new PlaySource();
+//                    searchPlaySource.setLayerId(notExistLayerId);
+//                    List<PlaySource> searchPlaySourceList = playSourceService.selectPlaySourceList(searchPlaySource);
+//                    if (null != searchPlaySourceList && searchPlaySourceList.size() > 0) {
+//                        for (PlaySource playSource : searchPlaySourceList) {
+//                            playSourceService.deleteById(playSource.getId());
+//                        }
+//                    }
+//                }
+//            }
+//
+//            String layerId = layerIdList.get(0);
+//            Layer layer = layerService.selectLayerById(layerId);
+//            layer.setSourcesIds(String.join(",", sourceIdList));
+//            layerService.updateLayerById(layer);
+//
+//            //复制Source到PlaySource
+//            for (String sourceId : sourceIdList) {
+//                addPlaysource(newProgram.get_id(), sourceId, layerId, newProgram.getWidth(), newProgram.getHeight());
+//            }
+//        } else {
+//            //如果没有资源,删掉该项目下所有层及所有资源
+//            oldProgram.setLayersIds("");
+//            updateProgramById(oldProgram);
+//            deleteLayerAndSource(newProgram);
+//        }
+//    }
 
-            //在的层，删除不存在的资源//TODO
+    private void addPlaysource(PlaySource playSource, Program newProgram, String layerId) {
+        playSource.setPlayTime(playSource.getPlayTime());
+        playSource.setTimeSpan(playSource.getTimeSpan());
+        playSource.setLeft(0);
+        playSource.setTop(0);
+        playSource.setWidth(newProgram.getWidth());
+        playSource.setHeight(newProgram.getHeight());
+        playSource.setEntryEffect("None");
+        playSource.setExitEffect("None");
+        playSource.setEntryEffectTimeSpan(0);
+        playSource.setExitEffectTimeSpan(0);
+        playSource.setShowBg(false);
+        playSource.setShowHourScale(false);
+        playSource.setShowMinScale(false);
+        playSource.setShowScaleNum(false);
+        playSource.setShowSecond(false);
+        playSource.setCenter(false);
 
-            String layerIds = oldProgram.getLayersIds();
-            List<String> layerIdList = Arrays.asList(layerIds.split(","));
-            Set<String> layerIdSet = new HashSet(layerIdList);
-            Set<String> subLayerIdSet = new HashSet<String>();
-            subLayerIdSet.addAll(layerIdSet);
-            subLayerIdSet.removeAll(existLayerIdList);
-            if (null == subLayerIdSet && subLayerIdSet.size() > 0) {
-                String newProgromLayerIds = String.join(",", subLayerIdSet);
-                oldProgram.setLayersIds(newProgromLayerIds);
-                updateProgramById(oldProgram);
-
-                for (String notExistLayerId : subLayerIdSet) {
-                    //不在的层，删了该层及层下所有资源
-                    layerService.deleteById(notExistLayerId);
-                    PlaySource searchPlaySource = new PlaySource();
-                    searchPlaySource.setLayerId(notExistLayerId);
-                    List<PlaySource> searchPlaySourceList = playSourceService.selectPlaySourceList(searchPlaySource);
-                    if (null != searchPlaySourceList && searchPlaySourceList.size() > 0) {
-                        for (PlaySource playSource : searchPlaySourceList) {
-                            playSourceService.deleteById(playSource.getId());
-                        }
-                    }
-                }
-            }
-
-            String layerId = layerIdList.get(0);
-            Layer layer = layerService.selectLayerById(layerId);
-            layer.setSourcesIds(String.join(",", sourceIdList));
-            layerService.updateLayerById(layer);
-
-            //复制Source到PlaySource
-            for (String sourceId : sourceIdList) {
-                addPlaysource(newProgram.get_id(), sourceId, layerId, newProgram.getWidth(), newProgram.getHeight());
-            }
-        } else {
-            //如果没有资源,删掉该项目下所有层及所有资源
-            oldProgram.setLayersIds("");
-            updateProgramById(oldProgram);
-            deleteLayerAndSource(newProgram);
-        }
-    }
-
-    private void addPlaysource( String programId, String sourceId, String layerId, Integer playSourceWidth, Integer playSourceHeight) {
-        PlaySource playSource = new PlaySource();
-        Source source = sourceService.selectSourceById(sourceId);
-        BeanUtils.copyProperties(source, playSource);
-        PlaySource existPlaySource = playSourceService.selectBySourceIdAndLayerId(sourceId, layerId);
-        if (null == existPlaySource) {
-            playSource.setPlayTime(0);
-            playSource.setTimeSpan(10);
-            playSource.setLeft(0);
-            playSource.setTop(0);
-            playSource.setWidth(playSourceWidth);
-            playSource.setHeight(playSourceHeight);
-            playSource.setEntryEffect("None");
-            playSource.setExitEffect("None");
-            playSource.setEntryEffectTimeSpan(0);
-            playSource.setExitEffectTimeSpan(0);
-            playSource.setShowBg(false);
-            playSource.setShowHourScale(false);
-            playSource.setShowMinScale(false);
-            playSource.setShowScaleNum(false);
-            playSource.setShowSecond(false);
-            playSource.setCenter(false);
-
-            playSource.setProgramId(programId);
-            playSource.setSourceId(sourceId);
-            playSource.setLayerId(layerId);
-            playSource.setId(UUID.randomUUID().toString().replace("-", ""));
-            playSourceService.insertPlaySource(playSource);
-        }
+        playSource.setProgramId(newProgram.get_id());
+        playSource.setSourceId(playSource.getSourceId());
+        playSource.setLayerId(layerId);
+        playSource.setId(UUID.randomUUID().toString().replace("-", ""));
+        playSourceService.insertPlaySource(playSource);
     }
 
     @Override
@@ -281,7 +276,7 @@ public class ProgramServiceImpl implements ProgramService {
             }
         }
 
-        if (newLayers != null && newLayers.size() > 0) {
+        if (newLayers != null && newLayers.size() > 0 && newLayers.get(0).getSources() !=null && newLayers.get(0).getSources().size() >0) {
             List<String> updateLayerIds = new ArrayList<>();
             for (Layer layer : newLayers) {
                 if (StringUtilsXD.isEmpty(layer.getId())) {
@@ -296,11 +291,29 @@ public class ProgramServiceImpl implements ProgramService {
                 List<PlaySource> sources = layer.getSources();
                 List<String> sourceIdList = new ArrayList<>();
                 if (null != sources && sources.size() > 0) {
+                    Integer allPlayTime = 0;
                     for (PlaySource playSource : sources) {
-                        if(StringUtilsXD.isEmpty(playSource.getId())){
+                        //自动设置开始播放时间
+                        if (StringUtilsXD.isEmpty(playSource.getId())) {
+                            playSource.setPlayTime(allPlayTime);
                             //新增，复制Source到PlaySource
-                            addPlaysource(newProgram.get_id(), playSource.getSourceId(), layer.getId(), newProgram.getWidth(), newProgram.getHeight());
-                        }else {
+                            //初始 持续时长等于素材时长，起始时间等于之前持续时长之和
+                            Integer timeSpan = 0;
+                            if(null != playSource.getTimeSpan()) {
+                                timeSpan = playSource.getTimeSpan();
+                            }else {
+                                timeSpan = playSource.getMaxPlayTime();//持续时长等于素材时长
+                            }
+                            String sourceId = playSource.getSourceId();
+                            Source source = sourceService.selectSourceById(sourceId);
+                            BeanUtils.copyProperties(source, playSource);
+                            playSource.setTimeSpan(timeSpan);
+                            playSource.setPlayTime(allPlayTime);
+                            allPlayTime +=timeSpan;
+                            addPlaysource(playSource, newProgram, layer.getId());
+                        } else {
+                            playSource.setPlayTime(allPlayTime);
+                            allPlayTime +=playSource.getTimeSpan();
                             //修改
                             playSourceService.updatePlaySourceById(playSource);
                         }

@@ -80,9 +80,6 @@ public class PlaySourceServiceImpl implements PlaySourceService {
             playSource.setCreateTime(cuttentTime);
             playSource.setUpdateTime(cuttentTime);
             playSource.setTheLeft(playSource.getLeft());
-            if (null == playSource.getMaxPlayTime()) {
-                playSource.setMaxPlayTime(10);
-            }
             n = playSourceMapper.insertSelective(playSource);
             //同步添加到审核表
             Examine examine = new Examine();

@@ -10,6 +10,7 @@ import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.ExamineService;
 import org.linlinjava.litemall.db.service.LitemallStorageService;
 import org.linlinjava.litemall.db.service.SourceService;
+import org.linlinjava.litemall.db.util.Constant;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class SourceServiceImpl implements SourceService {
             source.setUpdateTime(cuttentTime);
             source.setTheLeft(source.getLeft());
             if (null == source.getMaxPlayTime()) {
-                source.setMaxPlayTime(10);
+                source.setMaxPlayTime(Constant.PLAYTIME);
             }
             source = updateSourceOption(source);
             n = sourceMapper.insertSelective(source);
@@ -105,6 +106,9 @@ public class SourceServiceImpl implements SourceService {
                 Long size = storage.getSize().longValue();
                 source.setSize(size);
                 source.setMime(storage.getType());
+                if(null != storage.getMaxPlayTime()){
+                    source.setMaxPlayTime(storage.getMaxPlayTime());
+                }
             }
         }
         source.setEnabled(true);

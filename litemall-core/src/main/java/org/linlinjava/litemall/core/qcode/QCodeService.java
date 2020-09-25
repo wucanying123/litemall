@@ -39,7 +39,7 @@ public class QCodeService {
             ByteArrayInputStream inputStream2 = new ByteArrayInputStream(imageData);
             //存储分享图
             LitemallStorage storageInfo = storageService.store(inputStream2, imageData.length, "image/jpeg",
-                    getKeyName(groupon.getId().toString()));
+                    getKeyName(groupon.getId().toString()),null);
 
             return storageInfo.getUrl();
         } catch (WxErrorException e) {
@@ -74,7 +74,7 @@ public class QCodeService {
             ByteArrayInputStream inputStream2 = new ByteArrayInputStream(imageData);
             //存储分享图
             LitemallStorage litemallStorage = storageService.store(inputStream2, imageData.length, "image/jpeg",
-                    getKeyName(goodId));
+                    getKeyName(goodId),null);
 
             return litemallStorage.getUrl();
         } catch (WxErrorException e) {

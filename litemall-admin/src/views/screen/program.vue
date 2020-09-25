@@ -120,7 +120,8 @@ export default {
         id: undefined,
         name: undefined,
         width: undefined,
-        height: undefined
+        height: undefined,
+        updateTime: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -176,7 +177,9 @@ export default {
         id: undefined,
         name: undefined,
         width: undefined,
-        height: undefined
+        height: undefined,
+        updateTime: undefined
+
       }
     },
     handleCreate() {

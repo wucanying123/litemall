@@ -15,7 +15,9 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
-
+      <el-table-column align="center" label="类型" prop="_type">
+        <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
+      </el-table-column>
       <el-table-column align="center" label="内容" prop="url">
         <template slot-scope="scope">
           <div v-if="scope.row._type === 'Video'">
@@ -26,17 +28,11 @@
           </div>
         </template>
       </el-table-column>
-
       <!--      <el-table-column align="center" label="播放时长" prop="playTime">-->
       <!--        <template slot-scope="scope">{{ scope.row.playTime | secondToDate }}</template>-->
       <!--      </el-table-column>-->
-
       <el-table-column align="center" label="素材时长" prop="maxPlayTime">
         <template slot-scope="scope">{{ scope.row.maxPlayTime | secondToDate }}</template>
-      </el-table-column>
-
-      <el-table-column align="center" label="类型" prop="_type">
-        <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
       </el-table-column>
       <el-table-column align="center" label="格式" prop="fileExt" />
       <el-table-column align="center" label="修改时间" prop="updateTime">

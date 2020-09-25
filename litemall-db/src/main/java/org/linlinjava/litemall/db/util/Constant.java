@@ -10,6 +10,7 @@ public class Constant {
 
     public static final int PAGE_INDEX_FIRST = 1; //开始页数
     public static final int PAGE_INDEX_SIZE = 15; //每页条数
+    public static final int PLAYTIME = 10; //素材时长
 
     public static String LOCALHOST = "http://localhost";
     public static String WEBPORT = "8081";

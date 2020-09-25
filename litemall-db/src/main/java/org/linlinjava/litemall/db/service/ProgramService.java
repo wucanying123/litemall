@@ -53,7 +53,7 @@ public interface ProgramService {
 
     Program readProgram(String id);
 
-    void updatePlaySources(Program program);
+//    void updatePlaySources(Program program);
 
     void updateComplexProgramById(Program program);
 }
