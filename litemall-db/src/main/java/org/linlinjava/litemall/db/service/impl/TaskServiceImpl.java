@@ -125,7 +125,8 @@ public class TaskServiceImpl implements TaskService {
                     String itemId = item.get_id();
                     if (null == item.get_id()) {
                         Program program = item.get_program();
-                        item = createItemByProgramId(program.get_id());
+                        Integer itemVersion = item.getVersion();
+                        item = createItemByProgramId(program.get_id(),itemVersion);
                         itemId = item.get_id();
                     }
                     itemIdList.add(itemId);
@@ -144,10 +145,14 @@ public class TaskServiceImpl implements TaskService {
         return n;
     }
 
-    private Item createItemByProgramId(String programId) {
+    private Item createItemByProgramId(String programId,Integer itemVersion) {
         Item item = new Item();
         item.setProgramId(programId);
-        item.setVersion(2);
+        if(null == itemVersion) {
+            item.setVersion(2);
+        }else {
+            item.setVersion(itemVersion);
+        }
         item.setRepeatTimes(1);
         item.setPriority(0);
         item.set_id(UUID.randomUUID().toString().replace("-", ""));
@@ -180,13 +185,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public int insertQuickTask(String programName,String programId, Integer userId) {
+    public int insertQuickTask(String taskName,String programId, Integer userId,Integer itemVersion) {
         int n = 0;
         try {
             Task task = new Task();
             task.setUserid(userId);
-            task.setName(programName+"_Task");
-            Item item = createItemByProgramId(programId);
+            task.setName(taskName);
+            Item item = createItemByProgramId(programId,itemVersion);
             String itemIdStr = item.get_id();
             task.setItemsIds(itemIdStr);
             n = insertTask(task);
@@ -194,5 +199,16 @@ public class TaskServiceImpl implements TaskService {
             logger.error("insertQuickTask error and msg={}", e);
         }
         return n;
+    }
+
+    @Override
+    public Task selectTaskByName(String taskName) {
+        Task task = null;
+        try {
+            task = taskMapper.selectTaskByName(taskName);
+        } catch (Exception e) {
+            logger.error("selectTaskByName error and msg={}", e);
+        }
+        return task;
     }
 }

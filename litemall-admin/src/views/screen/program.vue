@@ -260,7 +260,7 @@ export default {
         })
     },
     handleCreateTask(row) {
-      insertQuickTask(row.name, row._id)
+      insertQuickTask(row.name, row._id, 2)
         .then(response => {
           this.$notify.success({
             title: '成功',

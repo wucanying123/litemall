@@ -15,14 +15,13 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
-      <!--      <el-table-column align="center" label="itemsIds" prop="itemsIds" />-->
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
       <el-table-column align="center" label="创建者" prop="userName" />
       <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放任务</el-button>
+          <el-button v-if="scope.row.itemsIds" type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放任务</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑任务</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>

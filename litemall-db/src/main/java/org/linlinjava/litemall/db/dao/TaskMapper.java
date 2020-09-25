@@ -20,4 +20,6 @@ public interface TaskMapper {
     int deleteByIdBatch(String[] ids);
 
     int deleteByPrimaryKey(String id);
+
+    Task selectTaskByName(@Param("taskName") String taskName);
 }

@@ -133,4 +133,11 @@
     </if>
     order by updateTime desc ,createTime desc
   </select>
+  <select id="selectTaskByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from task
+    where name = #{taskName,jdbcType=VARCHAR}
+    limit 1
+  </select>
 </mapper>

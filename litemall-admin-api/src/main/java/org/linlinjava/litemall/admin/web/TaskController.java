@@ -29,10 +29,10 @@ public class TaskController {
     private static Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     /**
+     * @param page  开始页数
+     * @param limit 每页条数
      * @Description: 获取任务列表
      * @title selectTaskPage
-     * @param page 开始页数
-     * @param limit 每页条数
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -53,8 +53,8 @@ public class TaskController {
     }
 
     /**
-     * @Description: 通过任务id查看任务详情
      * @param taskId 任务id
+     * @Description: 通过任务id查看任务详情
      * @Title: selectTaskById
      * @auther IngaWu
      * @currentdate:2020年9月2日
@@ -149,9 +149,9 @@ public class TaskController {
     }
 
     /**
+     * @param id 任务id
      * @Description: 删除任务
      * @Title: deleteById
-     * @param id 任务id
      * @auther IngaWu
      * @currentdate:2020年9月2日
      */
@@ -172,21 +172,21 @@ public class TaskController {
     }
 
     /**
+     * @param id 任务id
      * @Description: 播放任务
      * @Title: playTask
-     * @param id 任务id
      * @auther IngaWu
      * @currentdate:2020年9月22日
      */
     @ApiOperation(value = "播放任务")
     @PostMapping(value = "/playTask")
-    public ResponseUtil<Object> playTask(@RequestParam(value = "id") String id,String cardId) {
+    public ResponseUtil<Object> playTask(@RequestParam(value = "id") String id, String cardId) {
         logger.info("playTask and id={}", JSON.toJSONString(id));
-        if(StringUtilsXD.isEmpty(cardId)){
+        if (StringUtilsXD.isEmpty(cardId)) {
             ResponseUtil<Object> responseUtil = new ResponseUtil<>();
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
         }
-        return screenService.playXixunTask(id,cardId);
+        return screenService.playXixunTask(id, cardId);
     }
 
     /**
@@ -197,14 +197,22 @@ public class TaskController {
      */
     @ApiOperation(value = "快速创建任务")
     @PostMapping(value = "/insertQuickTask")
-    public ResponseUtil<Task> insertQuickTask(@RequestParam(value = "programName") String programName,@RequestParam(value = "programId") String programId) {
+    public ResponseUtil<Task> insertQuickTask(@RequestParam(value = "programName") String programName,
+                                              @RequestParam(value = "programId") String programId,
+                                              @RequestParam(value = "itemVersion") Integer itemVersion) {
         logger.info("insertQuickTask and programId:{}", programId);
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
+            String taskName = programName + "_Task";
+            Task existTask = taskService.selectTaskByName(taskName);
+            if (null != existTask) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_04, Constant.RTNINFO_SYS_04);
+                return responseUtil;
+            }
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             Integer userId = admin.getId();
-            int n = taskService.insertQuickTask(programName,programId,userId);
+            int n = taskService.insertQuickTask(taskName, programId, userId, itemVersion);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

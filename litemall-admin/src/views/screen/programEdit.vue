@@ -43,15 +43,15 @@
             <template slot-scope="scope">{{ scope.row._type | formatType }}</template>
           </el-table-column>
           <el-table-column align="center" label="格式" prop="fileExt" />
-          <el-table-column align="center" label="起始时间" prop="playTime" />
+          <el-table-column align="center" label="起始时间(秒)" prop="playTime" />
           <!--          <el-table-column align="center" label="起始时间" prop="playTime">-->
           <!--            <template slot-scope="scope">-->
           <!--              <el-input v-model="scope.row.playTime" />-->
           <!--            </template>-->
           <!--          </el-table-column>-->
-          <el-table-column align="center" label="持续时长" prop="timeSpan">
+          <el-table-column align="center" label="持续时长(秒)" prop="timeSpan">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.timeSpan" />
+              <el-input v-model="scope.row.timeSpan" placeholder="输秒" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
