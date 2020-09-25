@@ -45,14 +45,3 @@ export function deleteSchedule(id, itemId) {
     }
   })
 }
-
-export function playSchedule(id, cardId) {
-  return request({
-    url: '/screen/schedule/playSchedule',
-    method: 'post',
-    params: {
-      id: id,
-      cardId: cardId
-    }
-  })
-}

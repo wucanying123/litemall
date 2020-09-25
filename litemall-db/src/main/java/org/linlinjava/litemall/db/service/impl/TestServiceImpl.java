@@ -42,7 +42,6 @@ public class TestServiceImpl implements TestService {
             Command command = new Command();
             command.set_type("PlayXixunTask");
             command.setId("3be5e443-d025-4f8d-b708-62ac89c5b5fe");
-            command.setPreDownloadURL("https://m2mled.net/file/download?id=");
             Task task = new Task();
             task.set_id("55f5b637-a529-4807-8063-deeb3c12f9ab");
             task.setName("demo");
@@ -381,7 +380,6 @@ public class TestServiceImpl implements TestService {
         Command command = new Command();
         command.set_type("PlayXixunTask");
         command.setId(UUID.randomUUID().toString().replace("-", ""));
-        command.setPreDownloadURL(null);
         command.setTaskId(task.get_id());
         commandMapper.insertSelective(command);
     }

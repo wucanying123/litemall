@@ -328,10 +328,6 @@ export default {
         }
       })
     },
-    handleDetail(row) {
-      this.userDetail = row
-      this.userDialogVisible = true
-    },
     handleUpdate(row) {
       this.dataForm = Object.assign({}, row)
       this.dialogStatus = 'update'

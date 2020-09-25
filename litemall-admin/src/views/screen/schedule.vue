@@ -34,7 +34,6 @@
 
       <el-table-column align="center" label="操作" width="330" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -160,7 +159,7 @@
 </style>
 
 <script>
-import { listSchedule, createSchedule, updateSchedule, deleteSchedule, playSchedule } from '@/api/schedule'
+import { listSchedule, createSchedule, updateSchedule, deleteSchedule } from '@/api/schedule'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
@@ -376,25 +375,6 @@ export default {
             })
         }
       })
-    },
-    handleDetail(row) {
-      this.userDetail = row
-      this.userDialogVisible = true
-    },
-    handlePlay(row) {
-      playSchedule(row.id, this.cardId)
-        .then(response => {
-          this.$notify.success({
-            title: '成功',
-            message: '播放成功'
-          })
-        })
-        .catch(response => {
-          this.$notify.error({
-            title: '失败',
-            message: response.data.errmsg
-          })
-        })
     },
     handleUpdate(row) {
       this.dataForm = Object.assign({}, row)

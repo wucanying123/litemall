@@ -520,7 +520,6 @@ public class ScreenServiceImpl implements ScreenService {
         Command command = new Command();
         command.set_type("PlayXixunTask");
         command.setId(UUID.randomUUID().toString().replace("-", ""));
-        command.setPreDownloadURL("http://192.168.1.108:8081/file/download?id=");
         command.setTask(task);
         command.setTaskId(taskId);
         requestData.setCommand(command);
@@ -596,6 +595,34 @@ public class ScreenServiceImpl implements ScreenService {
         return task;
     }
 
+    private Schedule setScheduleOption(Schedule schedule){
+        if(null != schedule.getDateType()){
+            if(schedule.getDateType().equals(DateType.All.toString())){
+                schedule.setStartDate(null);
+                schedule.setEndDate(null);
+            }
+        }
+        if(null != schedule.getTimeType()){
+            if(schedule.getTimeType().equals(TimeType.All.toString())){
+                schedule.setStartTime(null);
+                schedule.setEndTime(null);
+            }
+        }
+        if(null != schedule.getFilterType()){
+            if(schedule.getFilterType().equals(FilterType.None.toString())){
+                schedule.setWeekFilter(null);
+                schedule.setWeekFilterArray(null);
+            }
+        }
+        List<String> weekFilterArray = schedule.getWeekFilterArray();
+        if(null != weekFilterArray && weekFilterArray.size() >0){
+            String weekFilter = weekFilterArray.toString();
+            weekFilter = StringUtilsXD.replaceBlank(weekFilter);
+            schedule.setWeekFilter(weekFilter);
+        }
+        return schedule;
+    }
+
 
     public List<ScheduleVO> readItemSchedule(Item item){
         List<ScheduleVO> scheduleVOList = new ArrayList<>();
@@ -616,6 +643,7 @@ public class ScreenServiceImpl implements ScreenService {
                         }
                         schedule.setWeekFilterArray(weekStrList);
                     }
+                    schedule = setScheduleOption(schedule);
                     schedules.add(schedule);
                 }
             }
