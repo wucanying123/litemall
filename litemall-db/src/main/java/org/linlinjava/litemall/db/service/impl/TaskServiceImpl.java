@@ -5,13 +5,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.linlinjava.litemall.db.dao.ItemMapper;
+import org.linlinjava.litemall.db.dao.ScheduleMapper;
 import org.linlinjava.litemall.db.domain.*;
-import org.linlinjava.litemall.db.service.ExamineService;
-import org.linlinjava.litemall.db.service.ItemService;
-import org.linlinjava.litemall.db.service.LitemallAdminService;
+import org.linlinjava.litemall.db.service.*;
 import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.dao.TaskMapper;
-import org.linlinjava.litemall.db.service.TaskService;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,8 @@ public class TaskServiceImpl implements TaskService {
     private ItemService itemService;
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private ScheduleMapper scheduleMapper;
 
 
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -172,6 +172,14 @@ public class TaskServiceImpl implements TaskService {
                 String itemIds = task.getItemsIds();
                 List<String> itemIdList = Arrays.asList(itemIds.split(","));
                 for(String itemId:itemIdList){
+                    Item item = itemService.selectItemById(itemId);
+                    String scheduleIds = item.getSchedulesIds();
+                    if (null != scheduleIds && scheduleIds.length() > 0) {
+                        List<String> scheduleIdsList = Arrays.asList(scheduleIds.split(","));
+                        for (String scheduleId : scheduleIdsList) {
+                              scheduleMapper.deleteByPrimaryKey(scheduleId);
+                        }
+                    }
                     itemService.deleteById(id,itemId);
                 }
             }
