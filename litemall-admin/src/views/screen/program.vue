@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
+          <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
