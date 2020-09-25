@@ -3,8 +3,6 @@ package org.linlinjava.litemall.db.service;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.domain.Program;
 
-import javax.validation.constraints.NotNull;
-
 public interface ProgramService {
 
     /**
@@ -51,9 +49,20 @@ public interface ProgramService {
      */
     int deleteById(String id);
 
+    /**
+     * @Description: 查看节目详情
+     * @Title: readProgram
+     * @param id 节目id
+     * @auther IngaWu
+     * @currentdate:2020年9月2日
+     */
     Program readProgram(String id);
 
-//    void updatePlaySources(Program program);
-
+    /**
+     * @Description: 编辑高级节目
+     * @title updateComplexProgramById
+     * @author IngaWu
+     * @currentdate:2020年9月25日
+     */
     void updateComplexProgramById(Program program);
 }
