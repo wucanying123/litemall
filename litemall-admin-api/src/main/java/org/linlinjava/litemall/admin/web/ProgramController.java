@@ -152,36 +152,6 @@ public class ProgramController {
         return responseUtil;
     }
 
-
-    /**
-     * @Description: 编辑简易节目
-     * @title
-     * @author IngaWu
-     * @currentdate:2020年9月2日
-     */
-    @ApiOperation(value = "编辑简易节目")
-    @PostMapping(value = "/updateSimpleProgramById")
-    public ResponseUtil<Program> updateSimpleProgramById(@RequestBody Program program) {
-        logger.info("updateSimpleProgramById and program:{}", JSON.toJSONString(program));
-        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
-        if (StringUtilsXD.isBlank(program.get_id())) {
-            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
-        }
-        try {
-            int n = programService.updateProgramById(program);
-//            String[] sourceIdList = program.getPlaySource();
-//            String a = String.join(",", sourceIdList);
-//            programService.updatePlaySources(program);
-            if (n == 1) {
-                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
-            }
-        } catch (Exception e) {
-            logger.error("updateSimpleProgramById and program:{}", JSON.toJSONString(program), e);
-
-        }
-        return responseUtil;
-    }
-
     /**
      * @Description: 删除节目
      * @Title: deleteById
