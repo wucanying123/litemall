@@ -81,13 +81,6 @@ public class PlaySourceServiceImpl implements PlaySourceService {
             playSource.setUpdateTime(cuttentTime);
             playSource.setTheLeft(playSource.getLeft());
             n = playSourceMapper.insertSelective(playSource);
-            //同步添加到审核表
-            Examine examine = new Examine();
-            examine.setPassStatus(1);
-            examine.setType(3);
-            examine.setDetailId(playSource.getId());
-            examine.setDetailName(playSource.getName());
-            examineService.insertExamine(examine);
         } catch (Exception e) {
             logger.error("insertPlaySource error and msg={}", e);
         }
@@ -100,10 +93,6 @@ public class PlaySourceServiceImpl implements PlaySourceService {
         try {
             playSource.setUpdateTime(DateUtil.getDateline());
             n = playSourceMapper.updateByPrimaryKeySelective(playSource);
-            //同步修改名称到审核表
-            if (StringUtilsXD.isNotEmpty(playSource.getId()) && StringUtilsXD.isNotEmpty(playSource.getName())) {
-                examineService.updateExamineDetailName(playSource.getId(),playSource.getName());
-            }
         } catch (Exception e) {
             logger.error("updatePlaySourceById error and msg={}", e);
         }
@@ -115,8 +104,6 @@ public class PlaySourceServiceImpl implements PlaySourceService {
         int n = 0;
         try {
             n = playSourceMapper.deleteByPrimaryKey(id);
-            //同步删除审核表数据
-            examineService.deleteByDetailId(id);
         } catch (Exception e) {
             logger.error("deleteById error and msg={}", e);
         }

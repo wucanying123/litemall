@@ -74,6 +74,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     private Schedule setScheduleOption(Schedule schedule){
+        if(StringUtilsXD.isEmpty(schedule.getDateType())){
+            schedule.setDateType(DateType.All.toString());
+        }
         if(null != schedule.getDateType()){
             if(schedule.getDateType().equals(DateType.All.toString())){
                 schedule.setStartDate("");

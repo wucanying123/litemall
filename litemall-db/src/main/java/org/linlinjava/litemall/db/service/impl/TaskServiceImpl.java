@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
             //同步添加到审核表
             Examine examine = new Examine();
             examine.setPassStatus(1);
-            examine.setType(3);
+            examine.setType(1);
             examine.setDetailId(task.get_id());
             examine.setDetailName(task.getName());
             examineService.insertExamine(examine);
