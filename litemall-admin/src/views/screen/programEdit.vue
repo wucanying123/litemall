@@ -216,28 +216,26 @@ export default {
       return ''
     },
     secondToDate(msd) {
-      var time = msd
-      // eslint-disable-next-line eqeqeq
-      if (time != null && time != '') {
-        if (time > 60 && time < 60 * 60) {
-          time = parseInt(time / 60.0) + '分钟' + parseInt((parseFloat(time / 60.0) -
-            parseInt(time / 60.0)) * 60) + '秒'
-        } else if (time >= 60 * 60 && time < 60 * 60 * 24) {
-          time = parseInt(time / 3600.0) + '小时' + parseInt((parseFloat(time / 3600.0) -
-            parseInt(time / 3600.0)) * 60) + '分钟' +
-            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
-        } else if (time >= 60 * 60 * 24) {
-          time = parseInt(time / 3600.0 / 24) + '天' + parseInt((parseFloat(time / 3600.0 / 24) -
-            parseInt(time / 3600.0 / 24)) * 24) + '小时' + parseInt((parseFloat(time / 3600.0) -
-            parseInt(time / 3600.0)) * 60) + '分钟' +
-            parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-              parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + '秒'
-        } else {
-          time = parseInt(time) + '秒'
+      var theTime = parseInt(msd)// 秒
+      var middle = 0// 分
+      var hour = 0// 小时
+
+      if (theTime > 60) {
+        middle = parseInt(theTime / 60)
+        theTime = parseInt(theTime % 60)
+        if (middle > 60) {
+          hour = parseInt(middle / 60)
+          middle = parseInt(middle % 60)
         }
       }
-      return time
+      var result = '' + parseInt(theTime) + '秒'
+      if (middle > 0) {
+        result = '' + parseInt(middle) + '分' + result
+      }
+      if (hour > 0) {
+        result = '' + parseInt(hour) + '小时' + result
+      }
+      return result
     },
     timestampToTime(timestamp) {
       if (timestamp != null) {

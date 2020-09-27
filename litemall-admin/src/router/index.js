@@ -115,6 +115,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'seniorProgram',
+        component: () => import('@/views/screen/seniorProgram'),
+        name: 'seniorProgram',
+        meta: {
+          title: '高级节目',
+          noCache: true
+        }
+      },
+      {
         path: 'item',
         component: () => import('@/views/screen/item'),
         name: 'item',
