@@ -1,7 +1,9 @@
 package org.linlinjava.litemall.admin.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.JsonObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.linlinjava.litemall.db.domain.Item;
@@ -220,5 +222,16 @@ public class TaskController {
             logger.error("insertQuickTask and programId:{}", programId, e);
         }
         return responseUtil;
+    }
+
+    @ApiOperation(value = "任务进度")
+    @RequestMapping(value = "/nocice",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public Object demo(@RequestBody JSONObject json) throws Exception{
+        try {
+            System.out.println("输出："+json);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseUtil.ok(json);
     }
 }
