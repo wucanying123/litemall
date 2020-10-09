@@ -42,13 +42,10 @@ export function deleteLive(id) {
   })
 }
 
-export function playLive(id, cardId) {
+export function playLive(data) {
   return request({
     url: '/screen/live/playLive',
     method: 'post',
-    params: {
-      id: id,
-      cardId: cardId
-    }
+    data
   })
 }

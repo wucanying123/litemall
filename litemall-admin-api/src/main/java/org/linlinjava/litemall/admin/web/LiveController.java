@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Live;
 import org.linlinjava.litemall.db.service.LiveService;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin/screen/live")
@@ -152,18 +155,19 @@ public class LiveController {
     /**
      * @Description: 播放直播
      * @Title: playLive
-     * @param id 直播id
      * @auther IngaWu
      * @currentdate:2020年9月15日
      */
     @ApiOperation(value = "播放直播")
     @PostMapping(value = "/playLive")
-    public ResponseUtil<Object> playLive(@RequestParam(value = "id") String id,String cardId) {
-        logger.info("playLive and id={}", JSON.toJSONString(id));
-        if(StringUtilsXD.isEmpty(cardId)){
+    public ResponseUtil<Object> playLive(@RequestBody String body) {
+        String id = JacksonUtil.parseString(body, "id");
+        List<String> selectCardIds = JacksonUtil.parseStringList(body, "selectCardIds");
+        logger.info("playLive and id ={},selectCardIds={}", id,JSON.toJSONString(selectCardIds));
+        if (null == selectCardIds || selectCardIds.size() < 1) {
             ResponseUtil<Object> responseUtil = new ResponseUtil<>();
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
         }
-        return screenService.playLiveVideo(id,cardId);
+        return screenService.playLiveVideo(id,selectCardIds);
     }
 }

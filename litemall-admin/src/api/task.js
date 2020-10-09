@@ -62,13 +62,10 @@ export function deleteTask(id) {
   })
 }
 
-export function playTask(id, cardId) {
+export function playTask(data) {
   return request({
     url: '/screen/task/playTask',
     method: 'post',
-    params: {
-      id: id,
-      cardId: cardId
-    }
+    data
   })
 }

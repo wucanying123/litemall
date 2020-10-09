@@ -3,6 +3,7 @@ package org.linlinjava.litemall.admin.web;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
+import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.db.domain.LitemallRole;
 import org.linlinjava.litemall.db.domain.ScreenDevice;
 import org.linlinjava.litemall.db.service.ScreenDeviceService;
@@ -200,12 +201,14 @@ public class ScreenDeviceController {
 
     @ApiOperation(value = "停止直播")
     @PostMapping(value = "/stopLiveVideo")
-    public ResponseUtil<Object> stopLiveVideo(String cardId) {
-        if (StringUtilsXD.isEmpty(cardId)) {
+    public ResponseUtil<Object> stopLiveVideo(@RequestBody String body) {
+        List<String> selectCardIds = JacksonUtil.parseStringList(body, "selectCardIds");
+        logger.info("stopLiveVideo and selectCardIds={}", JSON.toJSONString(selectCardIds));
+        if (null == selectCardIds || selectCardIds.size() < 1) {
             ResponseUtil<Object> responseUtil = new ResponseUtil<>();
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
         }
-        return screenService.stopLiveVideo(cardId);
+        return screenService.stopLiveVideo(selectCardIds);
     }
 
     @ApiOperation(value = "清屏")
@@ -220,12 +223,14 @@ public class ScreenDeviceController {
 
     @ApiOperation(value = "停止节目，清除播放器节目数据和文件")
     @PostMapping(value = "/clearPlayerTask")
-    public ResponseUtil<Object> clearPlayerTask(String cardId) {
-        if (StringUtilsXD.isEmpty(cardId)) {
+    public ResponseUtil<Object> clearPlayerTask(@RequestBody String body) {
+        List<String> selectCardIds = JacksonUtil.parseStringList(body, "selectCardIds");
+        logger.info("clearPlayerTask and selectCardIds={}", JSON.toJSONString(selectCardIds));
+        if (null == selectCardIds || selectCardIds.size() < 1) {
             ResponseUtil<Object> responseUtil = new ResponseUtil<>();
             return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_03, Constant.RTNINFO_SYS_03);
         }
-        return screenService.clearPlayerTask(cardId);
+        return screenService.clearPlayerTask(selectCardIds);
     }
 
     @ApiOperation(value = "获取截图", notes = "返回截图为base64编码的字符串（字符串中含有较多的\\n换行符，需要用正则去掉才能正常显示，格式为png")

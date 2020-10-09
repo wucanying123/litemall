@@ -335,7 +335,7 @@ export default {
         })
     },
     handleclearTask(row) {
-      clearPlayerTask(row.cardId)
+      clearPlayerTask({ selectCardIds: [row.cardId] })
         .then(response => {
           this.$notify.success({
             title: '成功',
@@ -351,7 +351,7 @@ export default {
         })
     },
     stopLive(row) {
-      stopLiveVideo(row.cardId)
+      stopLiveVideo({ selectCardIds: [row.cardId] })
         .then(response => {
           this.$notify.success({
             title: '成功',

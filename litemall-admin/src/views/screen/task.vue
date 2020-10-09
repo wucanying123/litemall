@@ -3,11 +3,20 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
+      <!--      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">-->
+      <!--        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--      </el-select>-->
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>卡号列表</span>
+        </div>
+        <el-table v-loading="listLoading" :data="cardList" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" />
+          <el-table-column align="center" label="卡号" prop="value" />
+        </el-table>
+      </el-card>
+      <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入搜索名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-select v-model="cardId" clearable style="width: 200px" class="filter-item" placeholder="选择卡号">
-        <el-option v-for="item in cardList" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleclearTask">停止节目</el-button>
     </div>
 
@@ -47,28 +56,17 @@
 </template>
 
 <style>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
 }
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
+.clearfix:after {
+  clear: both
 }
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 120px;
-  height: 120px;
-  line-height: 120px;
-  text-align: center;
-}
-.avatar {
-  width: 145px;
-  height: 145px;
-  display: block;
+
+.box-card {
+  width: 280px;
 }
 </style>
 
@@ -77,7 +75,8 @@ import { listTask, updateTask, deleteTask } from '@/api/task'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 import { clearPlayerTask, selectOnlineDevice } from '@/api/screenDevice'
-import { playTask } from '@/api/task' // Secondary package based on el-pagination
+import { playTask } from '@/api/task'
+import _ from 'lodash'
 
 export default {
   name: 'Task',
@@ -222,7 +221,16 @@ export default {
         })
     },
     handleclearTask() {
-      clearPlayerTask(this.cardId)
+      if (this.multipleSelection == null || this.multipleSelection.length === 0) {
+        this.$message.error('请选择至少一个卡号')
+        return
+      }
+      const selectCardIds = []
+      _.forEach(this.multipleSelection, function(item) {
+        selectCardIds.push(item.value)
+      })
+
+      clearPlayerTask({ selectCardIds: selectCardIds })
         .then(response => {
           this.$notify.success({
             title: '成功',
@@ -238,7 +246,16 @@ export default {
         })
     },
     handlePlay(row) {
-      playTask(row._id, this.cardId)
+      if (this.multipleSelection == null || this.multipleSelection.length === 0) {
+        this.$message.error('请选择至少一个卡号')
+        return
+      }
+      const selectCardIds = []
+      _.forEach(this.multipleSelection, function(item) {
+        selectCardIds.push(item.value)
+      })
+
+      playTask({ id: row._id, selectCardIds: selectCardIds })
         .then(response => {
           this.$notify.success({
             title: '成功',
@@ -251,6 +268,9 @@ export default {
             message: response.data.errmsg
           })
         })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
     }
   }
 }

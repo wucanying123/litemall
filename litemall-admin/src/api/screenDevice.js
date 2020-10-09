@@ -69,23 +69,19 @@ export function clearScreen(cardId) {
   })
 }
 
-export function clearPlayerTask(cardId) {
+export function clearPlayerTask(data) {
   return request({
     url: '/screen/screenDevice/clearPlayerTask',
     method: 'post',
-    params: {
-      cardId: cardId
-    }
+    data
   })
 }
 
-export function stopLiveVideo(cardId) {
+export function stopLiveVideo(data) {
   return request({
     url: '/screen/screenDevice/stopLiveVideo',
     method: 'post',
-    params: {
-      cardId: cardId
-    }
+    data
   })
 }
 

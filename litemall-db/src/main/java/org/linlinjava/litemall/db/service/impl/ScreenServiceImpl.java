@@ -50,7 +50,7 @@ public class ScreenServiceImpl implements ScreenService {
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         String jsonString = "{action:getInfo}";
         String resultString = UDPClient.getCardInfo(jsonString);
-        if(!StringUtilsXD.isEmpty(resultString)) {
+        if (!StringUtilsXD.isEmpty(resultString)) {
             int indexStart = resultString.indexOf("{");
             int indexEnd = resultString.indexOf("}");
             String result = resultString.substring(indexStart, indexEnd + 1);
@@ -63,7 +63,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 加载顶层网页 （显示在其他界面之上，默认是透明的）
      */
-    public ResponseUtil<Object> updateTopWeb(String weburl,String cardId) {
+    public ResponseUtil<Object> updateTopWeb(String weburl, String cardId) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "loadUrl");
         if (StringUtils.isEmpty(weburl)) {
@@ -71,7 +71,7 @@ public class ScreenServiceImpl implements ScreenService {
         }
         params.put("url", weburl);
         params.put("persistent", "true");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -89,7 +89,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "invokeJs");
         params.put("js", "handleData({id:'m2',content:'how/<br>are/<br>you2222/<br>?',direction:'down'})");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -106,7 +106,7 @@ public class ScreenServiceImpl implements ScreenService {
      * @param direction 往左滚动，可填值left、 right
      * @param align     在上方显示，可填值top、center、bottom
      */
-    public ResponseUtil<Object> scrollingText(Integer num, String text, String color, Integer interval, Integer step, String direction, String align,String cardId) {
+    public ResponseUtil<Object> scrollingText(Integer num, String text, String color, Integer interval, Integer step, String direction, String align, String cardId) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "invokeBuildInJs");
         params.put("method", "scrollMarquee");
@@ -137,7 +137,7 @@ public class ScreenServiceImpl implements ScreenService {
             align = "top";
         }
         params.put("align", align);
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -149,7 +149,7 @@ public class ScreenServiceImpl implements ScreenService {
     public ResponseUtil<Object> clearScreen(String cardId) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "clear");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -162,7 +162,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "startActivity");
         params.put("apk", "com.xixun.xy.xwalk");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -187,7 +187,7 @@ public class ScreenServiceImpl implements ScreenService {
                 "            \"c\":\"abc\"\n" +
                 "\t\t} \n" +
                 "\t} ");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -211,7 +211,7 @@ public class ScreenServiceImpl implements ScreenService {
                 "\t\t}\n" +
                 "\t}\n" +
                 "}";
-        String result = HttpUtil.postJsonString(Constant.URL+cardId, json);
+        String result = HttpUtil.postJsonString(Constant.URL + cardId, json);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -221,7 +221,7 @@ public class ScreenServiceImpl implements ScreenService {
      * 设置xwalk背景
      * (注意：当前加载的页面必须已经定义过showHtml方法)
      */
-    public ResponseUtil<Object> setBackgroundColor(String color,String cardId) {
+    public ResponseUtil<Object> setBackgroundColor(String color, String cardId) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callXwalkFn");
         params.put("fn", "setBackgroundColor");
@@ -229,7 +229,7 @@ public class ScreenServiceImpl implements ScreenService {
             color = "#666666";
         }
         params.put("arg", color);
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -246,7 +246,7 @@ public class ScreenServiceImpl implements ScreenService {
         command.setPath("/data/data/com.xixun.xy.conn/files/local/abc/2.mp4");
         command.setPassword("abc");
         requestData.setCommand(command);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData);
+        String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -255,7 +255,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 播放直播
      */
-    public ResponseUtil<Object> playLiveVideo(String liveId,String cardId) {
+    public ResponseUtil<Object> playLiveVideo(String liveId, List<String> selectCardIds) {
         Live live = liveService.selectLiveById(liveId);
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
@@ -263,22 +263,26 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("url", live.getUrl());
         params.put("width", live.getWidth().toString());
         params.put("height", live.getHeight().toString());
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        for (String cardId:selectCardIds) {
+            String result = HttpUtil.postMap(Constant.URL + cardId, params);
+            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        }
         return responseUtil;
     }
 
     /**
      * 停止直播
      */
-    public ResponseUtil<Object> stopLiveVideo(String cardId) {
+    public ResponseUtil<Object> stopLiveVideo(List<String> selectCardIds) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callLiveService");
         params.put("_type", "StopLiveVideo");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        for(String cardId:selectCardIds) {
+            String result = HttpUtil.postMap(Constant.URL + cardId, params);
+            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        }
         return responseUtil;
     }
 
@@ -292,7 +296,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("fileName", "C:\\Users\\Admin\\Desktop\\timg.jpg");
         params.put("content", "base64Data");
         params.put("base64", "true");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -307,7 +311,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("fileName", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1598440556009&di=658c" +
                 "561ef1daf8c80c9b2eb1a3d55804&imgtype=0&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201407%2F31%2F182726essfa0380ygmly3h.jpg");
 //        params.put("deleteAll","true");//如果要删除所有保存的文件，请取消对此的注释
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -323,7 +327,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("url", fileName);
 //        Date date = new Date();
         params.put("path", "/abc/1.mp4");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -336,7 +340,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "downloadFileToSD");
         params.put("path", "/201505/download.html");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -349,7 +353,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getFileLength");
         params.put("path", "/201505/download.html");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -362,7 +366,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "stopPlayer");
         params.put("stop", "true");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -376,7 +380,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("type", "downloadFileToLocal");
         params.put("url", "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4");
         params.put("path", "/abc/2.mp4");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -389,7 +393,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "deleteFileFromLocal");
         params.put("path", "/abc");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -402,7 +406,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getLocalFileLength");
         params.put("path", "/abc/demo.html");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -418,7 +422,7 @@ public class ScreenServiceImpl implements ScreenService {
         requestData2.setFn("screenshot");
         requestData2.setArg1(100);
         requestData2.setArg2(100);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+        String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
         JSONObject jsonObject = JSONObject.fromObject(result);
         String imgString = "";
         if (null != jsonObject.get("result")) {
@@ -439,7 +443,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "getGpsLocation");
         params.put("fn", "screenshot");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -448,12 +452,12 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 开关屏幕
      */
-    public ResponseUtil<Object> setScreenOpen(boolean isopen,String cardId) {
+    public ResponseUtil<Object> setScreenOpen(boolean isopen, String cardId) {
         RequestData2 requestData = new RequestData2();
         requestData.setType("callCardService");
         requestData.setFn("setScreenOpen");
         requestData.setArg1(isopen);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData);
+        String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -466,7 +470,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "isScreenOpen");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -475,12 +479,12 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 设置亮度
      */
-    public ResponseUtil<Object> setBrightness(Integer brightNum,String cardId) {
+    public ResponseUtil<Object> setBrightness(Integer brightNum, String cardId) {
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("callCardService");
         requestData2.setFn("setBrightness");
         requestData2.setArg1(brightNum);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+        String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
 
 //        Map<String, Object> params = new HashMap<>();
 //        params.put("type", "callCardService");
@@ -496,14 +500,14 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 提交JsonString
      */
-    public ResponseUtil<Object> postJsonString(String jsonString,String cardId) {
+    public ResponseUtil<Object> postJsonString(String jsonString, String cardId) {
         if (StringUtils.isEmpty(jsonString)) {
             jsonString = "{ \n" +
                     "\t\"type\": \"clear\"\n" +
                     "}";
         }
         jsonString = StringUtilsXD.replaceBlank(jsonString);
-        String result = HttpUtil.postJsonString(Constant.URL+cardId, jsonString);
+        String result = HttpUtil.postJsonString(Constant.URL + cardId, jsonString);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -512,7 +516,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 播放熙讯任务
      */
-    public ResponseUtil<Object> playXixunTask(String taskId,String cardId) {
+    public ResponseUtil<Object> playXixunTask(String taskId, List<String> selectCardIds) {
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         Task task = readTask(taskId);
         RequestData requestData = new RequestData();
@@ -523,12 +527,14 @@ public class ScreenServiceImpl implements ScreenService {
         command.setTask(task);
         command.setTaskId(taskId);
         requestData.setCommand(command);
-        String result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData);
-        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        for (String cardId : selectCardIds) {
+            String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData);
+            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        }
         return responseUtil;
     }
 
-    public Task readTask(String taskId){
+    public Task readTask(String taskId) {
         Task task = taskMapper.selectByPrimaryKey(taskId);
         if (null == task) {
             return null;
@@ -595,27 +601,27 @@ public class ScreenServiceImpl implements ScreenService {
         return task;
     }
 
-    private Schedule setScheduleOption(Schedule schedule){
-        if(null != schedule.getDateType()){
-            if(schedule.getDateType().equals(DateType.All.toString())){
+    private Schedule setScheduleOption(Schedule schedule) {
+        if (null != schedule.getDateType()) {
+            if (schedule.getDateType().equals(DateType.All.toString())) {
                 schedule.setStartDate(null);
                 schedule.setEndDate(null);
             }
         }
-        if(null != schedule.getTimeType()){
-            if(schedule.getTimeType().equals(TimeType.All.toString())){
+        if (null != schedule.getTimeType()) {
+            if (schedule.getTimeType().equals(TimeType.All.toString())) {
                 schedule.setStartTime(null);
                 schedule.setEndTime(null);
             }
         }
-        if(null != schedule.getFilterType()){
-            if(schedule.getFilterType().equals(FilterType.None.toString())){
+        if (null != schedule.getFilterType()) {
+            if (schedule.getFilterType().equals(FilterType.None.toString())) {
                 schedule.setWeekFilter(null);
                 schedule.setWeekFilterArray(null);
             }
         }
         List<String> weekFilterArray = schedule.getWeekFilterArray();
-        if(null != weekFilterArray && weekFilterArray.size() >0){
+        if (null != weekFilterArray && weekFilterArray.size() > 0) {
             String weekFilter = weekFilterArray.toString();
             weekFilter = StringUtilsXD.replaceBlank(weekFilter);
             schedule.setWeekFilter(weekFilter);
@@ -624,7 +630,7 @@ public class ScreenServiceImpl implements ScreenService {
     }
 
 
-    public List<ScheduleVO> readItemSchedule(Item item){
+    public List<ScheduleVO> readItemSchedule(Item item) {
         List<ScheduleVO> scheduleVOList = new ArrayList<>();
         String scheduleIds = item.getSchedulesIds();
         if (null != scheduleIds && scheduleIds.length() > 0) {
@@ -633,8 +639,8 @@ public class ScreenServiceImpl implements ScreenService {
             for (String scheduleId : scheduleIdsList) {
                 Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
                 if (null != schedule) {
-                    if(StringUtilsXD.isNotEmpty(schedule.getWeekFilter())){
-                        String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
+                    if (StringUtilsXD.isNotEmpty(schedule.getWeekFilter())) {
+                        String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]", "");
                         List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
                         List<Integer> weekIntList = new ArrayList<>();
                         for (String str : weekStrList) {
@@ -666,9 +672,9 @@ public class ScreenServiceImpl implements ScreenService {
 
         if (StringUtilsXD.isNotEmpty(schedule.getDateType())) {
             DateType equalDateType = null;
-            if(schedule.getDateType().equals("All")) {
+            if (schedule.getDateType().equals("All")) {
                 equalDateType = DateType.All;
-            }else if(schedule.getDateType().equals("Range")) {
+            } else if (schedule.getDateType().equals("Range")) {
                 equalDateType = DateType.Range;
             }
             vo.setDateType(equalDateType);
@@ -680,15 +686,15 @@ public class ScreenServiceImpl implements ScreenService {
         }
 
         if (null != schedule.getEndDate()) {
-            String endDate =schedule.getEndDate();
+            String endDate = schedule.getEndDate();
             vo.setEndDate(endDate);
         }
 
         if (StringUtilsXD.isNotEmpty(schedule.getTimeType())) {
             TimeType equalTimeType = null;
-            if(schedule.getTimeType().equals("All")) {
+            if (schedule.getTimeType().equals("All")) {
                 equalTimeType = TimeType.All;
-            }else if(schedule.getTimeType().equals("Range")) {
+            } else if (schedule.getTimeType().equals("Range")) {
                 equalTimeType = TimeType.Range;
             }
             vo.setTimeType(equalTimeType);
@@ -706,18 +712,18 @@ public class ScreenServiceImpl implements ScreenService {
 
         if (StringUtilsXD.isNotEmpty(schedule.getFilterType())) {
             FilterType equalFilterType = null;
-            if(schedule.getFilterType().equals("None")) {
+            if (schedule.getFilterType().equals("None")) {
                 equalFilterType = FilterType.None;
-            }else if(schedule.getFilterType().equals("Week")) {
+            } else if (schedule.getFilterType().equals("Week")) {
                 equalFilterType = FilterType.Week;
-            }else if(schedule.getFilterType().equals("Month")) {
+            } else if (schedule.getFilterType().equals("Month")) {
                 equalFilterType = FilterType.Month;
             }
             vo.setFilterType(equalFilterType);
         }
 
         if (StringUtilsXD.isNotEmpty(schedule.getWeekFilter())) {
-            String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]","");
+            String weekFilterStr = schedule.getWeekFilter().replaceAll("[\\[\\]]", "");
             List<String> weekStrList = Arrays.asList(weekFilterStr.split(","));
             List<Integer> weekIntList = new ArrayList<>();
             for (String str : weekStrList) {
@@ -729,7 +735,7 @@ public class ScreenServiceImpl implements ScreenService {
         }
 
         if (StringUtilsXD.isNotEmpty(schedule.getMonthFilter())) {
-            String monthFilterStr = schedule.getMonthFilter().replaceAll("[\\[\\]]","");
+            String monthFilterStr = schedule.getMonthFilter().replaceAll("[\\[\\]]", "");
             List<String> monthStrList = Arrays.asList(monthFilterStr.split(","));
             List<Integer> monthIntList = new ArrayList<>();
             for (String str : monthStrList) {
@@ -739,10 +745,10 @@ public class ScreenServiceImpl implements ScreenService {
             vo.setMonthFilter(monthIntList);
         }
 
-        if(null != schedule.getCreateTime()){
+        if (null != schedule.getCreateTime()) {
             vo.setCreateTime(schedule.getCreateTime());
         }
-        if(null != schedule.getUpdateTime()){
+        if (null != schedule.getUpdateTime()) {
             vo.setUpdateTime(schedule.getUpdateTime());
         }
 
@@ -757,7 +763,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getBrightness");
-        String result = HttpUtil.postMap(Constant.URL+cardId, params);
+        String result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -766,14 +772,14 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 设置音量
      */
-    public ResponseUtil<Object> setVolume(Integer volumeNum,String cardId) {
+    public ResponseUtil<Object> setVolume(Integer volumeNum, String cardId) {
         String result = "";
         try {
             RequestData2 requestData2 = new RequestData2();
             requestData2.setType("callCardService");
             requestData2.setFn("setVolume");
             requestData2.setArg1(volumeNum);
-            result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+            result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
         } catch (Exception e) {
             logger.error("setVolume error and volumeNum = {}", volumeNum, e);
         }
@@ -790,7 +796,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getVolume");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -804,7 +810,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getScreenWidth");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -818,7 +824,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getScreenHeight");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -832,7 +838,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getNetworkType");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -842,7 +848,7 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 设置NTP服务器或时区
      */
-    public ResponseUtil<Object> setTimeSync(String ntpServer, String timezone,String cardId) {
+    public ResponseUtil<Object> setTimeSync(String ntpServer, String timezone, String cardId) {
         String result = "";
         try {
             RequestData2 requestData2 = new RequestData2();
@@ -850,7 +856,7 @@ public class ScreenServiceImpl implements ScreenService {
             requestData2.setFn("setTimeSync");
             requestData2.setArg1(ntpServer);
             requestData2.setArg2(timezone);
-            result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+            result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
         } catch (Exception e) {
             logger.error("setTimeSync error and ntpServer = {},timezone = {}", ntpServer, timezone, e);
         }
@@ -867,7 +873,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getNtpServer");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -881,7 +887,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getTimezone");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -896,7 +902,7 @@ public class ScreenServiceImpl implements ScreenService {
         requestData2.setType("callCardService");
         requestData2.setFn("reboot");
         requestData2.setArg1(1);
-        result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+        result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -910,7 +916,7 @@ public class ScreenServiceImpl implements ScreenService {
         RequestData2 requestData2 = new RequestData2();
         requestData2.setType("getPackageVersion");
         requestData2.setApk("com.xixun.xixunplayer");
-        result = HttpUtil.postJsonObject(Constant.URL+cardId, requestData2);
+        result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData2);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -924,7 +930,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "callCardService");
         params.put("fn", "getFpgaInfomation");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -938,7 +944,7 @@ public class ScreenServiceImpl implements ScreenService {
         Map<String, String> params = new HashMap<>();
         params.put("type", "updateAPP");
         params.put("appUrl", "https://m2mled.net/file/download?id=5c13839da62960b53cb07b42");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -955,7 +961,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("companyId", "18948769783");
         params.put("realtimeURL", Constant.LOCALHOST + ":" + Constant.WEBPORT);
         params.put("usbProgramPwd", null);
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -976,7 +982,7 @@ public class ScreenServiceImpl implements ScreenService {
         params.put("identificationCode", "1");
         params.put("delaySync", "1");
         params.put("checkNtpTime", null);
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -985,13 +991,13 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 设置自动亮度，亮度根据传感器数据变化自动调整
      */
-    public ResponseUtil<Object> setAutoBrightness(String sensitivity, String minBrightness,String cardId) {
+    public ResponseUtil<Object> setAutoBrightness(String sensitivity, String minBrightness, String cardId) {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "setAutoBrightness");
         params.put("sensitivity", sensitivity);
         params.put("minBrightness", minBrightness);
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1004,7 +1010,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getAutoBrightness");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1074,7 +1080,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedBrightness");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1129,7 +1135,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedScreening");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1138,12 +1144,12 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 定时重启接口
      */
-    public ResponseUtil<Object> timedReboot(String time,String cardId) {
+    public ResponseUtil<Object> timedReboot(String time, String cardId) {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "timedReboot");
         params.put("time", time);
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1156,7 +1162,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getTimedReboot");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1165,13 +1171,15 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 清除播放器节目数据和文件
      */
-    public ResponseUtil<Object> clearPlayerTask(String cardId) {
+    public ResponseUtil<Object> clearPlayerTask(List<String> selectCardIds) {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "clearPlayerTask");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
-        responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        for(String cardId:selectCardIds) {
+            result = HttpUtil.postMap(Constant.URL + cardId, params);
+            responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
+        }
         return responseUtil;
     }
 
@@ -1185,7 +1193,7 @@ public class ScreenServiceImpl implements ScreenService {
         sensor.setAction("xixun.intent.action.TEMPERATURE_HUMIDITY");
         sensor.setCallbackURL(null);
         sensor.setSubscribe(true);
-        result = HttpUtil.postJsonObject(Constant.URL+cardId, sensor);
+        result = HttpUtil.postJsonObject(Constant.URL + cardId, sensor);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1198,7 +1206,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getControllerDate");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1211,7 +1219,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getDiskSpace");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1224,7 +1232,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getProgramTask");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1237,7 +1245,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getPlayingProgram");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1250,7 +1258,7 @@ public class ScreenServiceImpl implements ScreenService {
         String result = "";
         Map<String, String> params = new HashMap<>();
         params.put("type", "getServerAddress");
-        result = HttpUtil.postMap(Constant.URL+cardId, params);
+        result = HttpUtil.postMap(Constant.URL + cardId, params);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;
@@ -1259,13 +1267,13 @@ public class ScreenServiceImpl implements ScreenService {
     /**
      * 开关WiFi/AP接口
      */
-    public ResponseUtil<Object> switchWiFi(boolean on,String cardId) {
+    public ResponseUtil<Object> switchWiFi(boolean on, String cardId) {
         String result = "";
         SwitchWiFi switchWiFi = new SwitchWiFi();
         switchWiFi.set_id("f237643d-c35c");
         switchWiFi.setType("switchWiFi");
         switchWiFi.setOn(on);
-        result = HttpUtil.postJsonObject(Constant.URL+cardId, switchWiFi);
+        result = HttpUtil.postJsonObject(Constant.URL + cardId, switchWiFi);
         ResponseUtil<Object> responseUtil = new ResponseUtil<>();
         responseUtil = StringUtilsXD.setResponseUtil(responseUtil, result);
         return responseUtil;

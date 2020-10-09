@@ -84,12 +84,12 @@ public interface ScreenService {
     /**
      * 播放直播
      */
-    ResponseUtil<Object> playLiveVideo(String liveId,String cardId);
+    ResponseUtil<Object> playLiveVideo(String liveId,List<String> selectCardIds);
 
     /**
      * 停止直播
      */
-    ResponseUtil<Object> stopLiveVideo(String cardId);
+    ResponseUtil<Object> stopLiveVideo(List<String> selectCardIds);
 
     /**
      * 以字符串形式上传并保存html、图片等文件到sd卡
@@ -157,7 +157,7 @@ public interface ScreenService {
     /**
      * 播放熙讯任务
      */
-    ResponseUtil<Object> playXixunTask(String taskId,String cardId);
+    ResponseUtil<Object> playXixunTask(String taskId,List<String> selectCardIds);
 
 
     /**
@@ -294,7 +294,7 @@ public interface ScreenService {
     /**
      * 清除播放器节目数据和文件
      */
-    ResponseUtil<Object> clearPlayerTask(String cardId);
+    ResponseUtil<Object> clearPlayerTask(List<String> selectCardIds);
 
     /**
      * 获取传感器数据接口
