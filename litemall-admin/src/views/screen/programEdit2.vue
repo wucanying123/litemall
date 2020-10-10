@@ -39,7 +39,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="3-1">
-              多行文本
+              多行文本测试
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -1370,9 +1370,7 @@ export default {
             if (currentFrame >= startSliderFrame && currentFrame <= endFrame) {
               el.style.opacity = ((currentFrame - startSliderFrame) * parseFloat(perFramePercentage))
             }
-          }
-          // 淡出
-          else if (obj.animationType == 'fadeout') {
+          } else if (obj.animationType == 'fadeout') { // 淡出
             // 特效结束帧
             const endFrame = ((parentObj.stopX - parentObj.startX) / (this.pubSecondWidth / this.pubFrame))
             // 特效开始帧

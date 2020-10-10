@@ -69,6 +69,7 @@ module.exports = {
       'newIsCap': true,
       'capIsNew': false
     }],
+    'eqeqeq' : ["off"],
     'new-parens': 2,
     'no-array-constructor': 2,
     'no-caller': 2,
@@ -194,5 +195,10 @@ module.exports = {
       objectsInObjects: false
     }],
     'array-bracket-spacing': [2, 'never']
+  },
+  "globals":{
+    "Whammy": true,
+    "html2canvas": true,
+    "webkitURL": true
   }
 }
