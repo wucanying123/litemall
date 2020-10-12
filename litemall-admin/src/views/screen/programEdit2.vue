@@ -139,7 +139,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           smurl="./images/111.jpg"
           class="sliderBlock"
-          smtype="img"
+          smtype="Image"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -152,7 +152,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           smurl="./images/222.jpg"
           class="sliderBlock"
-          smtype="img"
+          smtype="Image"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -166,7 +166,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           smurl="./images/333.jpg"
           class="sliderBlock"
-          smtype="img"
+          smtype="Image"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -179,7 +179,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           smurl="./images/444.jpg"
           class="sliderBlock"
-          smtype="img"
+          smtype="Image"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -194,7 +194,7 @@
           smurl="./videos/test.mp4"
           class="sliderBlock"
           style="background-color: #F08080;"
-          smtype="video"
+          smtype="Video"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -208,7 +208,7 @@
           smurl="./videos/test.mp4"
           class="sliderBlock"
           style="background-color: #F08080;"
-          smtype="video"
+          smtype="Video"
           draggable="true"
           onmouseup="mouseRelease()"
           onmousedown="unboundTrackOnMousedown(event)"
@@ -222,7 +222,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           class="sliderBlock"
           style="background-color: #009393;"
-          smtype="rolltext"
+          smtype="MultiText"
           text="测试-左滚动"
           direction="left"
           draggable="true"
@@ -237,7 +237,7 @@
           ondblclick="deleteTrackSourceMaterial(event)"
           class="sliderBlock"
           style="background-color: #009393;"
-          smtype="rolltext"
+          smtype="MultiText"
           text="测试-右滚动"
           direction="right"
           draggable="true"
@@ -1161,7 +1161,7 @@ export default {
             const el = document.getElementById('sm_' + obj.id)
             if (el == null) { return }
 
-            if (obj.smtype == 'video') {
+            if (obj.smtype == 'Video') {
               this.execStopPlay(el)
             }
           }
@@ -1310,7 +1310,7 @@ export default {
 
               // 特效处理方法
               this.specialEffectsHandle(obj, el)
-              if (obj.smtype == 'video') {
+              if (obj.smtype == 'Video') {
                 const video = el.querySelector(' video')
                 const img = el.querySelector(' div')
 
@@ -1337,7 +1337,7 @@ export default {
                 // generateImages();
               }
             } else if (currentOffsetX > obj.stopX) {
-              if (obj.smtype == 'video') {
+              if (obj.smtype == 'Video') {
                 if (this.playing) {
                   this.execStopPlay(el)
                 }
@@ -1613,11 +1613,11 @@ export default {
       smEL.id = 'sm_' + id
       smEL.style.zIndex = sliderParent.getAttribute('tracklayer')
 
-      if (smtype == 'img') {
+      if (smtype == 'Image') {
         smEL.setAttribute('crossorigin', 'anonymous')
         smEL.style.background = 'url(' + smurl + ') no-repeat'
         smEL.style.backgroundSize = '100% 100%'
-      } else if (smtype == 'video') {
+      } else if (smtype == 'Video') {
         const video = document.createElement('video')
         video.src = smurl
         video.style = 'width:0px; height:0px; display:none;'
@@ -1626,7 +1626,7 @@ export default {
         const img = document.createElement('div')
         img.style = 'width:100%; height:100%;'
         smEL.appendChild(img)
-      } else if (smtype == 'rolltext') {
+      } else if (smtype == 'MultiText') {
         const rollText = document.createElement('div')
         rollText.setAttribute('class', 'rollText')
         rollText.setAttribute('direction', elObj.getAttribute('direction'))
