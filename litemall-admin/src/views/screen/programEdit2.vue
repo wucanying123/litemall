@@ -32,15 +32,25 @@
           <templatenp slot="title">
             <i class="el-icon-video-camera" />视频
           </templatenp>
-          <el-menu-item-group
+          <div
             v-for="(source, index) in videoList"
+            :id="source.sourceId"
             :key="index"
-            :show-timeout="10"
-            :hide-timeout="30"
-            :index="source.id"
+
+            :index="source.sourceId"
+            ondblclick="deleteTrackSourceMaterial(event)"
+            :smurl="source.url"
+            class="sliderBlock"
+            style="background-color: #F08080;"
+            :smtype="source._type"
+            draggable="true"
+            onmouseup="mouseRelease()"
+            onmousedown="unboundTrackOnMousedown(event)"
+            ondragstart="drag(event)"
           >
-            <el-menu-item>{{ source.name }}{{ source.fileExt }}</el-menu-item>
-          </el-menu-item-group>
+            {{ source.name }}{{ source.fileExt }}
+          </div>
+
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
@@ -1329,20 +1339,31 @@ export default {
                 const positionSecond = parseFloat((this.progressBarDOM.value - startFrame) / this.pubFrame)
 
                 video.currentTime = positionSecond
-
+                // 设置图片跨域访问
+                video.setAttribute('crossOrigin', 'anonymous')
                 if (img != null) {
+                  img.setAttribute('crossOrigin', 'anonymous')
                   const canvas = document.createElement('canvas')
                   canvas.width = el.offsetWidth
                   canvas.height = el.offsetHeight
                   const ctx = canvas.getContext('2d')
                   ctx.drawImage(video, 0, 0, el.offsetWidth, el.offsetHeight)
-
                   img.style.width = el.offsetWidth + 'px'
                   img.style.height = el.offsetHeight + 'px'
                   img.style.background = 'url(' + canvas.toDataURL() + ') no-repeat'
                   img.style.backgroundSize = '100% 100%'
-                }
 
+                  // let img1 = new Image(),//创建新的图片对象
+                  // base64 = '';//base64
+                  // img1.setAttribute('crossOrigin', 'anonymous'),
+                  //
+                  //   img1.src = 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png';
+                  // img1.setAttribute("crossOrigin", 'Anonymous')
+                  // img1.onload = function () {//图片加载完，再draw 和 toDataURL
+                  //   ctx.drawImage(img1, 0, 0);
+                  //   base64 = canvas.toDataURL("image/png");
+                  // }
+                }
                 // generateImages();
               }
             } else if (currentOffsetX > obj.stopX) {
@@ -1405,10 +1426,9 @@ export default {
     },
     generateImages() {
       const thar = this
-      html2canvas(this.videoPackageDOM).then(function(canvas) {
+      html2canvas(this.videoPackageDOM, { allowTaint: true, useCORS: true }).then(function(canvas) {
         // const ctx = canvas.getContext('2d')
         thar.imgs.add(canvas)
-
         thar.progressBarDOM.value = parseInt(thar.progressBarDOM.value) + 1
         requestAnimationFrame(thar.recordScreen)
       })
