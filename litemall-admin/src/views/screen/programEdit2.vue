@@ -9,20 +9,29 @@
           <template slot="title">
             <i class="el-icon-picture" />图片
           </template>
-          <el-menu-item-group
+
+          <div
             v-for="(source, index) in pictureList"
+            :id="source.sourceId"
             :key="index"
-            :show-timeout="10"
-            :hide-timeout="30"
-            :index="source.id"
+
+            :index="source.sourceId"
+            ondblclick="deleteTrackSourceMaterial(event)"
+            :smurl="source.url"
+            :smtype="source._type"
+            class="sliderBlock"
+            draggable="true"
+            onmouseup="mouseRelease()"
+            onmousedown="unboundTrackOnMousedown(event)"
+            ondragstart="drag(event)"
           >
-            <el-menu-item>{{ source.name }}{{ source.fileExt }}</el-menu-item>
-          </el-menu-item-group>
+            {{ source.name }}{{ source.fileExt }}
+          </div>
         </el-submenu>
         <el-submenu index="2">
-          <template slot="title">
+          <templatenp slot="title">
             <i class="el-icon-video-camera" />视频
-          </template>
+          </templatenp>
           <el-menu-item-group
             v-for="(source, index) in videoList"
             :key="index"
