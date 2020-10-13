@@ -1312,6 +1312,7 @@ export default {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
         const obj = this.pubTimelineStorages[i]
         if (thar.id == obj.id) {
+          console.log(thar)
           smEL.remove()
           thar.remove()
           this.pubTimelineStorages.splice(i, 1)
