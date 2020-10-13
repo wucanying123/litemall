@@ -1272,6 +1272,8 @@ export default {
 
       // 轨道长度设置
       this.updateTracksWidth()
+      this.program.layers.push({})
+      // console.log(this.program.layers)
     },
     deleteTrack(event) {
       event.target.remove()
@@ -1343,6 +1345,8 @@ export default {
                 const startFrame = obj.startX / (this.pubSecondWidth / this.pubFrame)
                 // 定位秒(带小数位，可控制帧)
                 const positionSecond = parseFloat((this.progressBarDOM.value - startFrame) / this.pubFrame)
+                // console.log("滑块位置", parseFloat(startFrame / this.pubFrame));
+                // console.log("滑块结束位置", parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame));
 
                 video.currentTime = positionSecond
                 // 设置图片跨域访问
@@ -1724,22 +1728,25 @@ export default {
           const yy = e.clientY
           const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
+          const bottom = thar.videoPackageDOM.clientHeight - (top + parseInt(smEL.clientHeight))
+          const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
+          console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
-            if (left < 0 || width < thar.renderBlocksBox.width) {
+            if (top < 0 || bottom < 0 || left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
               return
             }
             smEL.style.width = width + 'px'
             smEL.style.left = ((xx - thar.videoPackageDOM.offsetLeft) <= -1 ? 0 : (xx - thar.videoPackageDOM.offsetLeft)) + 'px'
           } else if (positionType == 'right') {
             const width = oBoxW + xx - x
-            if (left < 0 || width < thar.renderBlocksBox.width) {
+            if (top < 0 || bottom < 0 || left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
               return
             }
             smEL.style.width = width + 'px'
           } else if (positionType == 'top') {
             const height = oBoxH + y - yy
-            if (top < 0 || height < thar.renderBlocksBox.height) {
+            if (top < 0 || bottom < 0 || left < 0 || right < 0 || height < thar.renderBlocksBox.height) {
               return
             }
             smEL.style.height = height + 'px'
@@ -1747,7 +1754,7 @@ export default {
             // smEL.style.top = parseInt(smEL.style.top) - 1 + 'px';
           } else if (positionType == 'bottom') {
             const height = oBoxH + yy - y
-            if (top < 0 || height < thar.renderBlocksBox.height) {
+            if (top < 0 || bottom < 0 || left < 0 || right < 0 || height < thar.renderBlocksBox.height) {
               return
             }
             smEL.style.height = height + 'px'
