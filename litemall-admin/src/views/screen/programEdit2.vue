@@ -1520,6 +1520,7 @@ export default {
     drop(ev) {
       // 当前元素（滑动块的父级）
       const sliderParent = ev.target
+      console.log(this.currentSlider)
 
       // 防止叠加在子div中
       if (sliderParent.getAttribute('class') != 'track') {
