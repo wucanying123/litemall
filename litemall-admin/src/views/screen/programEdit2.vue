@@ -1551,6 +1551,7 @@ export default {
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
+        console.log('移动滑块')
         e = e || event
         const x = e.clientX
         // const y = e.clientY
