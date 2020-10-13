@@ -887,7 +887,9 @@ export default {
       playTimer: null,
 
       // 无限定时器(一直轮询)
-      infiniteTimer: null
+      infiniteTimer: null,
+
+      stopPlayFrame: false
     }
   },
   computed: {
@@ -1137,6 +1139,8 @@ export default {
     },
     // 开始播放(按帧，无[按时间]中的缺陷)
     startPlayFrame() {
+      if (this.stopPlayFrame) { return }
+
       if (parseInt(this.progressBarDOM.value) < parseInt(this.progressBarDOM.max)) {
         this.playing = true
 
@@ -1167,6 +1171,8 @@ export default {
       video.pause()
     },
     stopPlay() {
+      this.stopPlayFrame = true
+
       this.progressBarDOM.removeAttribute('disabled')
       this.progressBarDOM.value = 0
       clearInterval(this.playTimer)
@@ -1340,7 +1346,7 @@ export default {
 
                 video.currentTime = positionSecond
                 // 设置图片跨域访问
-                video.setAttribute('crossOrigin', 'anonymous')
+
                 if (img != null) {
                   img.setAttribute('crossOrigin', 'anonymous')
                   const canvas = document.createElement('canvas')
@@ -1426,7 +1432,7 @@ export default {
     },
     generateImages() {
       const thar = this
-      html2canvas(this.videoPackageDOM, { allowTaint: true, useCORS: true }).then(function(canvas) {
+      html2canvas(this.videoPackageDOM, { useCORS: true }).then(function(canvas) {
         // const ctx = canvas.getContext('2d')
         thar.imgs.add(canvas)
         thar.progressBarDOM.value = parseInt(thar.progressBarDOM.value) + 1
@@ -1648,6 +1654,7 @@ export default {
         smEL.style.backgroundSize = '100% 100%'
       } else if (smtype == 'Video') {
         const video = document.createElement('video')
+        video.setAttribute('crossOrigin', 'anonymous')
         video.src = smurl
         video.style = 'width:0px; height:0px; display:none;'
         smEL.appendChild(video)
