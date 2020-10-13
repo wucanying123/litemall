@@ -1730,7 +1730,7 @@ export default {
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const bottom = thar.videoPackageDOM.clientHeight - (top + parseInt(smEL.clientHeight))
           const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
-          console.log(top, bottom, left, right)
+          // console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
             if (top < 0 || bottom < 0 || left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
