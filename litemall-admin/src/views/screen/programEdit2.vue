@@ -1730,23 +1730,23 @@ export default {
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const bottom = thar.videoPackageDOM.clientHeight - (top + parseInt(smEL.clientHeight))
           const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
-          // console.log(top, bottom, left, right)
+          console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
-            if (top < 0 || bottom < 0 || left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
+            if (left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
               return
             }
             smEL.style.width = width + 'px'
             smEL.style.left = ((xx - thar.videoPackageDOM.offsetLeft) <= -1 ? 0 : (xx - thar.videoPackageDOM.offsetLeft)) + 'px'
           } else if (positionType == 'right') {
             const width = oBoxW + xx - x
-            if (top < 0 || bottom < 0 || left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
+            if (left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
               return
             }
             smEL.style.width = width + 'px'
           } else if (positionType == 'top') {
             const height = oBoxH + y - yy
-            if (top < 0 || bottom < 0 || left < 0 || right < 0 || height < thar.renderBlocksBox.height) {
+            if (top < 0 || bottom < 0 || height < thar.renderBlocksBox.height) {
               return
             }
             smEL.style.height = height + 'px'
@@ -1754,7 +1754,7 @@ export default {
             // smEL.style.top = parseInt(smEL.style.top) - 1 + 'px';
           } else if (positionType == 'bottom') {
             const height = oBoxH + yy - y
-            if (top < 0 || bottom < 0 || left < 0 || right < 0 || height < thar.renderBlocksBox.height) {
+            if (top < 0 || bottom < 0 || height < thar.renderBlocksBox.height) {
               return
             }
             smEL.style.height = height + 'px'
