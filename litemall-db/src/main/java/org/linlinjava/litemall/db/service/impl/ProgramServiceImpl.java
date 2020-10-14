@@ -147,6 +147,7 @@ public class ProgramServiceImpl implements ProgramService {
                         for (String sourceId : sourceIdArray) {
                             PlaySource playSource = playSourceService.selectBySourceIdAndLayerId(sourceId, layerId);
                             if (null != playSource) {
+                                playSource.setLeft(playSource.getTheLeft());
                                 playSourceList.add(playSource);
                             }
                         }

@@ -30,9 +30,9 @@
           </div>
         </el-submenu>
         <el-submenu index="2">
-          <templatenp slot="title">
+          <template slot="title">
             <i class="el-icon-video-camera" />视频
-          </templatenp>
+          </template>
           <div
             v-for="(source, index) in videoList"
             :id="source.sourceId"
@@ -292,124 +292,72 @@
         >
           <el-input v-model="program.width" />
         </el-form-item>
-        <el-form-item
-          label="节目宽"
-          prop="height"
-        >
-          <el-input v-model="program.height" />
-        </el-form-item>
-        <el-form-item
-          label="媒体资源"
-          prop="playSource"
-        >
-          <el-button
-            style="float:right;"
-            size="mini"
-            type="primary"
-            @click="handleCreate()"
-          >
-            创建资源
-          </el-button>
-          <!-- 查询结果 -->
-          <el-table
-            :data="playSourceList"
-            border
-            fit
-            highlight-current-row
-          >
-            <el-table-column
-              align="center"
-              label="名称"
-              prop="name"
-            />
-
-            <el-table-column
-              align="center"
-              label="内容"
-              prop="url"
-              width="130"
-            >
-              <template slot-scope="scope">
-                <div v-if="scope.row._type === 'Video'">
-                  <video
-                    :src="scope.row.url"
-                    controls="controls"
-                    width="200"
-                    height="90"
-                  />
-                </div>
-                <div v-if="scope.row._type === 'Image'">
-                  <img
-                    v-if="scope.row.url"
-                    :src="scope.row.url"
-                    width="100"
-                    height="90"
-                  >
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="素材时长"
-              prop="maxPlayTime"
-            >
-              <template slot-scope="scope">
-                {{ scope.row.maxPlayTime | secondToDate }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="类型"
-              prop="_type"
-            >
-              <template slot-scope="scope">
-                {{ scope.row._type | formatType }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="格式"
-              prop="fileExt"
-            />
-            <el-table-column
-              align="center"
-              label="起始时间(秒)"
-              prop="playTime"
-            />
-            <!--          <el-table-column align="center" label="起始时间" prop="playTime">-->
-            <!--            <template slot-scope="scope">-->
-            <!--              <el-input v-model="scope.row.playTime" />-->
-            <!--            </template>-->
-            <!--          </el-table-column>-->
-            <el-table-column
-              align="center"
-              label="持续时长(秒)"
-              prop="timeSpan"
-            >
-              <template slot-scope="scope">
-                <el-input
-                  v-model="scope.row.timeSpan"
-                  placeholder="输秒"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="操作"
-              class-name="small-padding fixed-width"
-            >
-              <template slot-scope="scope">
-                <el-button
-                  type="danger"
-                  size="mini"
-                  @click="handleDelete(scope.row)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
+        <el-tabs>
+          <el-tab-pane label="所选素材信息" type="card">
+            <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="名称">
+                    <el-input v-model="currentSource.name" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="类型">
+                    <el-input v-model="currentSource._type" readonly />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="距左">
+                    <el-input v-model="currentSource.left" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="距顶">
+                    <el-input v-model="currentSource.top" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="宽度">
+                    <el-input v-model="currentSource.width" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="高度">
+                    <el-input v-model="currentSource.height" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="入场特效">
+                    <el-input v-model="currentSource.entryEffect" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="入场时间">
+                    <el-input v-model="currentSource.entryEffectTimeSpan" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="出场特效">
+                    <el-input v-model="currentSource.exitEffect" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="出场时间">
+                    <el-input v-model="currentSource.exitEffectTimeSpan" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
       <div
         slot="footer"
@@ -891,7 +839,11 @@ export default {
       // 无限定时器(一直轮询)
       infiniteTimer: null,
 
-      stopPlayFrame: false
+      stopPlayFrame: false,
+
+      sourceDivVisiable: false,
+
+      currentSource: undefined
     }
   },
   computed: {
@@ -983,6 +935,7 @@ export default {
     // }
     // this.id = this.$route.query.id
     this.getProgram()
+    this.sourceDivVisiable = false
   },
   methods: {
     getProgram() {
@@ -993,7 +946,7 @@ export default {
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
-          // console.log(this.program)
+          console.log(this.program)
         })
         .catch(() => {
           this.program = {}
@@ -1117,6 +1070,8 @@ export default {
       const sourceQuery = { _type: 'Video' }
       listSource(sourceQuery).then(response => {
         this.videoList = response.data.data.list
+        console.log('打印视频')
+        console.log(this.videoList)
       }).catch(() => {
         this.videoList = []
       })
@@ -1510,6 +1465,23 @@ export default {
       this.sliderPressHold = true
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
+      console.log('点击滑条')
+      this.sourceDivVisiable = true
+
+      // console.log(this.currentSlider)
+      // // 当前选择第几个轨道
+      // const sliderParent = event.target
+      // const currentTracklayer = sliderParent.getAttribute('tracklayer')
+      // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      // console.log(newPlaySource)
+      // console.log(currentTracklayer)
+
+      // if (this.program.layers[currentTracklayer - 1].sources != null) {
+      //   this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
+      // } else {
+      //   this.program.layers[currentTracklayer - 1].sources = newPlaySource
+      // }
+      // console.log(this.program)
     },
     updatePubTimelineStoragesData(thar) {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
@@ -1531,23 +1503,26 @@ export default {
     drop(ev) {
       // 当前元素（滑动块的父级）
       const sliderParent = ev.target
+      // 防止叠加在子div中
+      if (sliderParent.getAttribute('class') != 'track') {
+        alert('不能重叠')
+        return
+      }
+
       console.log(this.currentSlider)
       // 当前选择第几个轨道
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
       const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      console.log(newPlaySource)
+      this.currentSource = newPlaySource
+      console.log(this.currentSource)
+      console.log(currentTracklayer)
+
       if (this.program.layers[currentTracklayer - 1].sources != null) {
         this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
       } else {
         this.program.layers[currentTracklayer - 1].sources = newPlaySource
       }
       console.log(this.program)
-
-      // 防止叠加在子div中
-      if (sliderParent.getAttribute('class') != 'track') {
-        alert('不能重叠')
-        return
-      }
 
       this.updateCurrentSliderRelevantData(ev)
 
