@@ -14,8 +14,9 @@
             v-for="(source, index) in pictureList"
             :id="source.sourceId"
             :key="index"
-
             :index="source.sourceId"
+
+            :source="JSON.stringify(source)"
             ondblclick="deleteTrackSourceMaterial(event)"
             :smurl="source.url"
             :smtype="source._type"
@@ -36,8 +37,9 @@
             v-for="(source, index) in videoList"
             :id="source.sourceId"
             :key="index"
-
             :index="source.sourceId"
+
+            :source="JSON.stringify(source)"
             ondblclick="deleteTrackSourceMaterial(event)"
             :smurl="source.url"
             class="sliderBlock"
@@ -1088,7 +1090,7 @@ export default {
       this.$router.push({ path: '/screen/program' })
     },
     handleConfirm() {
-      this.program.layers[0].sources = this.playSourceList
+      // this.program.layers[0].sources = this.playSourceList
       this.$refs['program'].validate(valid => {
         if (valid) {
           updateComplexProgramById(this.program).then(response => {
@@ -1277,6 +1279,14 @@ export default {
     },
     deleteTrack(event) {
       event.target.remove()
+      this.trackLayer--
+      const sliderParent = event.target
+      // 当前选择第几个轨道
+      const currentTracklayer = sliderParent.getAttribute('tracklayer')
+      console.log(currentTracklayer)
+      this.program.layers.splice(currentTracklayer - 1, 1)
+      console.log('删除轨道')
+      console.log(this.program)
     },
     addTime(second) {
       this.totalSecond += second
@@ -1522,6 +1532,16 @@ export default {
       // 当前元素（滑动块的父级）
       const sliderParent = ev.target
       console.log(this.currentSlider)
+      // 当前选择第几个轨道
+      const currentTracklayer = sliderParent.getAttribute('tracklayer')
+      const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      console.log(newPlaySource)
+      if (this.program.layers[currentTracklayer - 1].sources != null) {
+        this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
+      } else {
+        this.program.layers[currentTracklayer - 1].sources = newPlaySource
+      }
+      console.log(this.program)
 
       // 防止叠加在子div中
       if (sliderParent.getAttribute('class') != 'track') {
@@ -1551,7 +1571,6 @@ export default {
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
-        console.log('移动滑块')
         e = e || event
         const x = e.clientX
         // const y = e.clientY
@@ -1570,6 +1589,7 @@ export default {
 
       // 滑块拉长处理
       elObj.onmousedown = function(e) {
+        // console.log('移动滑块')
         e = e || event
         const x = e.clientX
         // const y = e.clientY
@@ -1733,7 +1753,7 @@ export default {
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const bottom = thar.videoPackageDOM.clientHeight - (top + parseInt(smEL.clientHeight))
           const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
-          console.log(top, bottom, left, right)
+          // console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
             if (left < 0 || right < 0 || width < thar.renderBlocksBox.width) {

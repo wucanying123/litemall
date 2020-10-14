@@ -201,18 +201,19 @@ public class ProgramServiceImpl implements ProgramService {
         if (newLayers != null && newLayers.size() > 0 && newLayers.get(0).getSources() !=null && newLayers.get(0).getSources().size() >0) {
             List<String> updateLayerIds = new ArrayList<>();
             for (Layer layer : newLayers) {
-                if (StringUtilsXD.isEmpty(layer.getId())) {
-                    //如果有资源，没有层,新建层
-                    layer.setId(UUID.randomUUID().toString().replace("-", ""));
-                    layer.setIsRepeat(false);
-                    long cuttentTime = DateUtil.getDateline();
-                    layer.setCreateTime(cuttentTime);
-                    layer.setUpdateTime(cuttentTime);
-                    layerMapper.insertSelective(layer);
-                }
                 List<PlaySource> sources = layer.getSources();
                 List<String> sourceIdList = new ArrayList<>();
                 if (null != sources && sources.size() > 0) {
+                    if (StringUtilsXD.isEmpty(layer.getId())) {
+                        //如果有资源，没有层,新建层
+                        layer.setId(UUID.randomUUID().toString().replace("-", ""));
+                        layer.setIsRepeat(false);
+                        long cuttentTime = DateUtil.getDateline();
+                        layer.setCreateTime(cuttentTime);
+                        layer.setUpdateTime(cuttentTime);
+                        layerMapper.insertSelective(layer);
+                    }
+
                     Integer allPlayTime = 0;
                     for (PlaySource playSource : sources) {
                         //自动设置开始播放时间
