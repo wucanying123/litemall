@@ -1468,14 +1468,22 @@ export default {
       console.log('点击滑条')
       this.sourceDivVisiable = true
 
-      // console.log(this.currentSlider)
-      // // 当前选择第几个轨道
-      // const sliderParent = event.target
-      // const currentTracklayer = sliderParent.getAttribute('tracklayer')
-      // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      // console.log(newPlaySource)
-      // console.log(currentTracklayer)
-
+      console.log(this.currentSlider)
+      // 当前选择第几个轨道
+      const currentTracklayer = this.currentSlider.style.zIndex
+      console.log(currentTracklayer)
+      const currentSourceId = this.currentSource.id
+      const newPlaySource = this.currentSource
+      console.log(newPlaySource)
+      for (let i = 0; i < this.program.layers.length; i++) {
+        if (this.program.layers[i].sources != null && this.program.layers[i].sources.length > 0) {
+          for (let j = 0; i < this.program.layers[i].sources.length; j++) {
+            if (currentSourceId === this.program.layers[i].sources[j].sourceId) {
+              this.program.layers[i].sources.splice(j, 1)
+            }
+          }
+        }
+      }
       // if (this.program.layers[currentTracklayer - 1].sources != null) {
       //   this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
       // } else {
@@ -1516,6 +1524,10 @@ export default {
       this.currentSource = newPlaySource
       console.log(this.currentSource)
       console.log(currentTracklayer)
+      const currentSourceName = this.currentSource.name
+      console.log('打印名称')
+      console.log(currentSourceName)
+      console.log(this.currentSource.name)
 
       if (this.program.layers[currentTracklayer - 1].sources != null) {
         this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)

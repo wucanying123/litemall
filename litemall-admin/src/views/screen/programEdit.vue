@@ -395,12 +395,12 @@ export default {
       this.addVisiable = false
     },
     handleDelete(row) {
-      for (var index = 0; index < this.program.layers[0].sources.length; index++) {
+      for (let index = 0; index < this.program.layers[0].sources.length; index++) {
         if (row.sourceId === this.program.layers[0].sources[index].sourceId) {
           this.program.layers[0].sources.splice(index, 1)
         }
       }
-      for (var index2 = 0; index2 < this.playSourceList.length; index2++) {
+      for (let index2 = 0; index2 < this.playSourceList.length; index2++) {
         if (row.sourceId === this.playSourceList[index2].sourceId) {
           this.playSourceList.splice(index2, 1)
         }
