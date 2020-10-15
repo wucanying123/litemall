@@ -955,10 +955,10 @@ export default {
       readProgram({ id: this.id })
         .then(response => {
           this.program = response.data.data.program
+          console.log(this.program)
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
-          console.log(this.program)
         })
         .catch(() => {
           this.program = {}
@@ -1333,12 +1333,8 @@ export default {
                 const positionSecond = parseFloat((this.progressBarDOM.value - startFrame) / this.pubFrame)
                 // console.log("滑块位置", parseFloat(startFrame / this.pubFrame));
                 // console.log("滑块结束位置", parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame));
-
                 video.currentTime = positionSecond
-                // 设置图片跨域访问
-
                 if (img != null) {
-                  img.setAttribute('crossOrigin', 'anonymous')
                   const canvas = document.createElement('canvas')
                   canvas.width = el.offsetWidth
                   canvas.height = el.offsetHeight
@@ -1348,17 +1344,6 @@ export default {
                   img.style.height = el.offsetHeight + 'px'
                   img.style.background = 'url(' + canvas.toDataURL() + ') no-repeat'
                   img.style.backgroundSize = '100% 100%'
-
-                  // let img1 = new Image(),//创建新的图片对象
-                  // base64 = '';//base64
-                  // img1.setAttribute('crossOrigin', 'anonymous'),
-                  //
-                  //   img1.src = 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png';
-                  // img1.setAttribute("crossOrigin", 'Anonymous')
-                  // img1.onload = function () {//图片加载完，再draw 和 toDataURL
-                  //   ctx.drawImage(img1, 0, 0);
-                  //   base64 = canvas.toDataURL("image/png");
-                  // }
                 }
                 // generateImages();
               }
@@ -1486,8 +1471,36 @@ export default {
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
+
       this.sourceDivVisiable = true
+      // // const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
+      // // const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
+      // // const width = parseInt(smEL.clientWidth)
+      // // const height = parseInt(smEL.clientHeight)
+      // // console.log(left)
+      // // console.log(top)
+      // // console.log(width)
+      // // console.log(height)
+      // //
       // console.log(this.currentSlider)
+      // const currentTracklayer = this.currentSlider.style.zIndex
+      // console.log("当前轨道")
+      // console.log(currentTracklayer)
+      // // console.log(this.program)
+      // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      // if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+      //     for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+      //       if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+      //         this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+      //         // this.currentSource.top = top
+      //         // this.currentSource.left = left
+      //         // this.currentSource.width = width
+      //         // this.currentSource.height = height
+      //       }
+      //     }
+      // }
+      // console.log(JSON.stringify(this.currentSource))
+      // console.log(this.program)
     },
     sourceChange() {
       // // 当前选择第几个轨道
@@ -1541,8 +1554,6 @@ export default {
       } else {
         this.program.layers[currentTracklayer - 1].sources = [newPlaySource]
       }
-      console.log('添加后')
-      console.log(this.program)
 
       this.updateCurrentSliderRelevantData(ev)
 
@@ -1555,14 +1566,31 @@ export default {
       this.sliderOperationHandle(id, sliderParent, offsetX)
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
+      console.log('添加后')
+      // console.log(this.program)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
       const elObjClone = elObj.cloneNode(true)
       elObjClone.setAttribute('id', Math.random())
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
-
       elObj.setAttribute('draggable', false)
+      console.log(elObj)
+
+      // const currentTracklayer = elObj.getAttribute('tracklayer')
+      // if (this.currentSource != null && currentTracklayer != null) {
+      //   for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+      //     if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+      //       this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+      //       this.currentSource.top = top
+      //       this.currentSource.left = left
+      //       this.currentSource.width = width
+      //       this.currentSource.height = height
+      //     }
+      //   }
+      // }
+      console.log(this.currentSource)
+      console.log(this.program)
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
@@ -1668,6 +1696,8 @@ export default {
       smEL.setAttribute('class', 'pictureBlock')
       smEL.id = 'sm_' + id
       smEL.style.zIndex = sliderParent.getAttribute('tracklayer')
+      smEL.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
+      smEL.setAttribute('source', elObj.getAttribute('source'))
 
       if (smtype == 'Image') {
         smEL.setAttribute('crossorigin', 'anonymous')
@@ -1682,6 +1712,8 @@ export default {
 
         const img = document.createElement('div')
         img.style = 'width:100%; height:100%;'
+        img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
+        img.setAttribute('source', elObj.getAttribute('source'))
         smEL.appendChild(img)
       } else if (smtype == 'MultiText') {
         const rollText = document.createElement('div')
@@ -1712,8 +1744,7 @@ export default {
           smEL.style.cursor = 'move'
         }
       }
-
-      smEL.onmousedown = function(e) {
+      smEL.onmousedown = (e) => {
         e = e || event
         const x = e.clientX
         const y = e.clientY
@@ -1739,7 +1770,19 @@ export default {
           currentsmELBrowserY = e.clientY - (smEL.style.top == '' ? 0 : parseInt(smEL.style.top))
         }
 
-        document.onmousemove = function(e) {
+        console.log('按下画布')
+        const sliderParent = e.target
+        const currentTracklayer = sliderParent.getAttribute('tracklayer')
+        const newPlaySource = JSON.parse(sliderParent.getAttribute('source'))
+        if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+          for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+            if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+            }
+          }
+        }
+
+        document.onmousemove = (e) => {
           e = e || event
           const xx = e.clientX
           const yy = e.clientY
@@ -1747,6 +1790,8 @@ export default {
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const bottom = thar.videoPackageDOM.clientHeight - (top + parseInt(smEL.clientHeight))
           const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
+          const width = parseInt(smEL.clientWidth)
+          const height = parseInt(smEL.clientHeight)
           // console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
@@ -1787,7 +1832,22 @@ export default {
               smEL.style.top = (e.clientY - currentsmELBrowserY) + 'px'
             }
           }
-
+          console.log('移动画布')
+          const sliderParent = e.target
+          const currentTracklayer = sliderParent.getAttribute('tracklayer')
+          if (this.currentSource != null && currentTracklayer != null) {
+            for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+              if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+                this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                this.currentSource.top = top
+                this.currentSource.left = left
+                this.currentSource.width = width
+                this.currentSource.height = height
+              }
+            }
+          }
+          console.log(this.currentSource)
+          console.log(this.program)
           return false
         }
 
