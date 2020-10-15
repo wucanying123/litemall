@@ -843,7 +843,8 @@ export default {
 
       sourceDivVisiable: false,
 
-      currentSource: undefined
+      currentSource: { sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+
     }
   },
   computed: {
@@ -1283,7 +1284,18 @@ export default {
           this.pubTimelineStorages.splice(i, 1)
         }
       }
-
+      const currentSourceId = this.currentSource.sourceId
+      let currentTracklayer = this.currentSlider.style.zIndex
+      if (currentTracklayer == null || currentTracklayer == '') {
+        currentTracklayer = this.currentSlider.getAttribute('tracklayer')
+      }
+      for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+        if (currentSourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+          this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
+        }
+      }
+      console.log('删除元素后')
+      console.log(this.program)
       // 阻止父类div做出事件响应
       this.stopPropagation()
     },
@@ -1469,27 +1481,33 @@ export default {
       this.sourceDivVisiable = true
 
       console.log(this.currentSlider)
-      // 当前选择第几个轨道
-      const currentTracklayer = this.currentSlider.style.zIndex
-      console.log(currentTracklayer)
-      const currentSourceId = this.currentSource.id
-      const newPlaySource = this.currentSource
-      console.log(newPlaySource)
-      for (let i = 0; i < this.program.layers.length; i++) {
-        if (this.program.layers[i].sources != null && this.program.layers[i].sources.length > 0) {
-          for (let j = 0; i < this.program.layers[i].sources.length; j++) {
-            if (currentSourceId === this.program.layers[i].sources[j].sourceId) {
-              this.program.layers[i].sources.splice(j, 1)
-            }
-          }
-        }
-      }
-      // if (this.program.layers[currentTracklayer - 1].sources != null) {
-      //   this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
-      // } else {
-      //   this.program.layers[currentTracklayer - 1].sources = newPlaySource
+      // console.log(JSON.stringify(this.currentSource))
+      // const newPlaySource = this.currentSource
+      // const currentSourceId = this.currentSource.sourceId
+      // for (let i = 0; i < this.program.layers.length; i++) {
+      //   if (this.program.layers[i].sources != null && this.program.layers[i].sources.length > 0) {
+      //     for (let j = 0; j < this.program.layers[i].sources.length; j++) {
+      //         if (currentSourceId === this.program.layers[i].sources[j].sourceId) {
+      //           this.program.layers[i].sources.splice(j, 1)
+      //         }
+      //     }
+      //     console.log("打印后")
+      //     console.log(this.program.layers[i].sources)
+      //   }
       // }
-      // console.log(this.program)
+      // 当前选择第几个轨道
+      // let currentTracklayer = this.currentSlider.style.zIndex
+      // if(null == currentTracklayer || '' == currentTracklayer){
+      //   currentTracklayer = this.currentSlider.getAttribute('tracklayer')
+      // }
+      // if(null != currentTracklayer && '' != currentTracklayer){
+      //   if (this.program.layers[currentTracklayer - 1].sources != null) {
+      //     this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
+      //   } else {
+      //     this.program.layers[currentTracklayer - 1].sources = newPlaySource
+      //   }
+      //   console.log(this.program)
+      // }
     },
     updatePubTimelineStoragesData(thar) {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
@@ -1525,15 +1543,15 @@ export default {
       console.log(this.currentSource)
       console.log(currentTracklayer)
       const currentSourceName = this.currentSource.name
-      console.log('打印名称')
       console.log(currentSourceName)
       console.log(this.currentSource.name)
 
       if (this.program.layers[currentTracklayer - 1].sources != null) {
         this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
       } else {
-        this.program.layers[currentTracklayer - 1].sources = newPlaySource
+        this.program.layers[currentTracklayer - 1].sources = [newPlaySource]
       }
+      console.log('添加后')
       console.log(this.program)
 
       this.updateCurrentSliderRelevantData(ev)
