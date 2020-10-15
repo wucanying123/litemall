@@ -298,7 +298,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="名称">
-                    <el-input v-model="currentSource.name" />
+                    <el-input v-model="currentSource.name" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -310,53 +310,64 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="距左">
-                    <el-input v-model="currentSource.left" />
+                    <el-input v-model="currentSource.left" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="距顶">
-                    <el-input v-model="currentSource.top" />
+                    <el-input v-model="currentSource.top" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="宽度">
-                    <el-input v-model="currentSource.width" />
+                    <el-input v-model="currentSource.width" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="高度">
-                    <el-input v-model="currentSource.height" />
+                    <el-input v-model="currentSource.height" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="入场特效">
-                    <el-input v-model="currentSource.entryEffect" />
+                    <el-input v-model="currentSource.entryEffect" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="入场时间">
-                    <el-input v-model="currentSource.entryEffectTimeSpan" />
+                    <el-input v-model="currentSource.entryEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="出场特效">
-                    <el-input v-model="currentSource.exitEffect" />
+                    <el-input v-model="currentSource.exitEffect" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="出场时间">
-                    <el-input v-model="currentSource.exitEffectTimeSpan" />
+                    <el-input v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
             </div>
           </el-tab-pane>
+          <!--          <div-->
+          <!--            slot="footer"-->
+          <!--            class="dialog-footer"-->
+          <!--          >-->
+          <!--            <el-button-->
+          <!--              type="primary"-->
+          <!--              @click="handleConfirmSource"-->
+          <!--            >-->
+          <!--              修改素材信息-->
+          <!--            </el-button>-->
+          <!--          </div>-->
         </el-tabs>
       </el-form>
       <div
@@ -1071,8 +1082,6 @@ export default {
       const sourceQuery = { _type: 'Video' }
       listSource(sourceQuery).then(response => {
         this.videoList = response.data.data.list
-        console.log('打印视频')
-        console.log(this.videoList)
       }).catch(() => {
         this.videoList = []
       })
@@ -1284,13 +1293,12 @@ export default {
           this.pubTimelineStorages.splice(i, 1)
         }
       }
-      const currentSourceId = this.currentSource.sourceId
       let currentTracklayer = this.currentSlider.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
         currentTracklayer = this.currentSlider.getAttribute('tracklayer')
       }
       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-        if (currentSourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+        if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
           this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
         }
       }
@@ -1479,35 +1487,23 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       this.sourceDivVisiable = true
-
-      console.log(this.currentSlider)
+      // console.log(this.currentSlider)
+    },
+    sourceChange() {
+      // // 当前选择第几个轨道
+      let currentTracklayer = this.currentSlider.style.zIndex
+      if (currentTracklayer == null || currentTracklayer == '') {
+        currentTracklayer = this.currentSlider.getAttribute('tracklayer')
+      }
       // console.log(JSON.stringify(this.currentSource))
-      // const newPlaySource = this.currentSource
-      // const currentSourceId = this.currentSource.sourceId
-      // for (let i = 0; i < this.program.layers.length; i++) {
-      //   if (this.program.layers[i].sources != null && this.program.layers[i].sources.length > 0) {
-      //     for (let j = 0; j < this.program.layers[i].sources.length; j++) {
-      //         if (currentSourceId === this.program.layers[i].sources[j].sourceId) {
-      //           this.program.layers[i].sources.splice(j, 1)
-      //         }
-      //     }
-      //     console.log("打印后")
-      //     console.log(this.program.layers[i].sources)
-      //   }
-      // }
-      // 当前选择第几个轨道
-      // let currentTracklayer = this.currentSlider.style.zIndex
-      // if(null == currentTracklayer || '' == currentTracklayer){
-      //   currentTracklayer = this.currentSlider.getAttribute('tracklayer')
-      // }
-      // if(null != currentTracklayer && '' != currentTracklayer){
-      //   if (this.program.layers[currentTracklayer - 1].sources != null) {
-      //     this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
-      //   } else {
-      //     this.program.layers[currentTracklayer - 1].sources = newPlaySource
-      //   }
-      //   console.log(this.program)
-      // }
+      if (this.currentSource != null && currentTracklayer != null) {
+        for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+          if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+            this.program.layers[currentTracklayer - 1].sources[j] = this.currentSource
+          }
+        }
+      }
+      // console.log(this.program)
     },
     updatePubTimelineStoragesData(thar) {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
@@ -1540,12 +1536,6 @@ export default {
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
       const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
       this.currentSource = newPlaySource
-      console.log(this.currentSource)
-      console.log(currentTracklayer)
-      const currentSourceName = this.currentSource.name
-      console.log(currentSourceName)
-      console.log(this.currentSource.name)
-
       if (this.program.layers[currentTracklayer - 1].sources != null) {
         this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
       } else {
@@ -1594,7 +1584,6 @@ export default {
 
       // 滑块拉长处理
       elObj.onmousedown = function(e) {
-        // console.log('移动滑块')
         e = e || event
         const x = e.clientX
         // const y = e.clientY
