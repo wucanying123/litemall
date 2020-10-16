@@ -1503,7 +1503,6 @@ export default {
       // console.log(this.program)
     },
     sourceChange() {
-      // // 当前选择第几个轨道
       let currentTracklayer = this.currentSlider.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
         currentTracklayer = this.currentSlider.getAttribute('tracklayer')
