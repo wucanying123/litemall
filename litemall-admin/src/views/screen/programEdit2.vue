@@ -1562,6 +1562,9 @@ export default {
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
       const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
       this.currentSource = newPlaySource
+      if (this.program.layers == null) {
+        this.program.layers = [{}]
+      }
       if (this.program.layers[currentTracklayer - 1].sources != null) {
         this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
       } else {
@@ -1896,50 +1899,42 @@ export default {
       console.log(this.program)
       this.addTime(360)
       // 轨道数
-      const trackNum = this.program.layers.length
-      for (let i = 0; i < trackNum - 1; i++) {
+      const alltrackNum = this.program.layers.length
+      for (let i = 0; i < alltrackNum - 1; i++) {
         this.addTrack()
       }
       if (this.program.layers != null) {
+        console.log(this.program.layers)
+        console.log(this.program.layers.length)
         for (let i = 0; i < this.program.layers.length; i++) {
-          // this.addTrack();
-          const layer = this.program.layers[i]
-          console.log(layer)
           if (this.program.layers[i].sources != null) {
             for (let j = 0; j < this.program.layers[i].sources.length; j++) {
               const source = this.program.layers[i].sources[j]
-              console.log('打印第' + i + 1 + '排第' + j + '列')
+              console.log('打印第' + i + '轨道第' + j + '个')
               console.log(source)
               const playTime = source.playTime
               const timeSpan = source.timeSpan
 
-              // 仅用图片作为示例
               const id = source.sourceId
-              const tarckNum = 1
-              var offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
-              var offsetY = offsetX + this.pubSecondWidth * timeSpan
+              const offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
+              const offsetY = offsetX + this.pubSecondWidth * timeSpan
               console.log(offsetX)
               console.log(offsetY)
               const smELTop = source.top
               const smELLeft = source.left
 
               const tracks = document.getElementsByClassName('track')
-              for (let i = tracks.length - 1; i > -1; i--) {
-                const sliderParent = tracks[i]
-                const sliderParentTarckNum = parseInt(sliderParent.getAttribute('tracklayer'))
-                if (tarckNum == sliderParentTarckNum) {
-                  this.sliderOperationHandle(id, sliderParent, offsetX)
-                  setTimeout(() => {
-                    const eL = document.getElementById(id)
-                    eL.style.width = offsetY + 'px'
-                    const smEL = document.getElementById('sm_' + id)
-                    smEL.style.left = smELLeft + 'px'
-                    smEL.style.top = smELTop + 'px'
+              const sliderParent = tracks[i]
+              this.sliderOperationHandle(id, sliderParent, offsetX)
+              setTimeout(() => {
+                const eL = document.getElementById(id)
+                eL.style.width = offsetY + 'px'
+                const smEL = document.getElementById('sm_' + id)
+                smEL.style.left = smELLeft + 'px'
+                smEL.style.top = smELTop + 'px'
 
-                    this.updatePubTimelineStoragesData(eL)
-                  }, 500)
-                }
-              }
+                this.updatePubTimelineStoragesData(eL)
+              }, 500)
             }
           }
         }
