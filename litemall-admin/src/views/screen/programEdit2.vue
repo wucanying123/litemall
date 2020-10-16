@@ -1924,17 +1924,22 @@ export default {
               const smELLeft = source.left
 
               const tracks = document.getElementsByClassName('track')
-              const sliderParent = tracks[i]
-              this.sliderOperationHandle(id, sliderParent, offsetX)
-              setTimeout(() => {
-                const eL = document.getElementById(id)
-                eL.style.width = offsetY + 'px'
-                const smEL = document.getElementById('sm_' + id)
-                smEL.style.left = smELLeft + 'px'
-                smEL.style.top = smELTop + 'px'
+              for (let m = 0; m < tracks.length; m++) {
+                if (tracks[m].getAttribute('tracklayer') == i + 1) {
+                  const myTrack = tracks[m]
+                  const sliderParent = myTrack
+                  this.sliderOperationHandle(id, sliderParent, offsetX)
+                  setTimeout(() => {
+                    const eL = document.getElementById(id)
+                    eL.style.width = offsetY + 'px'
+                    const smEL = document.getElementById('sm_' + id)
+                    smEL.style.left = smELLeft + 'px'
+                    smEL.style.top = smELTop + 'px'
 
-                this.updatePubTimelineStoragesData(eL)
-              }, 500)
+                    this.updatePubTimelineStoragesData(eL)
+                  }, 500)
+                }
+              }
             }
           }
         }
