@@ -1307,17 +1307,17 @@ export default {
           this.pubTimelineStorages.splice(i, 1)
         }
       }
-      let currentTracklayer = this.currentSlider.style.zIndex
-      if (currentTracklayer == null || currentTracklayer == '') {
-        currentTracklayer = this.currentSlider.getAttribute('tracklayer')
-      }
+      const currentTracklayer = thar.style.zIndex
+      const currentSourceId = thar.getAttribute('id')
       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-        if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+        if (currentSourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+          console.log('试试')
+          console.log(currentSourceId)
           this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
         }
       }
       console.log('删除元素后')
-      console.log(this.program)
+      // console.log(this.program)
       // 阻止父类div做出事件响应
       this.stopPropagation()
     },
@@ -1485,6 +1485,7 @@ export default {
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
+      console.log(this.currentSlider)
       this.sourceDivVisiable = true
       this.sourceSynchro()
       // // const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
@@ -1513,8 +1514,8 @@ export default {
       //       }
       //     }
       // }
-      console.log(JSON.stringify(this.currentSource))
-      console.log(this.program)
+      // console.log(JSON.stringify(this.currentSource))
+      // console.log(this.program)
     },
     sourceChange() {
       console.log('改变资源')
