@@ -298,72 +298,72 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="名称">
-                    <el-input v-model="currentSource.name" @change="sourceChange" />
+                    <el-input id="currentSourceName" v-model="currentSource.name" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="类型">
-                    <el-input v-model="currentSource._type" readonly />
+                    <el-input id="currentSourceType" v-model="currentSource._type" readonly />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="距左">
-                    <el-input v-model="currentSource.left" @change="sourceChange" />
+                    <el-input id="currentSourceLeft" v-model="currentSource.left" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="距顶">
-                    <el-input v-model="currentSource.top" @change="sourceChange" />
+                    <el-input id="currentSourceTop" v-model="currentSource.top" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="宽度">
-                    <el-input v-model="currentSource.width" @change="sourceChange" />
+                    <el-input id="currentSourceWidth" v-model="currentSource.width" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="高度">
-                    <el-input v-model="currentSource.height" @change="sourceChange" />
+                    <el-input id="currentSourceHeight" v-model="currentSource.height" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="开始">
-                    <el-input v-model="currentSource.playTime" @change="sourceChange" />
+                    <el-input id="currentSourcePlayTime" v-model="currentSource.playTime" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="持续">
-                    <el-input v-model="currentSource.timeSpan" @change="sourceChange" />
+                    <el-input id="currentSourceTimeSpan" v-model="currentSource.timeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="入场特效">
-                    <el-input v-model="currentSource.entryEffect" @change="sourceChange" />
+                    <el-input id="currentSourceEntryEffect" v-model="currentSource.entryEffect" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="入场时间">
-                    <el-input v-model="currentSource.entryEffectTimeSpan" @change="sourceChange" />
+                    <el-input id="currentSourceEntryEffectTimeSpan" v-model="currentSource.entryEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="出场特效">
-                    <el-input v-model="currentSource.exitEffect" @change="sourceChange" />
+                    <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="出场时间">
-                    <el-input v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />
+                    <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -866,7 +866,7 @@ export default {
 
       sourceDivVisiable: false,
 
-      currentSource: { sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+      currentSource: { exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
 
     }
   },
@@ -1485,8 +1485,8 @@ export default {
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
-
       this.sourceDivVisiable = true
+      this.sourceSynchro()
       // // const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
       // // const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
       // // const width = parseInt(smEL.clientWidth)
@@ -1513,10 +1513,11 @@ export default {
       //       }
       //     }
       // }
-      // console.log(JSON.stringify(this.currentSource))
-      // console.log(this.program)
+      console.log(JSON.stringify(this.currentSource))
+      console.log(this.program)
     },
     sourceChange() {
+      console.log('改变资源')
       let currentTracklayer = this.currentSlider.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
         currentTracklayer = this.currentSlider.getAttribute('tracklayer')
@@ -1530,6 +1531,21 @@ export default {
         }
       }
       // console.log(this.program)
+    },
+    // 当前资源同步，解决绑定值失效
+    sourceSynchro() {
+      if (this.currentSource.name != null) { document.getElementById('currentSourceName').value = this.currentSource.name }
+      if (this.currentSource._type != null) { document.getElementById('currentSourceType').value = this.currentSource._type }
+      if (this.currentSource.left != null) { document.getElementById('currentSourceLeft').value = this.currentSource.left }
+      if (this.currentSource.top != null) { document.getElementById('currentSourceTop').value = this.currentSource.top }
+      if (this.currentSource.width != null) { document.getElementById('currentSourceWidth').value = this.currentSource.width }
+      if (this.currentSource.height != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
+      if (this.currentSource.playTime != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
+      if (this.currentSource.timeSpan != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
+      if (this.currentSource.entryEffect != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
+      if (this.currentSource.entryEffectTimeSpan != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
+      if (this.currentSource.exitEffect != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
+      if (this.currentSource.exitEffectTimeSpan != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
     },
     updatePubTimelineStoragesData(thar) {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
@@ -1849,6 +1865,7 @@ export default {
             }
           }
           console.log('移动画布')
+          this.sourceSynchro()
           const sliderParent = e.target
           const currentTracklayer = sliderParent.getAttribute('tracklayer')
           if (this.currentSource != null && currentTracklayer != null) {
