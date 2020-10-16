@@ -952,14 +952,15 @@ export default {
     }, 10)
   },
   created() {
+    this.defaultPictureList()
+    this.defaultVideoList()
     // if (this.$route.query.id == null) {
     //   return
     // }
     // this.id = this.$route.query.id
-    this.defaultPictureList()
-    this.defaultVideoList()
     this.getProgram()
     this.sourceDivVisiable = false
+    // this.imitateData()
   },
   methods: {
     getProgram() {
@@ -967,11 +968,11 @@ export default {
       readProgram({ id: this.id })
         .then(response => {
           this.program = response.data.data.program
-          console.log(this.program)
+          // console.log(this.program)
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
-          // this.imitateData()
+          this.imitateData()
         })
         .catch(() => {
           this.program = {}
@@ -1726,7 +1727,6 @@ export default {
         img.style = 'width:100%; height:100%;'
         img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
         img.setAttribute('source', elObj.getAttribute('source'))
-        img.setAttribute('source234', elObj.getAttribute('source'))
         smEL.appendChild(img)
       } else if (smtype == 'MultiText') {
         const rollText = document.createElement('div')
@@ -1889,56 +1889,62 @@ export default {
       } else {
         e.cancelBubble = true // IE阻止冒泡方法
       }
+    },
+    // 动态追加模拟数据
+    imitateData() {
+      console.log('模拟')
+      console.log(this.program)
+      this.addTime(360)
+      // 轨道数
+      const trackNum = this.program.layers.length
+      for (let i = 0; i < trackNum - 1; i++) {
+        this.addTrack()
+      }
+      if (this.program.layers != null) {
+        for (let i = 0; i < this.program.layers.length; i++) {
+          // this.addTrack();
+          const layer = this.program.layers[i]
+          console.log(layer)
+          if (this.program.layers[i].sources != null) {
+            for (let j = 0; j < this.program.layers[i].sources.length; j++) {
+              const source = this.program.layers[i].sources[j]
+              console.log('打印第' + i + 1 + '排第' + j + '列')
+              console.log(source)
+              const playTime = source.playTime
+              const timeSpan = source.timeSpan
+
+              // 仅用图片作为示例
+              const id = source.sourceId
+              const tarckNum = 1
+              var offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
+              var offsetY = offsetX + this.pubSecondWidth * timeSpan
+              console.log(offsetX)
+              console.log(offsetY)
+              const smELTop = source.top
+              const smELLeft = source.left
+
+              const tracks = document.getElementsByClassName('track')
+              for (let i = tracks.length - 1; i > -1; i--) {
+                const sliderParent = tracks[i]
+                const sliderParentTarckNum = parseInt(sliderParent.getAttribute('tracklayer'))
+                if (tarckNum == sliderParentTarckNum) {
+                  this.sliderOperationHandle(id, sliderParent, offsetX)
+                  setTimeout(() => {
+                    const eL = document.getElementById(id)
+                    eL.style.width = offsetY + 'px'
+                    const smEL = document.getElementById('sm_' + id)
+                    smEL.style.left = smELLeft + 'px'
+                    smEL.style.top = smELTop + 'px'
+
+                    this.updatePubTimelineStoragesData(eL)
+                  }, 500)
+                }
+              }
+            }
+          }
+        }
+      }
     }
-    // //动态追加模拟数据
-    // imitateData() {
-    //   console.log("模拟")
-    //   this.addTime(360)
-    // //轨道数
-    // if (null == this.program || null == this.program.layers) {
-    //   return
-    // }
-    // for (let i = 0; i < this.program.layers.length; i++) {
-    //   this.addTrack();
-    //   if(null != this.program.layers[i].sources){
-    //     for (let j = 0; j < this.program.layers[i].sources.length; j++) {
-    //     //   let source = this.program.layers[i].sources[j]
-    //       console.log("打印第"+i+"排第"+j+"列")
-    //   console.log(source)
-    //   let playTime = source.playTime;
-    //   let timeSpan = source.timeSpan;
-    //
-    //   //仅用图片作为示例
-    //   const id = source.sourceId;
-    //   let tarckNum = 1;
-    //   var offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime;
-    //   var offsetY = offsetX + this.pubSecondWidth * timeSpan;
-    //   console.log(offsetX)
-    //   console.log(offsetY)
-    //   let smELTop = source.top;
-    //   let smELLeft = source.left;
-    //
-    //   let tracks = document.getElementsByClassName("track");
-    //   for (let i = tracks.length - 1; i > -1; i--) {
-    //     let sliderParent = tracks[i];
-    //     let sliderParentTarckNum = parseInt(sliderParent.getAttribute("tracklayer"));
-    //     if (tarckNum == sliderParentTarckNum) {
-    //       this.sliderOperationHandle(id, sliderParent, offsetX);
-    //       setTimeout(() => {
-    //         const eL = document.getElementById(id);
-    //         eL.style.width = offsetY + "px";
-    //         const smEL = document.getElementById('sm_' + id);
-    //         smEL.style.left = smELLeft + "px";
-    //         smEL.style.top = smELTop + "px";
-    //
-    //         this.updatePubTimelineStoragesData(eL);
-    //       }, 500);
-    //     }
-    //   }
-    //   }
-    // }
-    // }
-    // }
   }
 }
 </script>
