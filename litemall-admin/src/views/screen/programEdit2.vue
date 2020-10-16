@@ -1311,13 +1311,11 @@ export default {
       const currentSourceId = thar.getAttribute('id')
       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
         if (currentSourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
-          console.log('试试')
-          console.log(currentSourceId)
           this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
         }
       }
       console.log('删除元素后')
-      // console.log(this.program)
+      console.log(this.program)
       // 阻止父类div做出事件响应
       this.stopPropagation()
     },
@@ -1485,34 +1483,31 @@ export default {
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
-      console.log(this.currentSlider)
       this.sourceDivVisiable = true
       this.sourceSynchro()
-      // // const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
-      // // const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-      // // const width = parseInt(smEL.clientWidth)
-      // // const height = parseInt(smEL.clientHeight)
-      // // console.log(left)
-      // // console.log(top)
-      // // console.log(width)
-      // // console.log(height)
-      // //
-      // console.log(this.currentSlider)
-      // const currentTracklayer = this.currentSlider.style.zIndex
-      // console.log("当前轨道")
-      // console.log(currentTracklayer)
-      // // console.log(this.program)
+      console.log(this.currentSlider)
       // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      // if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
-      //     for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-      //       if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
-      //         this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-      //         // this.currentSource.top = top
-      //         // this.currentSource.left = left
-      //         // this.currentSource.width = width
-      //         // this.currentSource.height = height
+      // if (newPlaySource != null) {
+      // const sourceId = newPlaySource.sourceId
+      // const currentTracklayer = this.currentSlider.style.zIndex
+      // const smEL = document.getElementById('sm_' + sourceId)
+      // if(null != smEL){
+      //   const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
+      //   const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
+      //   const width = parseInt(smEL.clientWidth)
+      //   const height = parseInt(smEL.clientHeight)
+      //   if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+      //       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+      //         if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+      //           this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+      //           this.currentSource.top = top
+      //           this.currentSource.left = left
+      //           this.currentSource.width = width
+      //           this.currentSource.height = height
+      //         }
       //       }
-      //     }
+      //   }
+      // }
       // }
       // console.log(JSON.stringify(this.currentSource))
       // console.log(this.program)
@@ -1938,8 +1933,10 @@ export default {
               const offsetY = offsetX + this.pubSecondWidth * timeSpan
               console.log(offsetX)
               console.log(offsetY)
-              const smELTop = source.top
               const smELLeft = source.left
+              const smELTop = source.top
+              const smELWidth = source.width
+              const smELHeight = source.height
 
               const tracks = document.getElementsByClassName('track')
               for (let m = 0; m < tracks.length; m++) {
@@ -1948,11 +1945,15 @@ export default {
                   const sliderParent = myTrack
                   this.sliderOperationHandle(id, sliderParent, offsetX)
                   setTimeout(() => {
+                    // 滑块
                     const eL = document.getElementById(id)
                     eL.style.width = offsetY + 'px'
+                    // 画布
                     const smEL = document.getElementById('sm_' + id)
                     smEL.style.left = smELLeft + 'px'
                     smEL.style.top = smELTop + 'px'
+                    smEL.style.width = smELWidth + 'px'
+                    smEL.style.height = smELHeight + 'px'
 
                     this.updatePubTimelineStoragesData(eL)
                   }, 500)
