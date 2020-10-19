@@ -1494,34 +1494,29 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       this.sourceDivVisiable = true
-      // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      // this.sourceSynchro(newPlaySource)
-      console.log('打印div,', this.currentSlider)
       const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      console.log(newPlaySource)
       if (newPlaySource != null) {
         const sourceId = newPlaySource.sourceId
-        // const currentTracklayer = this.currentSlider.style.zIndex
+        const currentTracklayer = this.currentSlider.style.zIndex
         const smEL = document.getElementById('sm_' + sourceId)
-        // console.log("11111111,", sourceId)
         if (smEL != null) {
           const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const width = parseInt(smEL.clientWidth)
           const height = parseInt(smEL.clientHeight)
           console.log(left, top, width, height)
-          // if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
-          //   for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-          //     if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
-          //       this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-          //       // this.currentSource.top = top
-          //       // this.currentSource.left = left
-          //       // this.currentSource.width = width
-          //       // this.currentSource.height = height
-          //       this.sourceSynchro()
-          //     }
-          //   }
-          // }
+          if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+            for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+              if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+                this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                this.currentSource.top = top
+                this.currentSource.left = left
+                this.currentSource.width = width
+                this.currentSource.height = height
+                this.sourceSynchro()
+              }
+            }
+          }
         }
       }
       // console.log(JSON.stringify(this.currentSource))
@@ -1615,18 +1610,13 @@ export default {
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
       console.log('添加后')
-      console.log(id)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
       const elObjClone = elObj.cloneNode(true)
-      const source = JSON.parse(elObj.getAttribute('source'))
-      console.log(source.sourceId)
       elObjClone.setAttribute('id', Math.random())
-
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
       elObj.setAttribute('draggable', false)
-      console.log(elObj)
 
       // const currentTracklayer = elObj.getAttribute('tracklayer')
       // if (this.currentSource != null && currentTracklayer != null) {
@@ -1640,8 +1630,8 @@ export default {
       //     }
       //   }
       // }
-      console.log(this.currentSource)
-      console.log(this.program)
+      // console.log(this.currentSource)
+      // console.log(this.program)
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
@@ -1824,6 +1814,8 @@ export default {
         console.log('按下画布')
         const sliderParent = e.target
         const currentTracklayer = sliderParent.getAttribute('tracklayer')
+        console.log('再测试', sliderParent)
+        console.log('再测试', currentTracklayer)
         const newPlaySource = JSON.parse(sliderParent.getAttribute('source'))
         if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
           for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
@@ -1921,7 +1913,9 @@ export default {
       ev.preventDefault()
     },
     drag(ev) {
-      ev.dataTransfer.setData('id', ev.target.id)
+      const slider = ev.target
+      const newPlaySource = JSON.parse(slider.getAttribute('source'))
+      ev.dataTransfer.setData('id', newPlaySource.sourceId)
     },
     stopPropagation(e) {
       e = e || window.event
