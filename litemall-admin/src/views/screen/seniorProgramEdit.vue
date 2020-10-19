@@ -74,6 +74,7 @@
             多行文本
           </div>
         </el-submenu>
+        <div id="alreadySources" style="display: none;" />
       </el-menu>
     </el-aside>
 
@@ -876,7 +877,7 @@ export default {
 
       sourceDivVisiable: false,
 
-      currentSource: { id: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+      currentSource: { id: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
 
     }
   },
@@ -1493,8 +1494,13 @@ export default {
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
+      console.log(this.currentSlider)
+      console.log(this.currentSlider.getAttribute('source'))
+      console.log(this.currentSlider.getAttribute('smurl'))
       this.sourceDivVisiable = true
       const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      console.log(this.program)
+      console.log(newPlaySource)
       if (newPlaySource != null) {
         const sourceId = newPlaySource.sourceId
         const currentTracklayer = this.currentSlider.style.zIndex
@@ -1610,9 +1616,12 @@ export default {
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
       console.log('添加后')
+      console.log('id', id)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
+      console.log('克隆', elObj)
+      if (elObj == null) { return }
       const elObjClone = elObj.cloneNode(true)
       elObjClone.setAttribute('id', Math.random())
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
@@ -1913,9 +1922,8 @@ export default {
       ev.preventDefault()
     },
     drag(ev) {
-      const slider = ev.target
-      const newPlaySource = JSON.parse(slider.getAttribute('source'))
-      ev.dataTransfer.setData('id', newPlaySource.sourceId)
+      ev.dataTransfer.setData('id', ev.target.id)
+      console.log('ev.target.id', ev.target)
     },
     stopPropagation(e) {
       e = e || window.event
@@ -1935,6 +1943,9 @@ export default {
       for (let i = 0; i < alltrackNum - 1; i++) {
         this.addTrack()
       }
+      const alreadySources = document.getElementById('alreadySources')
+      let html = ''
+      alreadySources.innerHTML = html
       if (this.program.layers != null) {
         console.log(this.program.layers)
         console.log(this.program.layers.length)
@@ -1944,6 +1955,21 @@ export default {
               const source = this.program.layers[i].sources[j]
               console.log('打印第' + i + '轨道第' + j + '个')
               console.log(source)
+
+              const str = JSON.stringify(source)
+              console.log(str)
+              html = '<div id="' + source.id + '" index="' + source.sourceId +
+              // source="{"sourceId":"94caa927acec4cbb9592224fd6083b28","name":"红色","url":"http://192.168.0.108:8083/admin/look/storage/fetch/zulnnlkd0fks9l8uwbph.jpg","maxPlayTime":10,"_type":"Image","mime":"image/jpeg","size":5335,"enabled":true,"fileExt":".jpg","showBg":false,"showHourScale":false,"showMinScale":false,"showScaleNum":false,"showSecond":false,"center":false,"createTime":1603103632,"updateTime":1603103632,"userid":1}"
+                  '"source="{"sourceId":"' + source.id + '"' +
+                  'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
+                  'class="sliderBlock" draggable="false" onmouseup="mouseRelease()"' +
+                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)"' +
+                  '{{ source.name }}{{ source.fileExt }}' +
+                  '</div>'
+              console.log('html', html)
+
+              alreadySources.innerHTML += html
+
               const playTime = source.playTime
               const timeSpan = source.timeSpan
 
@@ -1966,6 +1992,7 @@ export default {
                   setTimeout(() => {
                     // 滑块
                     const eL = document.getElementById(id)
+                    console.log('打印滑块', eL)
                     eL.style.width = offsetY + 'px'
                     // 画布
                     const smEL = document.getElementById('sm_' + id)
@@ -1982,6 +2009,26 @@ export default {
           }
         }
       }
+      console.log('已存', alreadySources)
+    },
+    createUuid(len, radix) {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
+      const uuid = []; let i
+      radix = radix || chars.length
+      if (len) {
+        for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix]
+      } else {
+        var r
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
+        uuid[14] = '4'
+        for (i = 0; i < 36; i++) {
+          if (!uuid[i]) {
+            r = 0 | Math.random() * 16
+            uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r]
+          }
+        }
+      }
+      return uuid.join('')
     }
   }
 }
