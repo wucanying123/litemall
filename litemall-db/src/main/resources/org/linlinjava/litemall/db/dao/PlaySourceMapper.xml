@@ -60,6 +60,7 @@
     <result column="source_id" jdbcType="VARCHAR" property="sourceId" />
     <result column="layer_id" jdbcType="VARCHAR" property="layerId" />
     <result column="program_id" jdbcType="VARCHAR" property="programId" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -68,7 +69,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime, userid, source_id, layer_id, program_id
+    city, code, createTime, updateTime, userid, source_id, layer_id, program_id, uuid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -257,6 +258,9 @@
       <if test="programId != null">
         program_id,
       </if>
+      <if test="uuid != null">
+        uuid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -433,6 +437,9 @@
       <if test="programId != null">
         #{programId,jdbcType=VARCHAR},
       </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.PlaySource">
@@ -608,6 +615,9 @@
       </if>
       <if test="programId != null">
         program_id = #{programId,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        uuid = #{uuid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

@@ -84,4 +84,5 @@ public class PlaySource implements Serializable {
     String sourceId;//资源id
     String layerId;//层id
     String programId;//节目id
+    String uuid;//唯一标识
 }
