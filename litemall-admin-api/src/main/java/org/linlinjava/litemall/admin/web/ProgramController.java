@@ -56,7 +56,6 @@ public class ProgramController {
 
     @GetMapping("/readProgram")
     public Object readProgram(String id) {
-        id ="e1a51d0c331742d59757066927e0b25a";
         Program program = programService.readProgram(id);
         Map<String, Object> data = new HashMap<>(2);
         data.put("program", program);

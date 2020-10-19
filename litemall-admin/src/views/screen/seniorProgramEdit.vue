@@ -58,11 +58,21 @@
           <template slot="title">
             <i class="el-icon-document" />多行文本
           </template>
-          <el-menu-item-group>
-            <el-menu-item index="3-1">
-              多行文本测试
-            </el-menu-item>
-          </el-menu-item-group>
+          <div
+            id="smallboxText"
+            ondblclick="deleteTrackSourceMaterial(event)"
+            class="sliderBlock"
+            style="background-color: #009393;"
+            smtype="MultiText"
+            text="多行文本"
+            direction="left"
+            draggable="true"
+            onmouseup="mouseRelease()"
+            onmousedown="unboundTrackOnMousedown(event)"
+            ondragstart="drag(event)"
+          >
+            多行文本
+          </div>
         </el-submenu>
       </el-menu>
     </el-aside>
@@ -712,7 +722,7 @@ const defaultTypeOptions = [
 ]
 
 export default {
-  name: 'ProgramEdit2',
+  name: 'SeniorProgramEdit',
   components: { Pagination },
   filters: {
     formatType(_type) {
@@ -866,7 +876,7 @@ export default {
 
       sourceDivVisiable: false,
 
-      currentSource: { exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+      currentSource: { id: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
 
     }
   },
@@ -954,13 +964,12 @@ export default {
   created() {
     this.defaultPictureList()
     this.defaultVideoList()
-    // if (this.$route.query.id == null) {
-    //   return
-    // }
-    // this.id = this.$route.query.id
+    if (this.$route.query.id == null) {
+      return
+    }
+    this.id = this.$route.query.id
     this.getProgram()
     this.sourceDivVisiable = false
-    // this.imitateData()
   },
   methods: {
     getProgram() {
@@ -1070,6 +1079,7 @@ export default {
     },
     handleConfirm() {
       // this.program.layers[0].sources = this.playSourceList
+      console.log(this.program)
       this.$refs['program'].validate(valid => {
         if (valid) {
           updateComplexProgramById(this.program).then(response => {
@@ -1484,31 +1494,36 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       this.sourceDivVisiable = true
-      this.sourceSynchro()
-      console.log(this.currentSlider)
       // const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      // if (newPlaySource != null) {
-      // const sourceId = newPlaySource.sourceId
-      // const currentTracklayer = this.currentSlider.style.zIndex
-      // const smEL = document.getElementById('sm_' + sourceId)
-      // if(null != smEL){
-      //   const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
-      //   const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-      //   const width = parseInt(smEL.clientWidth)
-      //   const height = parseInt(smEL.clientHeight)
-      //   if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
-      //       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-      //         if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
-      //           this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-      //           this.currentSource.top = top
-      //           this.currentSource.left = left
-      //           this.currentSource.width = width
-      //           this.currentSource.height = height
-      //         }
-      //       }
-      //   }
-      // }
-      // }
+      // this.sourceSynchro(newPlaySource)
+      console.log('打印div,', this.currentSlider)
+      const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      console.log(newPlaySource)
+      if (newPlaySource != null) {
+        const sourceId = newPlaySource.sourceId
+        // const currentTracklayer = this.currentSlider.style.zIndex
+        const smEL = document.getElementById('sm_' + sourceId)
+        // console.log("11111111,", sourceId)
+        if (smEL != null) {
+          const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
+          const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
+          const width = parseInt(smEL.clientWidth)
+          const height = parseInt(smEL.clientHeight)
+          console.log(left, top, width, height)
+          // if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+          //   for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+          //     if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+          //       this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+          //       // this.currentSource.top = top
+          //       // this.currentSource.left = left
+          //       // this.currentSource.width = width
+          //       // this.currentSource.height = height
+          //       this.sourceSynchro()
+          //     }
+          //   }
+          // }
+        }
+      }
       // console.log(JSON.stringify(this.currentSource))
       // console.log(this.program)
     },
@@ -1521,7 +1536,7 @@ export default {
       // console.log(JSON.stringify(this.currentSource))
       if (this.currentSource != null && currentTracklayer != null) {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-          if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+          if (this.currentSource.sourceId != null && this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
             this.program.layers[currentTracklayer - 1].sources[j] = this.currentSource
           }
         }
@@ -1529,19 +1544,24 @@ export default {
       // console.log(this.program)
     },
     // 当前资源同步，解决绑定值失效
-    sourceSynchro() {
-      if (this.currentSource.name != null) { document.getElementById('currentSourceName').value = this.currentSource.name }
-      if (this.currentSource._type != null) { document.getElementById('currentSourceType').value = this.currentSource._type }
-      if (this.currentSource.left != null) { document.getElementById('currentSourceLeft').value = this.currentSource.left }
-      if (this.currentSource.top != null) { document.getElementById('currentSourceTop').value = this.currentSource.top }
-      if (this.currentSource.width != null) { document.getElementById('currentSourceWidth').value = this.currentSource.width }
-      if (this.currentSource.height != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
-      if (this.currentSource.playTime != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
-      if (this.currentSource.timeSpan != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
-      if (this.currentSource.entryEffect != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
-      if (this.currentSource.entryEffectTimeSpan != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
-      if (this.currentSource.exitEffect != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
-      if (this.currentSource.exitEffectTimeSpan != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
+    sourceSynchro(newPlaySource) {
+      if (newPlaySource != null) {
+        this.currentSource = newPlaySource
+      }
+      if (this.currentSource != null) {
+        if (this.currentSource.name != null) { document.getElementById('currentSourceName').value = this.currentSource.name }
+        if (this.currentSource._type != null) { document.getElementById('currentSourceType').value = this.currentSource._type }
+        if (this.currentSource.left != null) { document.getElementById('currentSourceLeft').value = this.currentSource.left }
+        if (this.currentSource.top != null) { document.getElementById('currentSourceTop').value = this.currentSource.top }
+        if (this.currentSource.width != null) { document.getElementById('currentSourceWidth').value = this.currentSource.width }
+        if (this.currentSource.height != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
+        if (this.currentSource.playTime != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
+        if (this.currentSource.timeSpan != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
+        if (this.currentSource.entryEffect != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
+        if (this.currentSource.entryEffectTimeSpan != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
+        if (this.currentSource.exitEffect != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
+        if (this.currentSource.exitEffectTimeSpan != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
+      }
     },
     updatePubTimelineStoragesData(thar) {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
@@ -1595,12 +1615,15 @@ export default {
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
       console.log('添加后')
-      // console.log(this.program)
+      console.log(id)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
       const elObjClone = elObj.cloneNode(true)
+      const source = JSON.parse(elObj.getAttribute('source'))
+      console.log(source.sourceId)
       elObjClone.setAttribute('id', Math.random())
+
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
       elObj.setAttribute('draggable', false)
       console.log(elObj)
@@ -1722,10 +1745,10 @@ export default {
       const smtype = elObj.getAttribute('smtype')
       const smEL = document.createElement('div')
       smEL.setAttribute('class', 'pictureBlock')
+      smEL.setAttribute('source', elObj.getAttribute('source'))
       smEL.id = 'sm_' + id
       smEL.style.zIndex = sliderParent.getAttribute('tracklayer')
       smEL.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
-      smEL.setAttribute('source', elObj.getAttribute('source'))
 
       if (smtype == 'Image') {
         smEL.setAttribute('crossorigin', 'anonymous')
@@ -1808,6 +1831,8 @@ export default {
               this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
             }
           }
+        } else {
+          this.currentSource = {}
         }
 
         document.onmousemove = (e) => {

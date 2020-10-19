@@ -91,6 +91,7 @@ public class PlaySourceServiceImpl implements PlaySourceService {
     public int updatePlaySourceById(PlaySource playSource) {
         int n = 0;
         try {
+            playSource.setTheLeft(playSource.getLeft());
             playSource.setUpdateTime(DateUtil.getDateline());
             n = playSourceMapper.updateByPrimaryKeySelective(playSource);
         } catch (Exception e) {

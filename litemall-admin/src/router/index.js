@@ -115,13 +115,14 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'programEdit2',
-        component: () => import('@/views/screen/programEdit2'),
-        name: 'programEdit2',
+        path: 'program-senior-edit',
+        component: () => import('@/views/screen/seniorProgramEdit'),
+        name: 'seniorProgramEdit',
         meta: {
           title: '高级节目编辑',
           noCache: true
-        }
+        },
+        hidden: true
       },
       {
         path: 'item',

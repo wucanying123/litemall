@@ -217,31 +217,33 @@ public class ProgramServiceImpl implements ProgramService {
 
                     Integer allPlayTime = 0;
                     for (PlaySource playSource : sources) {
-                        //自动设置开始播放时间
-                        if (StringUtilsXD.isEmpty(playSource.getId())) {
-                            playSource.setPlayTime(allPlayTime);
-                            //新增，复制Source到PlaySource
-                            //初始 持续时长等于素材时长，起始时间等于之前持续时长之和
-                            Integer timeSpan = 0;
-                            if(null != playSource.getTimeSpan()) {
-                                timeSpan = playSource.getTimeSpan();
-                            }else {
-                                timeSpan = playSource.getMaxPlayTime();//持续时长等于素材时长
+                        if(null != playSource) {
+                            //自动设置开始播放时间
+                            if (StringUtilsXD.isEmpty(playSource.getId())) {
+                                playSource.setPlayTime(allPlayTime);
+                                //新增，复制Source到PlaySource
+                                //初始 持续时长等于素材时长，起始时间等于之前持续时长之和
+                                Integer timeSpan = 0;
+                                if (null != playSource.getTimeSpan()) {
+                                    timeSpan = playSource.getTimeSpan();
+                                } else {
+                                    timeSpan = playSource.getMaxPlayTime();//持续时长等于素材时长
+                                }
+                                String sourceId = playSource.getSourceId();
+                                Source source = sourceService.selectSourceById(sourceId);
+                                BeanUtils.copyProperties(source, playSource);
+                                playSource.setTimeSpan(timeSpan);
+                                playSource.setPlayTime(allPlayTime);
+                                allPlayTime += timeSpan;
+                                addPlaysource(playSource, newProgram, layer.getId());
+                            } else {
+                                playSource.setPlayTime(allPlayTime);
+                                allPlayTime += playSource.getTimeSpan();
+                                //修改
+                                playSourceService.updatePlaySourceById(playSource);
                             }
-                            String sourceId = playSource.getSourceId();
-                            Source source = sourceService.selectSourceById(sourceId);
-                            BeanUtils.copyProperties(source, playSource);
-                            playSource.setTimeSpan(timeSpan);
-                            playSource.setPlayTime(allPlayTime);
-                            allPlayTime +=timeSpan;
-                            addPlaysource(playSource, newProgram, layer.getId());
-                        } else {
-                            playSource.setPlayTime(allPlayTime);
-                            allPlayTime +=playSource.getTimeSpan();
-                            //修改
-                            playSourceService.updatePlaySourceById(playSource);
+                            sourceIdList.add(playSource.getSourceId());
                         }
-                        sourceIdList.add(playSource.getSourceId());
                     }
                 }
                 layer.setSourcesIds(String.join(",", sourceIdList));
