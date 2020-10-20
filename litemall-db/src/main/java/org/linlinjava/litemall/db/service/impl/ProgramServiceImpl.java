@@ -219,7 +219,7 @@ public class ProgramServiceImpl implements ProgramService {
                     for (PlaySource playSource : sources) {
                         if(null != playSource) {
                             //自动设置开始播放时间
-                            if (StringUtilsXD.isEmpty(playSource.getId())) {
+                            if (StringUtilsXD.isEmpty(playSource.getCreateTime().toString())) {
                                 playSource.setPlayTime(allPlayTime);
                                 //新增，复制Source到PlaySource
                                 //初始 持续时长等于素材时长，起始时间等于之前持续时长之和

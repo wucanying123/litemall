@@ -12,11 +12,10 @@
 
           <div
             v-for="(source, index) in pictureList"
-            :id="source.sourceId"
+            :id="createUuid(32,16)"
             :key="index"
-            :index="source.sourceId"
 
-            :source="JSON.stringify(source)"
+            :sourceId="source.sourceId"
             ondblclick="deleteTrackSourceMaterial(event)"
             :smurl="source.url"
             :smtype="source._type"
@@ -35,11 +34,10 @@
           </template>
           <div
             v-for="(source, index) in videoList"
-            :id="source.sourceId"
+            :id="createUuid(32,16)"
             :key="index"
-            :index="source.sourceId"
 
-            :source="JSON.stringify(source)"
+            :sourceId="source.sourceId"
             ondblclick="deleteTrackSourceMaterial(event)"
             :smurl="source.url"
             class="sliderBlock"
@@ -74,7 +72,7 @@
             多行文本
           </div>
         </el-submenu>
-        <div id="alreadySources" style="display: none;" />
+        <div id="alreadySources" />
       </el-menu>
     </el-aside>
 
@@ -1026,16 +1024,16 @@ export default {
       this.getList()
     },
     confirmAdd() {
-      const newPlaySourceIds = []
+      const newPlaySourceUIds = []
       const newPlaySourceList = []
       this.selectedlist.forEach(item => {
-        const sourceId = item.sourceId
+        const sourceUid = item.id
         let found = false
         if (this.program != null) {
           if (this.program.layers != null) {
             if (this.program.layers[0].sources != null) {
               for (let i = 0; i < this.program.layers[0].sources.length; i++) {
-                if (sourceId == this.program.layers[0].sources[i].sourceId) {
+                if (sourceUid == this.program.layers[0].sources[i].id) {
                   found = true
                 }
               }
@@ -1043,12 +1041,12 @@ export default {
           }
         }
         if (!found) {
-          newPlaySourceIds.push(sourceId)
+          newPlaySourceUIds.push(sourceUid)
           newPlaySourceList.push(item)
         }
       })
 
-      if (newPlaySourceIds.length > 0) {
+      if (newPlaySourceUIds.length > 0) {
         if (this.program.layers != null) {
           this.playSourceList = this.playSourceList.concat(newPlaySourceList)
           if (this.program.layers[0].sources != null) {
@@ -1065,12 +1063,12 @@ export default {
     },
     handleDelete(row) {
       for (let index = 0; index < this.program.layers[0].sources.length; index++) {
-        if (row.sourceId == this.program.layers[0].sources[index].sourceId) {
+        if (row.id == this.program.layers[0].sources[index].id) {
           this.program.layers[0].sources.splice(index, 1)
         }
       }
       for (let index2 = 0; index2 < this.playSourceList.length; index2++) {
-        if (row.sourceId == this.playSourceList[index2].sourceId) {
+        if (row.id == this.playSourceList[index2].id) {
           this.playSourceList.splice(index2, 1)
         }
       }
@@ -1319,9 +1317,9 @@ export default {
         }
       }
       const currentTracklayer = thar.style.zIndex
-      const currentSourceId = thar.getAttribute('id')
+      const sourceUid = thar.getAttribute('id')
       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-        if (currentSourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+        if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
           this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
         }
       }
@@ -1495,25 +1493,23 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       console.log(this.currentSlider)
-      console.log(this.currentSlider.getAttribute('source'))
       console.log(this.currentSlider.getAttribute('smurl'))
       this.sourceDivVisiable = true
-      const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
+      const sourceUid = this.currentSlider.getAttribute('id')
       console.log(this.program)
-      console.log(newPlaySource)
-      if (newPlaySource != null) {
-        const sourceId = newPlaySource.sourceId
+      console.log(sourceUid)
+      if (sourceUid != null) {
         const currentTracklayer = this.currentSlider.style.zIndex
-        const smEL = document.getElementById('sm_' + sourceId)
+        const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
           const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const width = parseInt(smEL.clientWidth)
           const height = parseInt(smEL.clientHeight)
           console.log(left, top, width, height)
-          if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+          if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-              if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+              if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
                 this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
                 this.currentSource.top = top
                 this.currentSource.left = left
@@ -1525,7 +1521,6 @@ export default {
           }
         }
       }
-      // console.log(JSON.stringify(this.currentSource))
       // console.log(this.program)
     },
     sourceChange() {
@@ -1534,10 +1529,9 @@ export default {
       if (currentTracklayer == null || currentTracklayer == '') {
         currentTracklayer = this.currentSlider.getAttribute('tracklayer')
       }
-      // console.log(JSON.stringify(this.currentSource))
       if (this.currentSource != null && currentTracklayer != null) {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-          if (this.currentSource.sourceId != null && this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+          if (this.currentSource.id != null && this.currentSource.id === this.program.layers[currentTracklayer - 1].sources[j].id) {
             this.program.layers[currentTracklayer - 1].sources[j] = this.currentSource
           }
         }
@@ -1589,12 +1583,29 @@ export default {
         alert('不能重叠')
         return
       }
-
       console.log(this.currentSlider)
-      // 当前选择第几个轨道
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
-      const newPlaySource = JSON.parse(this.currentSlider.getAttribute('source'))
-      this.currentSource = newPlaySource
+      const sourceUid = this.currentSlider.getAttribute('id')
+      const sourceId = this.currentSlider.getAttribute('sourceId')
+      // 素材库
+      let newPlaySource// 未做
+      if (sourceUid != null && sourceId != null) {
+        for (let i = 0; i < this.pictureList.length; i++) {
+          if (sourceId === this.pictureList[i].sourceId) {
+            newPlaySource = this.pictureList[i]
+            newPlaySource.id = sourceUid
+          }
+        }
+        if (newPlaySource == null) {
+          for (let i = 0; i < this.videoList.length; i++) {
+            if (sourceId === this.videoList[i].sourceId) {
+              newPlaySource = this.videoList[i]
+              newPlaySource.id = sourceUid
+            }
+          }
+        }
+      }
+
       if (this.program.layers == null) {
         this.program.layers = [{}]
       }
@@ -1615,32 +1626,16 @@ export default {
       this.sliderOperationHandle(id, sliderParent, offsetX)
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
-      console.log('添加后')
-      console.log('id', id)
+      console.log('添加后', id)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
       console.log('克隆', elObj)
       if (elObj == null) { return }
       const elObjClone = elObj.cloneNode(true)
-      elObjClone.setAttribute('id', Math.random())
+      elObjClone.setAttribute('id', this.createUuid(32, 16))
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
       elObj.setAttribute('draggable', false)
-
-      // const currentTracklayer = elObj.getAttribute('tracklayer')
-      // if (this.currentSource != null && currentTracklayer != null) {
-      //   for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-      //     if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
-      //       this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-      //       this.currentSource.top = top
-      //       this.currentSource.left = left
-      //       this.currentSource.width = width
-      //       this.currentSource.height = height
-      //     }
-      //   }
-      // }
-      // console.log(this.currentSource)
-      // console.log(this.program)
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
@@ -1744,7 +1739,6 @@ export default {
       const smtype = elObj.getAttribute('smtype')
       const smEL = document.createElement('div')
       smEL.setAttribute('class', 'pictureBlock')
-      smEL.setAttribute('source', elObj.getAttribute('source'))
       smEL.id = 'sm_' + id
       smEL.style.zIndex = sliderParent.getAttribute('tracklayer')
       smEL.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
@@ -1763,7 +1757,6 @@ export default {
         const img = document.createElement('div')
         img.style = 'width:100%; height:100%;'
         img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
-        img.setAttribute('source', elObj.getAttribute('source'))
         smEL.appendChild(img)
       } else if (smtype == 'MultiText') {
         const rollText = document.createElement('div')
@@ -1825,10 +1818,10 @@ export default {
         const currentTracklayer = sliderParent.getAttribute('tracklayer')
         console.log('再测试', sliderParent)
         console.log('再测试', currentTracklayer)
-        const newPlaySource = JSON.parse(sliderParent.getAttribute('source'))
-        if (newPlaySource != null && currentTracklayer != null && currentTracklayer != '') {
+        const sourceUid = sliderParent.getAttribute('id')
+        if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
           for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-            if (newPlaySource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
               this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
             }
           }
@@ -1892,7 +1885,7 @@ export default {
           const currentTracklayer = sliderParent.getAttribute('tracklayer')
           if (this.currentSource != null && currentTracklayer != null) {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-              if (this.currentSource.sourceId === this.program.layers[currentTracklayer - 1].sources[j].sourceId) {
+              if (this.currentSource.id === this.program.layers[currentTracklayer - 1].sources[j].id) {
                 this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
                 this.currentSource.top = top
                 this.currentSource.left = left
@@ -1956,24 +1949,18 @@ export default {
               console.log('打印第' + i + '轨道第' + j + '个')
               console.log(source)
 
-              const str = JSON.stringify(source)
-              console.log(str)
-              html = '<div id="' + source.id + '" index="' + source.sourceId +
-              // source="{"sourceId":"94caa927acec4cbb9592224fd6083b28","name":"红色","url":"http://192.168.0.108:8083/admin/look/storage/fetch/zulnnlkd0fks9l8uwbph.jpg","maxPlayTime":10,"_type":"Image","mime":"image/jpeg","size":5335,"enabled":true,"fileExt":".jpg","showBg":false,"showHourScale":false,"showMinScale":false,"showScaleNum":false,"showSecond":false,"center":false,"createTime":1603103632,"updateTime":1603103632,"userid":1}"
-                  '"source="{"sourceId":"' + source.id + '"' +
+              html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
                   'class="sliderBlock" draggable="false" onmouseup="mouseRelease()"' +
-                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)"' +
-                  '{{ source.name }}{{ source.fileExt }}' +
+                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)"' + source.name + source.fileExt +
                   '</div>'
-              console.log('html', html)
-
+              console.log('网页', html)
               alreadySources.innerHTML += html
 
               const playTime = source.playTime
               const timeSpan = source.timeSpan
 
-              const id = source.sourceId
+              const id = source.id
               const offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
               const offsetY = offsetX + this.pubSecondWidth * timeSpan
               console.log(offsetX)
@@ -2009,10 +1996,10 @@ export default {
           }
         }
       }
-      console.log('已存', alreadySources)
+      console.log('已存', alreadySources.innerHTML)
     },
     createUuid(len, radix) {
-      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
+      const chars = '0123456789abcdefghijklmnopqrstuvwxyz'.split('')
       const uuid = []; let i
       radix = radix || chars.length
       if (len) {
@@ -2028,6 +2015,7 @@ export default {
           }
         }
       }
+      console.log('打印uuid', uuid.join(''))
       return uuid.join('')
     }
   }
