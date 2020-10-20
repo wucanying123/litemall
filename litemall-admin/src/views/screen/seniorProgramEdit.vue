@@ -1502,10 +1502,16 @@ export default {
         const currentTracklayer = this.currentSlider.style.zIndex
         const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
-          const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
-          const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-          const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px'))) == null ? parseInt(smEL.clientWidth) : parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))
-          const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px'))) == null ? parseInt(smEL.clientHeight) : parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))
+          const img = smEL.querySelector(' div')
+          const left = img.style.left == '' ? 0 : parseInt(img.style.left)
+          const top = img.style.top == '' ? 0 : parseInt(img.style.top)
+          const width = img.style.width == '' ? 0 : parseInt(img.style.width)
+          const height = img.style.height == '' ? 0 : parseInt(img.style.height)
+          console.log(left, top, width, height, img.clientWidth, img.clientHeight)
+
+          // const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
+          // const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px'))) == null ? parseInt(smEL.clientWidth) : parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))
+          // const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px'))) == null ? parseInt(smEL.clientHeight) : parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))
           // console.log(left, top, smEL.style.width, smEL.style.height)
           // console.log(left, top, smEL.clientWidth, smEL.clientHeight)
           if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
@@ -1794,8 +1800,8 @@ export default {
 
         const img = document.createElement('div')
         img.style = 'width:100%; height:100%;'
-        img.setAttribute('id', 'sm_' + id)
-        img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
+        // img.setAttribute('id', 'sm_' + id)
+        // img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
         smEL.appendChild(img)
       } else if (smtype == 'MultiText') {
         const rollText = document.createElement('div')
@@ -1854,8 +1860,12 @@ export default {
 
         console.log('按下画布')
         const sliderParent = e.target
-        const currentTracklayer = sliderParent.getAttribute('tracklayer')
-        let sourceUid = sliderParent.getAttribute('id')
+        console.log('画面', sliderParent)
+        console.log(sliderParent.style.width, sliderParent.style.height)
+
+        const currentTracklayer = smEL.getAttribute('tracklayer')
+        let sourceUid = smEL.getAttribute('id')
+
         if (sourceUid.indexOf('sm_') != -1) {
           sourceUid = sourceUid.substring(3)
         }
@@ -1924,8 +1934,10 @@ export default {
           }
           console.log('移动画布')
           this.sourceSynchro()
-          const sliderParent = e.target
-          const currentTracklayer = sliderParent.getAttribute('tracklayer')
+          // const sliderParent = smEL.querySelector(' div')
+          const currentTracklayer = smEL.getAttribute('tracklayer')
+          console.log(this.currentSource)
+          console.log(this.program.layers[1])
           if (this.currentSource != null && currentTracklayer != null) {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
               if (this.currentSource.id === this.program.layers[currentTracklayer - 1].sources[j].id) {

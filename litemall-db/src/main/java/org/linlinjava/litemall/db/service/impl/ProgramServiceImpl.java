@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.linlinjava.litemall.db.dao.LayerMapper;
+import org.linlinjava.litemall.db.dao.PlaySourceMapper;
 import org.linlinjava.litemall.db.dao.ProgramMapper;
 import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.service.LayerService;
@@ -33,6 +34,8 @@ public class ProgramServiceImpl implements ProgramService {
     private PlaySourceService playSourceService;
     @Autowired
     private LayerMapper layerMapper;
+    @Autowired
+    private PlaySourceMapper playSourceMapper;
 
 
     private static Logger logger = LoggerFactory.getLogger(ProgramServiceImpl.class);
@@ -108,9 +111,7 @@ public class ProgramServiceImpl implements ProgramService {
         playSource.setCenter(false);
 
         playSource.setProgramId(newProgram.get_id());
-        playSource.setSourceId(playSource.getSourceId());
         playSource.setLayerId(layerId);
-        playSource.setId(UUID.randomUUID().toString().replace("-", ""));
         playSourceService.insertPlaySource(playSource);
     }
 
@@ -220,22 +221,32 @@ public class ProgramServiceImpl implements ProgramService {
                         if(null != playSource) {
                             //自动设置开始播放时间
                             if (null == playSource.getCreateTime()) {
-                                playSource.setPlayTime(allPlayTime);
-                                //新增，复制Source到PlaySource
-                                //初始 持续时长等于素材时长，起始时间等于之前持续时长之和
-                                Integer timeSpan = 0;
-                                if (null != playSource.getTimeSpan()) {
-                                    timeSpan = playSource.getTimeSpan();
-                                } else {
-                                    timeSpan = playSource.getMaxPlayTime();//持续时长等于素材时长
+                                if(StringUtilsXD.isEmpty(playSource.getId())) {
+                                    playSource.setPlayTime(allPlayTime);
+                                    //新增，复制Source到PlaySource
+                                    //初始 持续时长等于素材时长，起始时间等于之前持续时长之和
+                                    Integer timeSpan = 0;
+                                    if (null != playSource.getTimeSpan()) {
+                                        timeSpan = playSource.getTimeSpan();
+                                    } else {
+                                        timeSpan = playSource.getMaxPlayTime();//持续时长等于素材时长
+                                    }
+                                    String sourceId = playSource.getSourceId();
+                                    Source source = sourceService.selectSourceById(sourceId);
+                                    BeanUtils.copyProperties(source, playSource);
+                                    playSource.setTimeSpan(timeSpan);
+                                    playSource.setPlayTime(allPlayTime);
+                                    allPlayTime += timeSpan;
+                                    addPlaysource(playSource, newProgram, layer.getId());
+                                }else {
+                                    playSource.setProgramId(newProgram.get_id());
+                                    playSource.setLayerId(layer.getId());
+                                    long cuttentTime = DateUtil.getDateline();
+                                    playSource.setCreateTime(cuttentTime);
+                                    playSource.setUpdateTime(cuttentTime);
+                                    playSource.setTheLeft(playSource.getLeft());
+                                    playSourceMapper.insertSelective(playSource);
                                 }
-                                String sourceId = playSource.getSourceId();
-                                Source source = sourceService.selectSourceById(sourceId);
-                                BeanUtils.copyProperties(source, playSource);
-                                playSource.setTimeSpan(timeSpan);
-                                playSource.setPlayTime(allPlayTime);
-                                allPlayTime += timeSpan;
-                                addPlaysource(playSource, newProgram, layer.getId());
                             } else {
                                 playSource.setPlayTime(allPlayTime);
                                 allPlayTime += playSource.getTimeSpan();
