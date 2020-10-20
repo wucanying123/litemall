@@ -46,6 +46,7 @@ public class SourceServiceImpl implements SourceService {
             if (null != list1 && list1.size() > 0) {
                 for (Source source1 : list1) {
                     source1.setLeft(source1.getTheLeft());
+                    source1.setCreateTime(null);
                 }
             }
             String jsonString = JSON.toJSONString(list1);

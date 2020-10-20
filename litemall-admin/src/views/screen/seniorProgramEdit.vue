@@ -821,7 +821,7 @@ export default {
       timeLinePackagePadddingLeftAndMarginLeft: null,
 
       // 每秒多少帧
-      pubFrame: 0,
+      pubFrame: 24,
 
       // 总秒数(默认20)
       totalSecond: 20,
@@ -937,7 +937,7 @@ export default {
     window.onmouseup = this.mouseRelease
 
     // 生成时间轴
-    this.generateTimeline(this.totalSecond, 24)
+    this.generateTimeline(this.totalSecond, this.pubFrame)
     const rollTexts = document.getElementsByClassName('rollText')
     this.infiniteTimer = setInterval(() => {
       for (let i = 0; i < rollTexts.length; i++) {
@@ -1352,8 +1352,8 @@ export default {
                 const startFrame = obj.startX / (this.pubSecondWidth / this.pubFrame)
                 // 定位秒(带小数位，可控制帧)
                 const positionSecond = parseFloat((this.progressBarDOM.value - startFrame) / this.pubFrame)
-                // console.log("滑块位置", parseFloat(startFrame / this.pubFrame));
-                // console.log("滑块结束位置", parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame));
+                console.log('滑块位置', parseFloat(startFrame / this.pubFrame))
+                console.log('滑块结束位置', parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame))
                 video.currentTime = positionSecond
                 if (img != null) {
                   const canvas = document.createElement('canvas')
@@ -1418,6 +1418,7 @@ export default {
       setTimeout(() => {
         // 当前偏移位置X
         const currentOffsetX = this.pubProgressBarRangePerTime * this.progressBarDOM.value
+        // console.log("偏移",this.pubProgressBarRangePerTime,this.progressBarDOM.value)
 
         // 先全部隐藏
         this.frameHandle(1)
@@ -1493,7 +1494,6 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       console.log(this.currentSlider)
-      console.log(this.currentSlider.getAttribute('smurl'))
       this.sourceDivVisiable = true
       const sourceUid = this.currentSlider.getAttribute('id')
       console.log(this.program)
@@ -1504,8 +1504,8 @@ export default {
         if (smEL != null) {
           const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-          const width = parseInt(smEL.clientWidth)
-          const height = parseInt(smEL.clientHeight)
+          const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))// 或 parseInt(smEL.clientWidth)
+          const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))// 或 parseInt(smEL.clientHeight)
           console.log(left, top, width, height)
           if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
@@ -1656,7 +1656,7 @@ export default {
       }
 
       // 滑块拉长处理
-      elObj.onmousedown = function(e) {
+      elObj.onmousedown = (e) => {
         e = e || event
         const x = e.clientX
         // const y = e.clientY
@@ -1671,8 +1671,27 @@ export default {
         } else if (x > oBoxL + (oBoxW / 2) && x < oBoxL + oBoxW) {
           positionType = 'right'
         }
+        console.log('滑块down', elObj.offsetLeft, elObj.offsetWidth)
+        const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
+        const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+        const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
+        const currentTracklayer = elObj.style.zIndex
+        const sourceUid = elObj.getAttribute('id')
+        if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+          for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+            }
+          }
+        } else {
+          this.currentSource = {}
+        }
+        this.currentSource.playTime = playTime
+        this.currentSource.timeSpan = timeSpan
+        this.sourceSynchro()
+        // console.log("开始时间",elObj.offsetLeft,playTime,timeSpan)
 
-        document.onmousemove = function(e) {
+        document.onmousemove = (e) => {
           e = e || event
           const xx = e.clientX
           // const yy = e.clientY
@@ -1681,11 +1700,26 @@ export default {
             // 验证是否小于最小宽度 和 是否在最大宽度范围内
             if (width > thar.pubSliderMinWidth && width + elObj.offsetLeft < thar.pubTotalWidth) {
               elObj.style.width = width + 'px'
-              // 更新pubTimelineStoragesData数据
+              const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
+              const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+              const timeSpan = parseInt(width / pubSecondWidth)
+              const currentTracklayer = elObj.style.zIndex
+              const sourceUid = elObj.getAttribute('id')
+              if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+                for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+                  if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                    this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                  }
+                }
+              } else {
+                this.currentSource = {}
+              }
+              this.currentSource.playTime = playTime
+              this.currentSource.timeSpan = timeSpan
+              this.sourceSynchro()
               thar.updatePubTimelineStoragesData(elObj)
             }
           }
-
           return false
         }
 
@@ -1756,6 +1790,7 @@ export default {
 
         const img = document.createElement('div')
         img.style = 'width:100%; height:100%;'
+        img.setAttribute('id', 'sm_' + id)
         img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
         smEL.appendChild(img)
       } else if (smtype == 'MultiText') {
@@ -1816,9 +1851,10 @@ export default {
         console.log('按下画布')
         const sliderParent = e.target
         const currentTracklayer = sliderParent.getAttribute('tracklayer')
-        console.log('再测试', sliderParent)
-        console.log('再测试', currentTracklayer)
-        const sourceUid = sliderParent.getAttribute('id')
+        let sourceUid = sliderParent.getAttribute('id')
+        if (sourceUid.indexOf('sm_') != -1) {
+          sourceUid = sourceUid.substring(3)
+        }
         if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
           for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
             if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
@@ -1828,6 +1864,9 @@ export default {
         } else {
           this.currentSource = {}
         }
+        this.sourceDivVisiable = true
+        console.log('再测试', this.currentSource)
+        this.sourceSynchro()
 
         document.onmousemove = (e) => {
           e = e || event
@@ -1952,7 +1991,7 @@ export default {
               html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
                   'class="sliderBlock" draggable="false" onmouseup="mouseRelease()"' +
-                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)"' + source.name + source.fileExt +
+                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + source.name + source.fileExt +
                   '</div>'
               console.log('网页', html)
               alreadySources.innerHTML += html
@@ -1996,7 +2035,7 @@ export default {
           }
         }
       }
-      console.log('已存', alreadySources.innerHTML)
+      // console.log('已存', alreadySources.innerHTML)
     },
     createUuid(len, radix) {
       const chars = '0123456789abcdefghijklmnopqrstuvwxyz'.split('')
