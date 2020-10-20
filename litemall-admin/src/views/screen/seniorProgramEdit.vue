@@ -72,7 +72,7 @@
             多行文本
           </div>
         </el-submenu>
-        <div id="alreadySources" />
+        <div id="alreadySources" style="display: none;" />
       </el-menu>
     </el-aside>
 
@@ -1506,7 +1506,8 @@ export default {
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
           const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px'))) == null ? parseInt(smEL.clientWidth) : parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))
           const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px'))) == null ? parseInt(smEL.clientHeight) : parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))
-          console.log(left, top, width, height)
+          // console.log(left, top, smEL.style.width, smEL.style.height)
+          // console.log(left, top, smEL.clientWidth, smEL.clientHeight)
           if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
               if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
@@ -1653,6 +1654,25 @@ export default {
         } else if (x > oBoxL + (oBoxW / 2) && x < oBoxL + oBoxW) {
           elObj.style.cursor = 'w-resize'
         }
+
+        const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
+        const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+        const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
+        const currentTracklayer = elObj.style.zIndex
+        const sourceUid = elObj.getAttribute('id')
+        if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+          for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+            }
+          }
+        } else {
+          this.currentSource = {}
+        }
+        this.currentSource.playTime = playTime
+        this.currentSource.timeSpan = timeSpan
+        this.sourceSynchro()
+        // console.log("开始时间",elObj.offsetLeft,playTime,timeSpan)
       }
 
       // 滑块拉长处理
@@ -1672,24 +1692,6 @@ export default {
           positionType = 'right'
         }
         console.log('滑块down', elObj.offsetLeft, elObj.offsetWidth)
-        const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
-        const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
-        const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
-        const currentTracklayer = elObj.style.zIndex
-        const sourceUid = elObj.getAttribute('id')
-        if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
-          for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-            }
-          }
-        } else {
-          this.currentSource = {}
-        }
-        this.currentSource.playTime = playTime
-        this.currentSource.timeSpan = timeSpan
-        this.sourceSynchro()
-        // console.log("开始时间",elObj.offsetLeft,playTime,timeSpan)
 
         document.onmousemove = (e) => {
           e = e || event
@@ -1717,13 +1719,15 @@ export default {
               this.currentSource.playTime = playTime
               this.currentSource.timeSpan = timeSpan
               this.sourceSynchro()
+              // console.log("开始时间2",elObj.offsetLeft,playTime,timeSpan)
+
               thar.updatePubTimelineStoragesData(elObj)
             }
           }
           return false
         }
 
-        document.onmouseup = function() {
+        document.onmouseup = () => {
           document.onmousemove = null
           document.onmouseup = null
         }
