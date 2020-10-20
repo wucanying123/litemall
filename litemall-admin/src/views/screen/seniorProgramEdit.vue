@@ -1310,7 +1310,7 @@ export default {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
         const obj = this.pubTimelineStorages[i]
         if (thar.id == obj.id) {
-          console.log(thar)
+          console.log('本次删除', thar)
           smEL.remove()
           thar.remove()
           this.pubTimelineStorages.splice(i, 1)
@@ -1352,8 +1352,8 @@ export default {
                 const startFrame = obj.startX / (this.pubSecondWidth / this.pubFrame)
                 // 定位秒(带小数位，可控制帧)
                 const positionSecond = parseFloat((this.progressBarDOM.value - startFrame) / this.pubFrame)
-                console.log('滑块位置', parseFloat(startFrame / this.pubFrame))
-                console.log('滑块结束位置', parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame))
+                // console.log('滑块位置', parseFloat(startFrame / this.pubFrame))
+                // console.log('滑块结束位置', parseFloat((obj.stopX / (this.pubSecondWidth / this.pubFrame)) / this.pubFrame))
                 video.currentTime = positionSecond
                 if (img != null) {
                   const canvas = document.createElement('canvas')
@@ -1504,8 +1504,8 @@ export default {
         if (smEL != null) {
           const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
           const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-          const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))// 或 parseInt(smEL.clientWidth)
-          const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))// 或 parseInt(smEL.clientHeight)
+          const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px'))) == null ? parseInt(smEL.clientWidth) : parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))
+          const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px'))) == null ? parseInt(smEL.clientHeight) : parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))
           console.log(left, top, width, height)
           if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
