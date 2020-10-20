@@ -81,4 +81,5 @@ public class Source implements Serializable {
     Long createTime;//创建时间
     Long updateTime;//修改时间
     Integer userid;//用户id
+    String uuid;//仅为前端使用，随机值
 }

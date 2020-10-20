@@ -12,7 +12,7 @@
 
           <div
             v-for="(source, index) in pictureList"
-            :id="createUuid(32,16)"
+            :id="source.uuid"
             :key="index"
 
             :sourceId="source.sourceId"
@@ -34,7 +34,7 @@
           </template>
           <div
             v-for="(source, index) in videoList"
-            :id="createUuid(32,16)"
+            :id="source.uuid"
             :key="index"
 
             :sourceId="source.sourceId"
@@ -976,7 +976,7 @@ export default {
       readProgram({ id: this.id })
         .then(response => {
           this.program = response.data.data.program
-          // console.log(this.program)
+          console.log(this.program)
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
@@ -1987,10 +1987,13 @@ export default {
               const source = this.program.layers[i].sources[j]
               console.log('打印第' + i + '轨道第' + j + '个')
               console.log(source)
+              let styleStr = ''
+              const randomColor = this.createColor16()
+              styleStr = 'background-color: ' + randomColor + ';'
 
               html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
-                  'class="sliderBlock" draggable="false" onmouseup="mouseRelease()"' +
+                  'class="sliderBlock" draggable="false" onmouseup="mouseRelease()" style="' + styleStr + '"' +
                   'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + source.name + source.fileExt +
                   '</div>'
               console.log('网页', html)
@@ -2036,6 +2039,13 @@ export default {
         }
       }
       // console.log('已存', alreadySources.innerHTML)
+    },
+    createColor16() {
+      const r = Math.floor(Math.random() * 256)
+      const g = Math.floor(Math.random() * 256)
+      const b = Math.floor(Math.random() * 256)
+      const color = '#' + r.toString(16) + g.toString(16) + b.toString(16)
+      return color
     },
     createUuid(len, radix) {
       const chars = '0123456789abcdefghijklmnopqrstuvwxyz'.split('')

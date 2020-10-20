@@ -47,6 +47,8 @@ public class SourceServiceImpl implements SourceService {
                 for (Source source1 : list1) {
                     source1.setLeft(source1.getTheLeft());
                     source1.setCreateTime(null);
+                    String uuid = UUID.randomUUID().toString().replace("-", "");
+                    source1.setUuid(uuid);
                 }
             }
             String jsonString = JSON.toJSONString(list1);
