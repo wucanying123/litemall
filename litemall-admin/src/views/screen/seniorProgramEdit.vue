@@ -162,7 +162,7 @@
               />
             </div>
           </div>
-          <div id="videoPackage" />
+          <div id="videoPackage" :style="{width: this.program.width + 'px',height:this.program.height + 'px'}" />
         </div>
         <div
           id="smallbox1"
@@ -565,8 +565,8 @@ html{
 }
 #videoPackage{
   background-color:#000000;
-  width:100%;
-  height:50%;
+  /*width:100%;*/
+  /*height:50%;*/
   float:left;
   position: relative;
 }
@@ -659,8 +659,8 @@ html{
 }
 /*画面块*/
 .pictureBlock{
-  width:30%;
-  height:30%;
+  width:50%;
+  height:50%;
   display:none;
   position:absolute;
   overflow:hidden;
@@ -1495,31 +1495,40 @@ export default {
       console.log('点击滑条')
       console.log(this.currentSlider)
       this.sourceDivVisiable = true
+
+      // 同步画布宽高
       const sourceUid = this.currentSlider.getAttribute('id')
       console.log(this.program)
-      console.log(sourceUid)
       if (sourceUid != null) {
         const currentTracklayer = this.currentSlider.style.zIndex
         const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
           const img = smEL.querySelector(' div')
-          console.log('滑条1', smEL)
-          console.log('滑条', img)
-          const left = smEL.style.left == '' ? 0 : parseInt(smEL.style.left)
-          const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-          const width = smEL.style.width == '' ? 0 : parseInt(smEL.style.width)
-          const height = smEL.style.height == '' ? 0 : parseInt(smEL.style.height)
-          // const left = img.style.left == '' ? 0 : parseInt(img.style.left)
-          // const top = img.style.top == '' ? 0 : parseInt(img.style.top)
-          // const width = img.style.width == '' ? 0 : parseInt(img.style.width)
-          // const height = img.style.height == '' ? 0 : parseInt(img.style.height)
-          console.log(left, top, width, height, img.clientWidth, img.clientHeight)
-
-          // const top = smEL.style.top == '' ? 0 : parseInt(smEL.style.top)
-          // const width = parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px'))) == null ? parseInt(smEL.clientWidth) : parseInt(smEL.style.width.substring(0, smEL.style.width.indexOf('px')))
-          // const height = parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px'))) == null ? parseInt(smEL.clientHeight) : parseInt(smEL.style.height.substring(0, smEL.style.height.indexOf('px')))
-          // console.log(left, top, smEL.style.width, smEL.style.height)
-          // console.log(left, top, smEL.clientWidth, smEL.clientHeight)
+          console.log('父画布', smEL)
+          console.log('子画布', img)
+          let widthFlag = smEL.style.width
+          let heightFlag = smEL.style.height
+          let temp
+          if (widthFlag != null && widthFlag.length > 0) {
+            temp = smEL
+            widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+            heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+          } else {
+            temp = img
+            const tempWidth = temp.style.width
+            if (tempWidth == '100%') {
+              widthFlag = parseInt(this.program.width * 0.5)
+              heightFlag = parseInt(this.program.height * 0.5)
+            } else {
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            }
+          }
+          const left = temp.style.left == '' ? 0 : parseInt(temp.style.left)
+          const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
+          const width = widthFlag
+          const height = heightFlag
+          console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
           if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
               if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
@@ -1667,6 +1676,8 @@ export default {
           elObj.style.cursor = 'w-resize'
         }
 
+        this.sourceDivVisiable = true
+        // 同步滑块开始时间和持续时间
         const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
         const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
         const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
@@ -1683,8 +1694,49 @@ export default {
         }
         this.currentSource.playTime = playTime
         this.currentSource.timeSpan = timeSpan
+
+        // 同步画布宽高
+        if (sourceUid != null) {
+          const smEL = document.getElementById('sm_' + sourceUid)
+          if (smEL != null) {
+            const img = smEL.querySelector(' div')
+            let widthFlag = smEL.style.width
+            let heightFlag
+            let temp
+            if (widthFlag != null && widthFlag.length > 0) {
+              temp = smEL
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else {
+              temp = img
+              const tempWidth = temp.style.width
+              if (tempWidth == '100%') {
+                widthFlag = parseInt(this.program.width * 0.5)
+                heightFlag = parseInt(this.program.height * 0.5)
+              } else {
+                widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+                heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+              }
+            }
+            const left = temp.style.left == '' ? 0 : parseInt(temp.style.left)
+            const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
+            const width = widthFlag
+            const height = heightFlag
+            console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
+            if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+              for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+                if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                  this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                  this.currentSource.top = top
+                  this.currentSource.left = left
+                  this.currentSource.width = width
+                  this.currentSource.height = height
+                }
+              }
+            }
+          }
+        }
         this.sourceSynchro()
-        // console.log("开始时间",elObj.offsetLeft,playTime,timeSpan)
       }
 
       // 滑块拉长处理
