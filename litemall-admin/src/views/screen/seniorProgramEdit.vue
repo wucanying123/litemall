@@ -687,7 +687,7 @@ html{
 import { listSource } from '@/api/source'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
-import { readProgram, updateComplexProgramById } from '@/api/program'
+import { readProgram, updateSeniorProgramById } from '@/api/program'
 
 const defaultTypeOptions = [
   {
@@ -986,6 +986,7 @@ export default {
         .then(response => {
           this.program = response.data.data.program
           console.log(this.program)
+          console.log(this.program.name)
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
           this.listLoading = false
@@ -1090,7 +1091,7 @@ export default {
       console.log(this.program)
       this.$refs['program'].validate(valid => {
         if (valid) {
-          updateComplexProgramById(this.program).then(response => {
+          updateSeniorProgramById(this.program).then(response => {
             this.$router.push({ path: '/screen/program' })
           })
             .catch(response => {
@@ -1684,68 +1685,6 @@ export default {
         } else if (x > oBoxL + (oBoxW / 2) && x < oBoxL + oBoxW) {
           elObj.style.cursor = 'w-resize'
         }
-
-        this.sourceDivVisiable = true
-        // 同步滑块开始时间和持续时间
-        const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
-        const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
-        const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
-        const currentTracklayer = elObj.style.zIndex
-        const sourceUid = elObj.getAttribute('id')
-        if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
-          for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-            }
-          }
-        } else {
-          this.currentSource = {}
-        }
-        this.currentSource.playTime = playTime
-        this.currentSource.timeSpan = timeSpan
-        //
-        // // 同步画布宽高
-        // if (sourceUid != null) {
-        //   const smEL = document.getElementById('sm_' + sourceUid)
-        //   if (smEL != null) {
-        //     const img = smEL.querySelector(' div')
-        //     let widthFlag = smEL.style.width
-        //     let heightFlag
-        //     let temp
-        //     if (widthFlag != null && widthFlag.length > 0) {
-        //       temp = smEL
-        //       widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
-        //       heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
-        //     } else {
-        //       temp = img
-        //       const tempWidth = temp.style.width
-        //       if (tempWidth == '100%') {
-        //         widthFlag = parseInt(this.program.width * 0.5)
-        //         heightFlag = parseInt(this.program.height * 0.5)
-        //       } else {
-        //         widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
-        //         heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
-        //       }
-        //     }
-        //     const left = temp.style.left == '' ? 0 : parseInt(temp.style.left)
-        //     const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
-        //     const width = widthFlag
-        //     const height = heightFlag
-        //     console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
-        //     if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
-        //       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-        //         if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-        //           this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-        //           this.currentSource.top = top
-        //           this.currentSource.left = left
-        //           this.currentSource.width = width
-        //           this.currentSource.height = height
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        this.sourceSynchro()
       }
 
       // 滑块拉长处理
@@ -1765,6 +1704,7 @@ export default {
           positionType = 'right'
         }
         console.log('滑块down', elObj.offsetLeft, elObj.offsetWidth)
+        this.updateSource(elObj)
 
         document.onmousemove = (e) => {
           e = e || event
@@ -1801,6 +1741,7 @@ export default {
         }
 
         document.onmouseup = () => {
+          this.updateSource(elObj)
           document.onmousemove = null
           document.onmouseup = null
         }
@@ -2050,18 +1991,18 @@ export default {
     },
     // 动态追加模拟数据
     imitateData() {
-      console.log('模拟')
-      console.log(this.program)
-      this.addTime(400)
-      // 轨道数
-      const alltrackNum = this.program.layers.length
-      for (let i = 0; i < alltrackNum - 1; i++) {
-        this.addTrack()
-      }
-      const alreadySources = document.getElementById('alreadySources')
-      let html = ''
-      alreadySources.innerHTML = html
       if (this.program.layers != null) {
+        console.log('模拟')
+        console.log(this.program)
+        this.addTime(400)
+        // 轨道数
+        const alltrackNum = this.program.layers.length
+        for (let i = 0; i < alltrackNum - 1; i++) {
+          this.addTrack()
+        }
+        const alreadySources = document.getElementById('alreadySources')
+        let html = ''
+        alreadySources.innerHTML = html
         console.log(this.program.layers)
         console.log(this.program.layers.length)
         for (let i = 0; i < this.program.layers.length; i++) {
@@ -2087,7 +2028,7 @@ export default {
 
               const id = source.id
               const offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
-              const offsetY = offsetX + this.pubSecondWidth * timeSpan
+              const offsetY = this.pubSecondWidth * timeSpan
               console.log(offsetX)
               console.log(offsetY)
               const smELLeft = source.left
@@ -2149,6 +2090,73 @@ export default {
       }
       console.log('打印uuid', uuid.join(''))
       return uuid.join('')
+    },
+    updateSource(elObj) {
+      console.log('我的同步', elObj)
+      this.sourceDivVisiable = true
+      // 同步滑块开始时间和持续时间
+      const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
+      const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+      const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
+      const currentTracklayer = elObj.style.zIndex
+      const sourceUid = elObj.getAttribute('id')
+      if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+        for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+          if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+            this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+          }
+        }
+      } else {
+        this.currentSource = {}
+      }
+      this.currentSource.playTime = playTime
+      this.currentSource.timeSpan = timeSpan
+
+      // 同步画布宽高
+      if (sourceUid != null) {
+        const smEL = document.getElementById('sm_' + sourceUid)
+        if (smEL != null) {
+          const img = smEL.querySelector(' div')
+          console.log('同步画布宽高', smEL, img)
+          let widthFlag = smEL.style.width
+          let heightFlag
+          let temp
+          if (widthFlag != null && widthFlag.length > 0) {
+            temp = smEL
+            widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+            heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+          } else if (img != null) {
+            temp = img
+            const tempWidth = temp.style.width
+            if (tempWidth == '100%') {
+              widthFlag = parseInt(this.program.width * 0.5)
+              heightFlag = parseInt(this.program.height * 0.5)
+            } else {
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            }
+          }
+          if (temp != null) {
+            const left = temp.style.left == '' ? 0 : parseInt(temp.style.left)
+            const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
+            const width = widthFlag
+            const height = heightFlag
+            console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
+            if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
+              for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
+                if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                  this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                  this.currentSource.top = top
+                  this.currentSource.left = left
+                  this.currentSource.width = width
+                  this.currentSource.height = height
+                }
+              }
+            }
+          }
+        }
+      }
+      this.sourceSynchro()
     }
   }
 }
