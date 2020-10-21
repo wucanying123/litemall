@@ -319,12 +319,12 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="距左">
-                    <el-input id="currentSourceLeft" v-model="currentSource.left" @change="sourceChange" />
+                    <el-input id="currentSourceLeft" v-model="currentSource.left" readonly @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="距顶">
-                    <el-input id="currentSourceTop" v-model="currentSource.top" @change="sourceChange" />
+                    <el-input id="currentSourceTop" v-model="currentSource.top" readonly @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -334,30 +334,26 @@
                     <el-input
                       id="currentSourceWidth"
                       v-model="currentSource.width"
-                      type="number"
-                      min="0"
-                      step="1"
-                      size="2"
-                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      readonly
                       @change="sourceChange"
                     />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="高度">
-                    <el-input id="currentSourceHeight" v-model="currentSource.height" @change="sourceChange" />
+                    <el-input id="currentSourceHeight" v-model="currentSource.height" readonly @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="开始">
-                    <el-input id="currentSourcePlayTime" v-model="currentSource.playTime" @change="sourceChange" />
+                    <el-input id="currentSourcePlayTime" v-model="currentSource.playTime" readonly @change="sourceChange" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="持续">
-                    <el-input id="currentSourceTimeSpan" v-model="currentSource.timeSpan" @change="sourceChange" />
+                    <el-input id="currentSourceTimeSpan" v-model="currentSource.timeSpan" readonly @change="sourceChange" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -668,8 +664,8 @@ html{
 }
 /*画面块*/
 .pictureBlock{
-  width:50%;
-  height:50%;
+  width:100%;
+  height:100%;
   display:none;
   position:absolute;
   overflow:hidden;
@@ -1741,7 +1737,7 @@ export default {
         }
 
         document.onmouseup = () => {
-          this.updateSource(elObj)
+          // this.updateSource(elObj)
           document.onmousemove = null
           document.onmouseup = null
         }
@@ -2092,7 +2088,6 @@ export default {
       return uuid.join('')
     },
     updateSource(elObj) {
-      console.log('我的同步', elObj)
       this.sourceDivVisiable = true
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
@@ -2100,6 +2095,7 @@ export default {
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       const currentTracklayer = elObj.style.zIndex
       const sourceUid = elObj.getAttribute('id')
+      console.log('我的同步', this.currentSource)
       if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
           if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
@@ -2109,6 +2105,7 @@ export default {
       } else {
         this.currentSource = {}
       }
+      console.log('我的同步', this.currentSource)
       this.currentSource.playTime = playTime
       this.currentSource.timeSpan = timeSpan
 
@@ -2129,8 +2126,8 @@ export default {
             temp = img
             const tempWidth = temp.style.width
             if (tempWidth == '100%') {
-              widthFlag = parseInt(this.program.width * 0.5)
-              heightFlag = parseInt(this.program.height * 0.5)
+              widthFlag = this.program.width // parseInt(this.program.width * 0.5)
+              heightFlag = this.program.height // parseInt(this.program.height * 0.5)
             } else {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
               heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
