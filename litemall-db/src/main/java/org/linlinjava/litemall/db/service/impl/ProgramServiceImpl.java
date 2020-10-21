@@ -163,7 +163,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void updateComplexProgramById(Program newProgram) {
+    public void updateComplexProgramById(Program newProgram,int type) {
         Program oldProgram = readProgram(newProgram.get_id());
         List<Layer> newLayers = newProgram.getLayers();
         Set<String> existLayerIdList = new HashSet<>();
@@ -248,8 +248,10 @@ public class ProgramServiceImpl implements ProgramService {
                                     playSourceMapper.insertSelective(playSource);
                                 }
                             } else {
-                                playSource.setPlayTime(allPlayTime);
-                                allPlayTime += playSource.getTimeSpan();
+                                if(type == 0) {
+                                    playSource.setPlayTime(allPlayTime);
+                                    allPlayTime += playSource.getTimeSpan();
+                                }
                                 //修改
                                 playSourceService.updatePlaySourceById(playSource);
                             }

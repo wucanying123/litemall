@@ -61,8 +61,9 @@ public interface ProgramService {
     /**
      * @Description: 编辑高级节目
      * @title updateComplexProgramById
+     * @param type 0简易节目 1高级节目
      * @author IngaWu
      * @currentdate:2020年9月25日
      */
-    void updateComplexProgramById(Program program);
+    void updateComplexProgramById(Program program,int type);
 }

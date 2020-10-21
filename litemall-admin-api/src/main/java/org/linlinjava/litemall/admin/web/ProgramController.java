@@ -176,12 +176,12 @@ public class ProgramController {
     }
 
     /**
-     * @Description: 编辑高级节目
+     * @Description: 编辑节目
      * @title
      * @author IngaWu
      * @currentdate:2020年9月2日
      */
-    @ApiOperation(value = "编辑高级节目")
+    @ApiOperation(value = "编辑节目")
     @PostMapping(value = "/updateComplexProgramById")
     public ResponseUtil<Program> updateComplexProgramById(@RequestBody String programJson) {
         logger.info("updateComplexProgramById and programJson:{}", JSON.toJSONString(programJson));
@@ -192,12 +192,40 @@ public class ProgramController {
         }
         try {
             int n = programService.updateProgramById(program);
-            programService.updateComplexProgramById(program);
+            programService.updateComplexProgramById(program,0);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }
         } catch (Exception e) {
             logger.error("updateComplexProgramById and program:{}", JSON.toJSONString(program), e);
+        }
+        return responseUtil;
+    }
+
+
+    /**
+     * @Description: 编辑高级节目
+     * @title
+     * @author IngaWu
+     * @currentdate:2020年9月2日
+     */
+    @ApiOperation(value = "编辑高级节目")
+    @PostMapping(value = "/updateSeniorProgramById")
+    public ResponseUtil<Program> updateSeniorProgramById(@RequestBody String programJson) {
+        logger.info("updateSeniorProgramById and programJson:{}", JSON.toJSONString(programJson));
+        ResponseUtil<Program> responseUtil = new ResponseUtil<>();
+        Program program = FastJsonUtils.getJsonToBean(programJson,Program.class);
+        if (StringUtilsXD.isBlank(program.get_id())) {
+            return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_02, Constant.RTNINFO_SYS_02);
+        }
+        try {
+            int n = programService.updateProgramById(program);
+            programService.updateComplexProgramById(program,1);
+            if (n == 1) {
+                responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+            }
+        } catch (Exception e) {
+            logger.error("updateSeniorProgramById and program:{}", JSON.toJSONString(program), e);
         }
         return responseUtil;
     }

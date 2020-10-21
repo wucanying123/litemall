@@ -56,4 +56,10 @@ export function updateComplexProgramById(data) {
     method: 'post',
     data
   })
+} export function updateSeniorProgramById(data) {
+  return request({
+    url: '/screen/program/updateSeniorProgramById',
+    method: 'post',
+    data
+  })
 }
