@@ -97,15 +97,16 @@
       </el-menu>
     </el-aside>
 
-    <el-container style="width: 500px">
+    <el-container>
       <div style="width: 100%;height: 100%;">
         <div id="package">
+          (添加素材:左侧单击并拖拽素材到层上，删除素材:双击素材滑块，删除层:双击层滑块)
           <div id="leftMenuPackage">
             <button
               style="width:95%;height:40px;font-size:16px;"
               @click="addTrack"
             >
-              添加轨道
+              添加层
             </button>
             <button
               style="width:95%;height:40px;font-size:16px;"
@@ -308,20 +309,20 @@
         status-icon
         label-position="left"
         label-width="100px"
-        style="width: 500px; margin-left:50px;"
+        style="width: 800px; margin-left:50px;"
       >
-        <el-form-item
-          label="节目名称"
-          prop="name"
-        >
-          <el-input v-model="program.name" />
-        </el-form-item>
-        <el-form-item
-          label="节目宽"
-          prop="width"
-        >
-          <el-input v-model="program.width" />
-        </el-form-item>
+        <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="节目宽" prop="width"><el-input v-model="program.width" readonly />  </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="节目高" prop="height"><el-input v-model="program.height" readonly />  </el-form-item>
+          </el-col>
+        </el-row>
+        <!--        <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>-->
+        <!--        <el-form-item label="节目宽" prop="width"><el-input v-model="program.width" readonly/>  </el-form-item>-->
+        <!--        <el-form-item label="节目高" prop="height"><el-input v-model="program.height" readonly/>  </el-form-item>-->
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
@@ -411,19 +412,64 @@
                   </el-col>
                 </el-row>
               </div>
+              <div v-show="textDivVisiable" v-if="currentSource" id="textDiv">
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="翻页">
+                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="默认行高">
+                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="网络文本地址">
+                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="垂直居中">
+                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="网络文本请求间隔(秒)">
+                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="背景色">
+                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="查看下一页">
+                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    </el-form-item>
+                  </el-col>
+                  <!--                  <el-col :span="12">-->
+                  <!--                    <el-form-item label="背景色">-->
+                  <!--&lt;!&ndash;                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />&ndash;&gt;-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
+                </el-row>
+                <el-row>
+                  <el-form-item label="专题内容" prop="content">
+                    <editor :init="editorInit" />
+                    <!--                  <editor :init="editorInit" v-model="topic.content"/>-->
+                  </el-form-item>
+                </el-row>
+              </div>
             </div>
           </el-tab-pane>
-          <!--          <div-->
-          <!--            slot="footer"-->
-          <!--            class="dialog-footer"-->
-          <!--          >-->
-          <!--            <el-button-->
-          <!--              type="primary"-->
-          <!--              @click="handleConfirmSource"-->
-          <!--            >-->
-          <!--              修改素材信息-->
-          <!--            </el-button>-->
-          <!--          </div>-->
         </el-tabs>
       </el-form>
       <div
@@ -580,7 +626,7 @@ html{
   height:100%;
 }
 #package{
-  width: 1100px;
+  width: 1000px;
   height: 800px;
   overflow: auto;
   border:1px red solid;
@@ -714,6 +760,7 @@ import { selectDefaultWebURL, selectDefaultMultiText, listSource } from '@/api/s
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
+import Editor from '@tinymce/tinymce-vue'
 
 const defaultTypeOptions = [
   {
@@ -757,7 +804,7 @@ const defaultTypeOptions = [
 
 export default {
   name: 'SeniorProgramEdit',
-  components: { Pagination },
+  components: { Editor, Pagination },
   filters: {
     formatType(_type) {
       for (let i = 0; i < defaultTypeOptions.length; i++) {
@@ -829,14 +876,8 @@ export default {
       },
       selectedlist: [],
       rules: {
-        title: [
+        name: [
           { required: true, message: '节目名称不能为空', trigger: 'blur' }
-        ],
-        width: [
-          { required: true, message: '节目窗不能为空', trigger: 'blur' }
-        ],
-        height: [
-          { required: true, message: '节目高不能为空', trigger: 'blur' }
         ]
       },
       pictureList: [],
@@ -914,8 +955,22 @@ export default {
 
       urlDivVisiable: false,
 
-      currentSource: { id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+      textDivVisiable: false,
 
+      currentSource: { id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined },
+
+      editorInit: {
+        language: 'zh_CN',
+        convert_urls: false,
+        height: 500,
+        plugins: [
+          'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
+        ],
+        toolbar: [
+          'searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat subscript superscript code codesample',
+          'hr bullist numlist link charmap preview anchor pagebreak insertdatetime media table emoticons forecolor backcolor fullscreen'
+        ]
+      }
     }
   },
   computed: {
@@ -1011,6 +1066,7 @@ export default {
     this.getProgram()
     this.sourceDivVisiable = false
     this.urlDivVisiable = false
+    this.textDivVisiable = false
   },
   methods: {
     getProgram() {
@@ -1685,11 +1741,16 @@ export default {
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
       elObj.setAttribute('draggable', false)
       smtype = elObj.getAttribute('smtype')
-      if (smtype != null && smtype == 'WebURL') {
-        this.urlDivVisiable = true
-      } else {
-        this.urlDivVisiable = false
+      this.urlDivVisiable = false
+      this.textDivVisiable = false
+      if (smtype != null) {
+        if (smtype == 'WebURL') {
+          this.urlDivVisiable = true
+        } else if (smtype == 'MultiText') {
+          this.textDivVisiable = true
+        }
       }
+
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
         e = e || event
@@ -1916,13 +1977,15 @@ export default {
           this.currentSource = {}
         }
         this.sourceDivVisiable = true
+        this.urlDivVisiable = false
+        this.textDivVisiable = false
         if (this.currentSource != null && this.currentSource._type != null) {
           const smtype = this.currentSource._type
-          if (smtype != null && smtype == 'WebURL') {
+          if (smtype == 'WebURL') {
             this.urlDivVisiable = true
+          } else if (smtype == 'MultiText') {
+            this.textDivVisiable = true
           }
-        } else {
-          this.urlDivVisiable = false
         }
         console.log('再测试', this.currentSource)
         this.sourceSynchro()
@@ -2136,6 +2199,7 @@ export default {
     updateSource(elObj) {
       this.sourceDivVisiable = true
       this.urlDivVisiable = false
+      this.textDivVisiable = false
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
       const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
@@ -2144,6 +2208,7 @@ export default {
       const sourceUid = elObj.getAttribute('id')
       const smtype = elObj.getAttribute('smtype')
       if (smtype == 'MultiText') {
+        this.textDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiText' }
           console.log('新建')
