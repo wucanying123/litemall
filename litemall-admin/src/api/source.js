@@ -49,3 +49,11 @@ export function selectDefaultMultiText(data) {
     data
   })
 }
+
+export function selectDefaultWebURL(data) {
+  return request({
+    url: '/screen/source/selectDefaultWebURL',
+    method: 'get',
+    data
+  })
+}

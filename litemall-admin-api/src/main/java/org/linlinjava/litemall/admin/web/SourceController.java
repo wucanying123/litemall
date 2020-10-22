@@ -165,4 +165,18 @@ public class SourceController {
         responseUtil.setData(source);
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
+
+    @ApiOperation(value = "获取默认网址")
+    @GetMapping("/selectDefaultWebURL")
+    public ResponseUtil selectDefaultWebUrl() {
+        ResponseUtil responseUtil = new ResponseUtil();
+        Source source = new Source();
+        source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
+        source.setUuid(UUID.randomUUID().toString().replace("-", ""));
+        source.set_type("WebURL");
+        source.setName("网址");
+        source.setMaxPlayTime(10);
+        responseUtil.setData(source);
+        return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+    }
 }

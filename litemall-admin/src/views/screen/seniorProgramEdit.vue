@@ -4,7 +4,7 @@
       width="220px"
       style="background-color: rgb(238, 241, 246)"
     >
-      <el-menu :default-openeds="['1','2','3']">
+      <el-menu :default-openeds="['1','2','3','4']">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-picture" />图片
@@ -71,6 +71,25 @@
             ondragstart="drag(event)"
           >
             {{ defaultMultiText.name }}
+          </div>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-news" />网址
+          </template>
+          <div
+            :id="defaultWebURL.uuid"
+            :sourceId="defaultWebURL.sourceId"
+            ondblclick="deleteTrackSourceMaterial(event)"
+            class="sliderBlock"
+            style="background-color:#6A6AFF;text-align: left;"
+            smtype="WebURL"
+            draggable="true"
+            onmouseup="mouseRelease()"
+            onmousedown="unboundTrackOnMousedown(event)"
+            ondragstart="drag(event)"
+          >
+            {{ defaultWebURL.name }}
           </div>
         </el-submenu>
         <div id="alreadySources" style="display: none;" />
@@ -382,6 +401,13 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <el-form-item label="URL">
+                    <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </div>
           </el-tab-pane>
           <!--          <div-->
@@ -681,7 +707,7 @@ html{
 </style>
 
 <script>
-import { selectDefaultMultiText, listSource } from '@/api/source'
+import { selectDefaultWebURL, selectDefaultMultiText, listSource } from '@/api/source'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
@@ -813,6 +839,7 @@ export default {
       pictureList: [],
       videoList: [],
       defaultMultiText: { id: undefined, uuid: undefined },
+      defaultWebURL: { id: undefined, uuid: undefined },
 
       timeLinePackageDOM: null,
       spotsDOM: null,
@@ -882,7 +909,7 @@ export default {
 
       sourceDivVisiable: false,
 
-      currentSource: { id: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
+      currentSource: { id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
 
     }
   },
@@ -971,6 +998,7 @@ export default {
     this.defaultPictureList()
     this.defaultVideoList()
     this.getDefaultMultiText()
+    this.getDefaultWebURL()
     if (this.$route.query.id == null) {
       return
     }
@@ -1123,6 +1151,13 @@ export default {
         this.defaultMultiText = response.data.data
       }).catch(() => {
         this.defaultMultiText = undefined
+      })
+    },
+    getDefaultWebURL() {
+      selectDefaultWebURL().then(response => {
+        this.defaultWebURL = response.data.data
+      }).catch(() => {
+        this.defaultWebURL = undefined
       })
     },
     // 开始播放(实现方式为强制替换时间,过程中会出现卡顿,丢帧,不推荐)
@@ -1547,6 +1582,7 @@ export default {
         if (this.currentSource.entryEffectTimeSpan != null && document.getElementById('currentSourceEntryEffectTimeSpan') != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
         if (this.currentSource.exitEffect != null && document.getElementById('currentSourceExitEffect') != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
         if (this.currentSource.exitEffectTimeSpan != null && document.getElementById('currentSourceExitEffectTimeSpan') != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
+        if (this.currentSource.url != null && document.getElementById('currentSourceUrl') != null) { document.getElementById('currentSourceUrl').value = this.currentSource.url }
       }
     },
     updatePubTimelineStoragesData(thar) {
@@ -1602,15 +1638,23 @@ export default {
             newPlaySource.id = sourceUid
           }
         }
+        if (newPlaySource == null) {
+          if (smtype == 'WebURL') {
+            newPlaySource = this.defaultWebURL
+            newPlaySource.id = sourceUid
+          }
+        }
       }
 
       if (this.program.layers == null) {
         this.program.layers = [{}]
       }
-      if (this.program.layers[currentTracklayer - 1].sources != null) {
-        this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
-      } else {
-        this.program.layers[currentTracklayer - 1].sources = [newPlaySource]
+      if (this.program.layers[currentTracklayer - 1] != null) {
+        if (this.program.layers[currentTracklayer - 1].sources != null) {
+          this.program.layers[currentTracklayer - 1].sources = this.program.layers[currentTracklayer - 1].sources.concat(newPlaySource)
+        } else {
+          this.program.layers[currentTracklayer - 1].sources = [newPlaySource]
+        }
       }
 
       this.updateCurrentSliderRelevantData(ev)
@@ -1784,7 +1828,11 @@ export default {
         rollText.setAttribute('class', 'rollText')
         rollText.setAttribute('direction', elObj.getAttribute('direction'))
         rollText.innerText = elObj.getAttribute('text')
-
+        smEL.appendChild(rollText)
+      } else if (smtype == 'WebURL') {
+        const rollText = document.createElement('div')
+        rollText.setAttribute('class', 'rollText')
+        rollText.innerText = elObj.getAttribute('text')
         smEL.appendChild(rollText)
       }
 
@@ -2082,6 +2130,12 @@ export default {
           console.log('新建')
         }
       }
+      if (smtype == 'WebURL') {
+        if (this.currentSource == null || this.currentSource.id != sourceUid) {
+          this.currentSource = { id: sourceUid, name: '网址', _type: 'WebURL' }
+          console.log('新建网址')
+        }
+      }
       if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
           if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
@@ -2122,6 +2176,15 @@ export default {
               heightFlag = this.program.height
             }
           } else if (smtype == 'MultiText') {
+            temp = smEL
+            if (widthFlag != null && widthFlag.length > 0) {
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else {
+              widthFlag = this.program.width
+              heightFlag = this.program.height
+            }
+          } else if (smtype == 'WebURL') {
             temp = smEL
             if (widthFlag != null && widthFlag.length > 0) {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
