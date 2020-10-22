@@ -270,7 +270,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="入场时间">
+                  <el-form-item label="入场时间(秒)">
                     <el-input id="currentSourceEntryEffectTimeSpan" v-model="currentSource.entryEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
@@ -282,7 +282,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="出场时间">
+                  <el-form-item label="出场时间(秒)">
                     <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />
                   </el-form-item>
                 </el-col>
@@ -299,7 +299,7 @@
               <div v-show="textDivVisiable" v-if="currentSource" id="textDiv">
                 <el-row>
                   <el-col :span="12">
-                    <el-form-item label="翻页时长">
+                    <el-form-item label="翻页间隔(秒)">
                       <el-input id="currentSourceSpeed" v-model="currentSource.speed" @change="sourceChange" />
                     </el-form-item>
                   </el-col>
@@ -318,13 +318,14 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item label="背景色">
-                      <el-input id="currentSourceBackgroundColor" v-model="currentSource.backgroundColor" @change="sourceChange" />
+                      <!--                      <el-input id="currentSourceBackgroundColor" v-model="currentSource.backgroundColor" @change="sourceChange" />-->
+                      <section>
+                        <div id="currentSourceBackgroundColor" class="color_con" :style="{background:color}" @click="handleShowColor" @change="sourceChange">选择颜色</div>
+                        <div v-show="colorShow">
+                          <sketch-picker v-model="color" @input="updateValue" />
+                        </div>
+                      </section>
                     </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="12">
-                    <el-form-item label="查看下一页" />
                   </el-col>
                 </el-row>
                 <el-row>
@@ -626,6 +627,7 @@ import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
 import Editor from '@tinymce/tinymce-vue'
+import { Sketch } from 'vue-color'
 
 const defaultTypeOptions = [
   {
@@ -669,7 +671,7 @@ const defaultTypeOptions = [
 
 export default {
   name: 'SeniorProgramEdit',
-  components: { Editor, Pagination },
+  components: { Editor, Pagination, 'sketch-picker': Sketch },
   filters: {
     formatType(_type) {
       for (let i = 0; i < defaultTypeOptions.length; i++) {
@@ -822,7 +824,7 @@ export default {
 
       textDivVisiable: false,
 
-      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined },
+      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -835,6 +837,16 @@ export default {
           'searchreplace bold italic underline strikethrough alignleft aligncenter alignright indent removeformat subscript superscript code',
           'hr bullist numlist charmap preview emoticons forecolor backcolor fullscreen'
         ]
+      },
+      color: '#000',
+      // 颜色选择器
+      colorShow: false,
+      colors: {
+        hex: '#194d33',
+        hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        rgba: { r: 25, g: 77, b: 51, a: 1 },
+        a: 1
       }
     }
   },
@@ -2202,6 +2214,19 @@ export default {
         result = '' + parseInt(hour) + '时'
       }
       return result
+    },
+    // 颜色选择器
+    handleShowColor() {
+      if (this.colorShow) {
+        this.colorShow = false
+      } else {
+        this.colorShow = true
+      }
+    },
+    updateValue(val) {
+      console.log('颜色选择', val) // 输出参数如下图1-1
+      this.color = val.hex
+      console.log('颜色', this.color) // 输出参数如下图1-1
     }
   }
 }
