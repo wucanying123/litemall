@@ -164,7 +164,7 @@
               />
             </div>
           </div>
-          <div id="videoPackage" :style="{width: this.program.width + 'px',height:this.program.height + 'px'}" />
+          <div id="videoPackage" :style="{width: program.width + 'px',height:program.height + 'px'}" />
         </div>
         <div
           id="smallbox1"
@@ -1228,15 +1228,17 @@ export default {
       this.pubMillisecondFrame = 1000 / frame
       for (let i = 0; i <= second; i++) {
         if (i != second) {
+          const timeStr = this.secondToDate(i)
           html = '<div class="spotPackage" style="width:' + this.pubSecondWidth + 'px">' +
-            '<div class="spotPackageTitle">' + i + 's</div>' +
+            '<div class="spotPackageTitle">' + timeStr + '</div>' +
             '<div class="spotPackageLine"></div>' +
             '</div>'
         } else {
+          const timeStr = this.secondToDate(i)
           // 计算文字往左偏移量，一个数字偏移6px
           const offsetLeft = (i.toString().length) * 4.5
           html = '<div class="spotPackageAfter">' +
-            '<div class="spotPackageTitleAfter" style="margin-left:-' + offsetLeft + 'px;">' + i + 's</div>' +
+            '<div class="spotPackageTitleAfter" style="margin-left:-' + offsetLeft + 'px;">' + timeStr + '</div>' +
             '<div class="spotPackageLineAfter"></div>' +
             '</div>'
         }
@@ -1729,8 +1731,10 @@ export default {
               const sourceUid = elObj.getAttribute('id')
               if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
                 for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-                  if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-                    this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                  if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
+                    if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                      this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                    }
                   }
                 }
               } else {
@@ -1886,8 +1890,10 @@ export default {
         }
         if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
           for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+            if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
+              if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+              }
             }
           }
         } else {
@@ -1969,7 +1975,7 @@ export default {
           return false
         }
 
-        document.onmouseup = function() {
+        document.onmouseup = (e) => {
           document.onmousemove = null
           document.onmouseup = null
         }
@@ -2114,10 +2120,12 @@ export default {
             }
           }
         }
+      } else if (this.currentSource) {
+        this.currentSource = {}
       } else {
         this.currentSource = {}
       }
-      console.log('我的同步2', this.currentSource)
+      console.log('此次', JSON.stringify(this.currentSource))
       this.currentSource.playTime = playTime
       this.currentSource.timeSpan = timeSpan
 
@@ -2126,23 +2134,37 @@ export default {
         const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
           const img = smEL.querySelector(' div')
-          console.log('同步画布宽高', smEL, img)
+          console.log('同步画布宽高', this.currentSlider, smEL, img)
           let widthFlag = smEL.style.width
           let heightFlag
           let temp
-          if (widthFlag != null && widthFlag.length > 0) {
+          const smtype = this.currentSlider.getAttribute('smtype')
+          if (smtype == 'Image') {
             temp = smEL
-            widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
-            heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
-          } else if (img != null) {
-            temp = img
-            const tempWidth = temp.style.width
-            if (tempWidth == '100%') {
-              widthFlag = this.program.width // parseInt(this.program.width * 0.5)
-              heightFlag = this.program.height // parseInt(this.program.height * 0.5)
-            } else {
+            if (widthFlag != null && widthFlag.length > 0) {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
               heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else {
+              widthFlag = this.program.width
+              heightFlag = this.program.height
+            }
+          } else if (smtype == 'MultiText') {
+            temp = smEL
+          } else if (smtype == 'Video') {
+            if (widthFlag != null && widthFlag.length > 0) {
+              temp = smEL
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else if (img != null) {
+              temp = img
+              const tempWidth = temp.style.width
+              if (tempWidth == '100%') {
+                widthFlag = this.program.width
+                heightFlag = this.program.height
+              } else {
+                widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+                heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+              }
             }
           }
           if (temp != null) {
@@ -2168,6 +2190,19 @@ export default {
         }
       }
       this.sourceSynchro()
+    },
+    secondToDate(msd) {
+      const theTime = parseInt(msd)// 秒
+      let result = '' + parseInt(theTime) + 's'
+      if (theTime % 60 == 0) {
+        const minute = parseInt(theTime / 60)
+        result = '' + parseInt(minute) + '分'
+      }
+      if (theTime % 3600 == 0) {
+        const hour = parseInt(theTime / 3600)
+        result = '' + parseInt(hour) + '时'
+      }
+      return result
     }
   }
 }
