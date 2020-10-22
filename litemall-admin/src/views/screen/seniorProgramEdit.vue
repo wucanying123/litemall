@@ -1754,7 +1754,7 @@ export default {
         }
 
         document.onmouseup = () => {
-          // this.updateSource(elObj)
+          this.updateSource(elObj)
           document.onmousemove = null
           document.onmouseup = null
         }
