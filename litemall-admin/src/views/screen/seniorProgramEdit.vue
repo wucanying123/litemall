@@ -207,9 +207,6 @@
             <el-form-item label="节目高" prop="height"><el-input v-model="program.height" readonly />  </el-form-item>
           </el-col>
         </el-row>
-        <!--        <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>-->
-        <!--        <el-form-item label="节目宽" prop="width"><el-input v-model="program.width" readonly/>  </el-form-item>-->
-        <!--        <el-form-item label="节目高" prop="height"><el-input v-model="program.height" readonly/>  </el-form-item>-->
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
