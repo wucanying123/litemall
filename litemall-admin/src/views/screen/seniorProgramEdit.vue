@@ -64,6 +64,7 @@
             class="sliderBlock"
             style="background-color: #009393;text-align: left;"
             smtype="MultiText"
+            :text="defaultMultiText.name"
             direction="left"
             draggable="true"
             onmouseup="mouseRelease()"
