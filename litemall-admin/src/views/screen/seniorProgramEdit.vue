@@ -2106,12 +2106,7 @@ export default {
           let widthFlag = smEL.style.width
           let heightFlag
           let temp
-          let smtype
-          if (this.currentSlider != null) {
-            smtype = this.currentSlider.getAttribute('smtype')
-          } else if (this.currentSource != null) {
-            smtype = this.currentSource._type
-          }
+          const smtype = this.currentSlider.getAttribute('smtype')
           if (smtype == 'Image') {
             temp = smEL
             if (widthFlag != null && widthFlag.length > 0) {
