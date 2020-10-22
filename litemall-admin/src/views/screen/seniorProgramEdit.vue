@@ -20,6 +20,7 @@
             :smurl="source.url"
             :smtype="source._type"
             class="sliderBlock"
+            style="text-align: left"
             draggable="true"
             onmouseup="mouseRelease()"
             onmousedown="unboundTrackOnMousedown(event)"
@@ -41,7 +42,7 @@
             ondblclick="deleteTrackSourceMaterial(event)"
             :smurl="source.url"
             class="sliderBlock"
-            style="background-color: #F08080;"
+            style="background-color: #F08080;text-align: left;"
             :smtype="source._type"
             draggable="true"
             onmouseup="mouseRelease()"
@@ -57,10 +58,11 @@
             <i class="el-icon-document" />多行文本
           </template>
           <div
-            id="smallboxText"
+            :id="defaultMultiText.uuid"
+            :sourceId="defaultMultiText.sourceId"
             ondblclick="deleteTrackSourceMaterial(event)"
             class="sliderBlock"
-            style="background-color: #009393;"
+            style="background-color: #009393;text-align: left;"
             smtype="MultiText"
             text="多行文本"
             direction="left"
@@ -654,7 +656,7 @@ html{
   margin-left: 3px;
   height: 40px;
   line-height: 40px;
-  width:200px;
+  width:400px;
   background: #46A3FF;
   cursor:move;
   float:left;
@@ -680,7 +682,7 @@ html{
 </style>
 
 <script>
-import { listSource } from '@/api/source'
+import { selectDefaultMultiText, listSource } from '@/api/source'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
@@ -811,6 +813,7 @@ export default {
       },
       pictureList: [],
       videoList: [],
+      defaultMultiText: { id: undefined, uuid: undefined },
 
       timeLinePackageDOM: null,
       spotsDOM: null,
@@ -968,6 +971,7 @@ export default {
   created() {
     this.defaultPictureList()
     this.defaultVideoList()
+    this.getDefaultMultiText()
     if (this.$route.query.id == null) {
       return
     }
@@ -1113,6 +1117,13 @@ export default {
         this.videoList = response.data.data.list
       }).catch(() => {
         this.videoList = []
+      })
+    },
+    getDefaultMultiText() {
+      selectDefaultMultiText().then(response => {
+        this.defaultMultiText = response.data.data
+      }).catch(() => {
+        this.defaultMultiText = undefined
       })
     },
     // 开始播放(实现方式为强制替换时间,过程中会出现卡顿,丢帧,不推荐)
@@ -2009,7 +2020,7 @@ export default {
               console.log(source)
               let styleStr = ''
               const randomColor = this.createColor16()
-              styleStr = 'background-color: ' + randomColor + ';'
+              styleStr = 'text-align: left;background-color: ' + randomColor + ';'
 
               html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
@@ -2095,17 +2106,18 @@ export default {
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       const currentTracklayer = elObj.style.zIndex
       const sourceUid = elObj.getAttribute('id')
-      console.log('我的同步', this.currentSource)
       if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-          if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-            this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+          if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
+            if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+              this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+            }
           }
         }
       } else {
         this.currentSource = {}
       }
-      console.log('我的同步', this.currentSource)
+      console.log('我的同步2', this.currentSource)
       this.currentSource.playTime = playTime
       this.currentSource.timeSpan = timeSpan
 
@@ -2141,12 +2153,14 @@ export default {
             console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
             if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
               for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-                if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-                  this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-                  this.currentSource.top = top
-                  this.currentSource.left = left
-                  this.currentSource.width = width
-                  this.currentSource.height = height
+                if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
+                  if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
+                    this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
+                    this.currentSource.top = top
+                    this.currentSource.left = left
+                    this.currentSource.width = width
+                    this.currentSource.height = height
+                  }
                 }
               }
             }

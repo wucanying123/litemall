@@ -41,3 +41,11 @@ export function deleteSource(sourceId) {
     }
   })
 }
+
+export function selectDefaultMultiText(data) {
+  return request({
+    url: '/screen/source/selectDefaultMultiText',
+    method: 'get',
+    data
+  })
+}

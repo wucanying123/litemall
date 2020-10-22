@@ -9,12 +9,15 @@ import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.Source;
 import org.linlinjava.litemall.db.service.SourceService;
 import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.DateUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/admin/screen/source")
@@ -146,5 +149,18 @@ public class SourceController {
             logger.error("deleteById and sourceId={}", JSON.toJSONString(sourceId), e);
         }
         return responseUtil;
+    }
+
+
+    @ApiOperation(value = "获取默认构造多行文本")
+    @GetMapping("/selectDefaultMultiText")
+    public ResponseUtil selectDefaultMultiText() {
+        ResponseUtil responseUtil = new ResponseUtil();
+        Source source = new Source();
+        source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
+        source.setUuid(UUID.randomUUID().toString().replace("-", ""));
+        source.set_type("MultiText");
+        responseUtil.setData(source);
+        return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
 }
