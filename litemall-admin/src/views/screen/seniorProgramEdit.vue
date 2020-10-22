@@ -402,13 +402,15 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <el-row>
-                <el-col :span="24">
-                  <el-form-item label="URL">
-                    <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" />
-                  </el-form-item>
-                </el-col>
-              </el-row>
+              <div v-show="urlDivVisiable" v-if="currentSource" id="urlDiv">
+                <el-row>
+                  <el-col :span="24">
+                    <el-form-item label="URL">
+                      <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </div>
             </div>
           </el-tab-pane>
           <!--          <div-->
@@ -910,6 +912,8 @@ export default {
 
       sourceDivVisiable: false,
 
+      urlDivVisiable: false,
+
       currentSource: { id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined }
 
     }
@@ -1006,6 +1010,7 @@ export default {
     this.id = this.$route.query.id
     this.getProgram()
     this.sourceDivVisiable = false
+    this.urlDivVisiable = false
   },
   methods: {
     getProgram() {
@@ -1679,7 +1684,12 @@ export default {
       elObjClone.setAttribute('id', this.createUuid(32, 16))
       elObj.parentNode.insertBefore(elObjClone, elObj.nextSibling)
       elObj.setAttribute('draggable', false)
-
+      smtype = elObj.getAttribute('smtype')
+      if (smtype != null && smtype == 'WebURL') {
+        this.urlDivVisiable = true
+      } else {
+        this.urlDivVisiable = false
+      }
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
         e = e || event
@@ -1801,7 +1811,7 @@ export default {
       thar.slidingTrigger()
 
       const smurl = elObj.getAttribute('smurl')
-      const smtype = elObj.getAttribute('smtype')
+      let smtype = elObj.getAttribute('smtype')
       const smEL = document.createElement('div')
       smEL.setAttribute('class', 'pictureBlock')
       smEL.id = 'sm_' + id
@@ -1906,6 +1916,14 @@ export default {
           this.currentSource = {}
         }
         this.sourceDivVisiable = true
+        if (this.currentSource != null && this.currentSource._type != null) {
+          const smtype = this.currentSource._type
+          if (smtype != null && smtype == 'WebURL') {
+            this.urlDivVisiable = true
+          }
+        } else {
+          this.urlDivVisiable = false
+        }
         console.log('再测试', this.currentSource)
         this.sourceSynchro()
 
@@ -2117,14 +2135,14 @@ export default {
     },
     updateSource(elObj) {
       this.sourceDivVisiable = true
-
+      this.urlDivVisiable = false
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
       const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       const currentTracklayer = elObj.style.zIndex
       const sourceUid = elObj.getAttribute('id')
-      const smtype = elObj.getAttribute('id')
+      const smtype = elObj.getAttribute('smtype')
       if (smtype == 'MultiText') {
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiText' }
@@ -2132,6 +2150,7 @@ export default {
         }
       }
       if (smtype == 'WebURL') {
+        this.urlDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '网址', _type: 'WebURL' }
           console.log('新建网址')
