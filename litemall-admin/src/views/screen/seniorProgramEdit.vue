@@ -64,7 +64,7 @@
             class="sliderBlock"
             style="background-color: #009393;text-align: left;"
             smtype="MultiText"
-            :text="defaultMultiText.name"
+            :text="defaultMultiText.html"
             direction="left"
             draggable="true"
             onmouseup="mouseRelease()"
@@ -299,56 +299,37 @@
               <div v-show="textDivVisiable" v-if="currentSource" id="textDiv">
                 <el-row>
                   <el-col :span="12">
-                    <el-form-item label="翻页">
-                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    <el-form-item label="翻页时长">
+                      <el-input id="currentSourceSpeed" v-model="currentSource.speed" @change="sourceChange" />
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
                     <el-form-item label="默认行高">
-                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
+                      <el-input id="currentSourceLineHeight" v-model="currentSource.lineHeight" @change="sourceChange" />
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="12">
-                    <el-form-item label="网络文本地址">
-                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
+                    <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange">
+                      <el-select v-model="currentSource.center" placeholder="请选择">
+                        <el-option :value="true" label="是" />
+                        <el-option :value="false" label="否" />
+                      </el-select>
                     </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item label="垂直居中">
-                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="12">
-                    <el-form-item label="网络文本请求间隔(秒)">
-                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
                     <el-form-item label="背景色">
-                      <!--                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />-->
+                      <el-input id="currentSourceBackgroundColor" v-model="currentSource.backgroundColor" @change="sourceChange" />
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="12">
-                    <el-form-item label="查看下一页">
-                      <!--                      <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />-->
-                    </el-form-item>
+                    <el-form-item label="查看下一页" />
                   </el-col>
-                  <!--                  <el-col :span="12">-->
-                  <!--                    <el-form-item label="背景色">-->
-                  <!--&lt;!&ndash;                      <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />&ndash;&gt;-->
-                  <!--                    </el-form-item>-->
-                  <!--                  </el-col>-->
                 </el-row>
                 <el-row>
-                  <el-form-item label="专题内容" prop="content">
-                    <editor :init="editorInit" />
-                    <!--                  <editor :init="editorInit" v-model="topic.content"/>-->
+                  <el-form-item label="内容" prop="html">
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" />
                   </el-form-item>
                 </el-row>
               </div>
@@ -766,7 +747,7 @@ export default {
       },
       pictureList: [],
       videoList: [],
-      defaultMultiText: { id: undefined, uuid: undefined },
+      defaultMultiText: { id: undefined, uuid: undefined, html: undefined },
       defaultWebURL: { id: undefined, uuid: undefined },
 
       timeLinePackageDOM: null,
@@ -841,7 +822,7 @@ export default {
 
       textDivVisiable: false,
 
-      currentSource: { id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined },
+      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: undefined, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -851,8 +832,8 @@ export default {
           'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
         ],
         toolbar: [
-          'searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat subscript superscript code codesample',
-          'hr bullist numlist link charmap preview anchor pagebreak insertdatetime media table emoticons forecolor backcolor fullscreen'
+          'searchreplace bold italic underline strikethrough alignleft aligncenter alignright indent removeformat subscript superscript code',
+          'hr bullist numlist charmap preview emoticons forecolor backcolor fullscreen'
         ]
       }
     }
@@ -1529,6 +1510,11 @@ export default {
         if (this.currentSource.exitEffect != null && document.getElementById('currentSourceExitEffect') != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
         if (this.currentSource.exitEffectTimeSpan != null && document.getElementById('currentSourceExitEffectTimeSpan') != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
         if (this.currentSource.url != null && document.getElementById('currentSourceUrl') != null) { document.getElementById('currentSourceUrl').value = this.currentSource.url }
+        if (this.currentSource.speed != null && document.getElementById('currentSourceSpeed') != null) { document.getElementById('currentSourceSpeed').value = this.currentSource.speed }
+        if (this.currentSource.lineHeight != null && document.getElementById('currentSourceLineHeight') != null) { document.getElementById('currentSourceLineHeight').value = this.currentSource.lineHeight }
+        if (this.currentSource.center != null && document.getElementById('currentSoureCenter') != null) { document.getElementById('currentSoureCenter').value = this.currentSource.center }
+        if (this.currentSource.backgroundColor != null && document.getElementById('currentSourceBackgroundColor') != null) { document.getElementById('currentSourceBackgroundColor').value = this.currentSource.backgroundColor }
+        if (this.currentSource.html != null && document.getElementById('currentSourceHtml') != null) { document.getElementById('currentSourceHtml').value = this.currentSource.html }
       }
     },
     updatePubTimelineStoragesData(thar) {
@@ -2004,9 +1990,10 @@ export default {
               } else {
                 nameFileExt = source.name
               }
+
               html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
-                  'class="sliderBlock" draggable="false" onmouseup="mouseRelease()" style="' + styleStr + '"' +
+                  'class="sliderBlock" draggable="false" onmouseup="mouseRelease()" style="' + styleStr + '" text ="' + source.html + '"' +
                   'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + nameFileExt +
                   '</div>'
               console.log('网页', html)
