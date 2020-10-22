@@ -64,14 +64,13 @@
             class="sliderBlock"
             style="background-color: #009393;text-align: left;"
             smtype="MultiText"
-            text="多行文本"
             direction="left"
             draggable="true"
             onmouseup="mouseRelease()"
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            多行文本
+            {{ defaultMultiText.name }}
           </div>
         </el-submenu>
         <div id="alreadySources" style="display: none;" />
@@ -1514,55 +1513,6 @@ export default {
       console.log('点击滑条')
       console.log(this.currentSlider)
       this.sourceDivVisiable = true
-      //
-      // // 同步画布宽高
-      // const sourceUid = this.currentSlider.getAttribute('id')
-      // console.log(this.program)
-      // if (sourceUid != null) {
-      //   const currentTracklayer = this.currentSlider.style.zIndex
-      //   const smEL = document.getElementById('sm_' + sourceUid)
-      //   if (smEL != null) {
-      //     const img = smEL.querySelector(' div')
-      //     console.log('父画布', smEL)
-      //     console.log('子画布', img)
-      //     let widthFlag = smEL.style.width
-      //     let heightFlag = smEL.style.height
-      //     let temp
-      //     if (widthFlag != null && widthFlag.length > 0) {
-      //       temp = smEL
-      //       widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
-      //       heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
-      //     } else {
-      //       temp = img
-      //       const tempWidth = temp.style.width
-      //       if (tempWidth == '100%') {
-      //         widthFlag = parseInt(this.program.width * 0.5)
-      //         heightFlag = parseInt(this.program.height * 0.5)
-      //       } else {
-      //         widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
-      //         heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
-      //       }
-      //     }
-      //     const left = temp.style.left == '' ? 0 : parseInt(temp.style.left)
-      //     const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
-      //     const width = widthFlag
-      //     const height = heightFlag
-      //     console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
-      //     if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
-      //       for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
-      //         if (sourceUid === this.program.layers[currentTracklayer - 1].sources[j].id) {
-      //           this.currentSource = this.program.layers[currentTracklayer - 1].sources[j]
-      //           this.currentSource.top = top
-      //           this.currentSource.left = left
-      //           this.currentSource.width = width
-      //           this.currentSource.height = height
-      //           this.sourceSynchro()
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      // console.log(this.program)
     },
     sourceChange() {
       console.log('改变资源')
@@ -1585,18 +1535,18 @@ export default {
         this.currentSource = newPlaySource
       }
       if (this.currentSource != null) {
-        if (this.currentSource.name != null) { document.getElementById('currentSourceName').value = this.currentSource.name }
-        if (this.currentSource._type != null) { document.getElementById('currentSourceType').value = this.currentSource._type }
-        if (this.currentSource.left != null) { document.getElementById('currentSourceLeft').value = this.currentSource.left }
-        if (this.currentSource.top != null) { document.getElementById('currentSourceTop').value = this.currentSource.top }
-        if (this.currentSource.width != null) { document.getElementById('currentSourceWidth').value = this.currentSource.width }
-        if (this.currentSource.height != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
-        if (this.currentSource.playTime != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
-        if (this.currentSource.timeSpan != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
-        if (this.currentSource.entryEffect != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
-        if (this.currentSource.entryEffectTimeSpan != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
-        if (this.currentSource.exitEffect != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
-        if (this.currentSource.exitEffectTimeSpan != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
+        if (this.currentSource.name != null && document.getElementById('currentSourceName') != null) { document.getElementById('currentSourceName').value = this.currentSource.name }
+        if (this.currentSource._type != null && document.getElementById('currentSourceType') != null) { document.getElementById('currentSourceType').value = this.currentSource._type }
+        if (this.currentSource.left != null && document.getElementById('currentSourceLeft') != null) { document.getElementById('currentSourceLeft').value = this.currentSource.left }
+        if (this.currentSource.top != null && document.getElementById('currentSourceTop') != null) { document.getElementById('currentSourceTop').value = this.currentSource.top }
+        if (this.currentSource.width != null && document.getElementById('currentSourceWidth') != null) { document.getElementById('currentSourceWidth').value = this.currentSource.width }
+        if (this.currentSource.height != null && document.getElementById('currentSourceHeight') != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
+        if (this.currentSource.playTime != null && document.getElementById('currentSourcePlayTime') != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
+        if (this.currentSource.timeSpan != null && document.getElementById('currentSourceTimeSpan') != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
+        if (this.currentSource.entryEffect != null && document.getElementById('currentSourceEntryEffect') != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
+        if (this.currentSource.entryEffectTimeSpan != null && document.getElementById('currentSourceEntryEffectTimeSpan') != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
+        if (this.currentSource.exitEffect != null && document.getElementById('currentSourceExitEffect') != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
+        if (this.currentSource.exitEffectTimeSpan != null && document.getElementById('currentSourceExitEffectTimeSpan') != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
       }
     },
     updatePubTimelineStoragesData(thar) {
@@ -1628,6 +1578,7 @@ export default {
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
       const sourceUid = this.currentSlider.getAttribute('id')
       const sourceId = this.currentSlider.getAttribute('sourceId')
+      const smtype = this.currentSlider.getAttribute('smtype')
       // 素材库
       let newPlaySource// 未做
       if (sourceUid != null && sourceId != null) {
@@ -1643,6 +1594,12 @@ export default {
               newPlaySource = this.videoList[i]
               newPlaySource.id = sourceUid
             }
+          }
+        }
+        if (newPlaySource == null) {
+          if (smtype == 'MultiText') {
+            newPlaySource = this.defaultMultiText
+            newPlaySource.id = sourceUid
           }
         }
       }
@@ -2027,11 +1984,16 @@ export default {
               let styleStr = ''
               const randomColor = this.createColor16()
               styleStr = 'text-align: left;background-color: ' + randomColor + ';'
-
+              let nameFileExt
+              if (source.fileExt != null && source.fileExt.length > 0) {
+                nameFileExt = source.name + source.fileExt
+              } else {
+                nameFileExt = source.name
+              }
               html = '<div id="' + source.id + '"' +
                   'ondblclick="deleteTrackSourceMaterial(event)" smurl="' + source.url + '" smtype="' + source._type + '"' +
                   'class="sliderBlock" draggable="false" onmouseup="mouseRelease()" style="' + styleStr + '"' +
-                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + source.name + source.fileExt +
+                  'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + nameFileExt +
                   '</div>'
               console.log('网页', html)
               alreadySources.innerHTML += html
@@ -2106,12 +2068,20 @@ export default {
     },
     updateSource(elObj) {
       this.sourceDivVisiable = true
+
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
       const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       const currentTracklayer = elObj.style.zIndex
       const sourceUid = elObj.getAttribute('id')
+      const smtype = elObj.getAttribute('id')
+      if (smtype == 'MultiText') {
+        if (this.currentSource == null || this.currentSource.id != sourceUid) {
+          this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiText' }
+          console.log('新建')
+        }
+      }
       if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
           if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
@@ -2120,12 +2090,10 @@ export default {
             }
           }
         }
-      } else if (this.currentSource) {
-        this.currentSource = {}
       } else {
         this.currentSource = {}
       }
-      console.log('此次', JSON.stringify(this.currentSource))
+      console.log('此次', this.currentSource)
       this.currentSource.playTime = playTime
       this.currentSource.timeSpan = timeSpan
 
@@ -2150,6 +2118,13 @@ export default {
             }
           } else if (smtype == 'MultiText') {
             temp = smEL
+            if (widthFlag != null && widthFlag.length > 0) {
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else {
+              widthFlag = this.program.width
+              heightFlag = this.program.height
+            }
           } else if (smtype == 'Video') {
             if (widthFlag != null && widthFlag.length > 0) {
               temp = smEL
