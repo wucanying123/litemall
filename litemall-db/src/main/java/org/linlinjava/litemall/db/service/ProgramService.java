@@ -66,4 +66,13 @@ public interface ProgramService {
      * @currentdate:2020年9月25日
      */
     void updateComplexProgramById(Program program,int type);
+
+    /**
+     * @Description: 获取层中资源总时长最大值
+     * @title updateComplexProgramById
+     * @param program 节目
+     * @author IngaWu
+     * @currentdate:2020年10月23日
+     */
+    Integer getMaxLayerPlaytime(Program program);
 }

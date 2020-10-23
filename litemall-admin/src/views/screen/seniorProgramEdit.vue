@@ -941,7 +941,8 @@ export default {
         hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
         rgba: { r: 25, g: 77, b: 51, a: 1 },
         a: 1
-      }
+      },
+      maxLayerPlaytime: 0
     }
   },
   computed: {
@@ -1046,9 +1047,9 @@ export default {
         .then(response => {
           this.program = response.data.data.program
           console.log(this.program)
-          console.log(this.program.name)
           this.program.layers = response.data.data.program.layers
           this.playSourceList = response.data.data.playSourceList
+          this.maxLayerPlaytime = response.data.data.maxLayerPlaytime
           this.listLoading = false
           this.imitateData()
         })
@@ -1363,6 +1364,9 @@ export default {
       console.log(this.program)
     },
     addTime(second) {
+      if (second == 0) {
+        return
+      }
       this.totalSecond += second
       this.generateTimeline(this.totalSecond, this.pubFrame)
     },
@@ -2065,10 +2069,9 @@ export default {
     },
     // 动态追加模拟数据
     imitateData() {
+      this.addTime(this.maxLayerPlaytime)
       if (this.program.layers != null) {
-        console.log('模拟')
         console.log(this.program)
-        this.addTime(400)
         // 轨道数
         const alltrackNum = this.program.layers.length
         for (let i = 0; i < alltrackNum - 1; i++) {
@@ -2083,8 +2086,7 @@ export default {
           if (this.program.layers[i].sources != null) {
             for (let j = 0; j < this.program.layers[i].sources.length; j++) {
               const source = this.program.layers[i].sources[j]
-              console.log('打印第' + i + '轨道第' + j + '个')
-              console.log(source)
+              // console.log('打印第' + i + '轨道第' + j + '个',source)
               let styleStr = ''
               const randomColor = this.createColor16()
               styleStr = 'text-align: left;background-color: ' + randomColor + ';'
@@ -2100,7 +2102,6 @@ export default {
                   'class="sliderBlock" draggable="false" onmouseup="mouseRelease()" style="' + styleStr + '" text ="' + source.html + '"' +
                   'onmousedown="unboundTrackOnMousedown(event)" ondragstart="drag(event)" >' + nameFileExt +
                   '</div>'
-              console.log('网页', html)
               alreadySources.innerHTML += html
 
               const playTime = source.playTime
@@ -2109,8 +2110,6 @@ export default {
               const id = source.id
               const offsetX = (playTime / (this.pubMillisecondFrame / 1000)) * this.pubProgressBarRangePerTime
               const offsetY = this.pubSecondWidth * timeSpan
-              console.log(offsetX)
-              console.log(offsetY)
               const smELLeft = source.left
               const smELTop = source.top
               const smELWidth = source.width
@@ -2125,7 +2124,6 @@ export default {
                   setTimeout(() => {
                     // 滑块
                     const eL = document.getElementById(id)
-                    console.log('打印滑块', eL)
                     eL.style.width = offsetY + 'px'
                     // 画布
                     const smEL = document.getElementById('sm_' + id)
@@ -2158,7 +2156,7 @@ export default {
       if (len) {
         for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix]
       } else {
-        var r
+        let r
         uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
         uuid[14] = '4'
         for (i = 0; i < 36; i++) {
@@ -2168,7 +2166,6 @@ export default {
           }
         }
       }
-      console.log('打印uuid', uuid.join(''))
       return uuid.join('')
     },
     updateSource(elObj) {
@@ -2186,14 +2183,12 @@ export default {
         this.textDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiLineText' }
-          console.log('新建')
         }
       }
       if (smtype == 'WebURL') {
         this.urlDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '网址', _type: 'WebURL' }
-          console.log('新建网址')
         }
       }
       if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {

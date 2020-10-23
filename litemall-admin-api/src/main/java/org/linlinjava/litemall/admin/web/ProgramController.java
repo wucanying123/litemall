@@ -74,6 +74,7 @@ public class ProgramController {
             }
         }
         data.put("playSourceList", playSourceList);
+        data.put("maxLayerPlaytime", programService.getMaxLayerPlaytime(program));
         return ResponseUtil.ok(data);
     }
 

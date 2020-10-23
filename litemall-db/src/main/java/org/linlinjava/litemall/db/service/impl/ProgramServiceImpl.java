@@ -301,4 +301,45 @@ public class ProgramServiceImpl implements ProgramService {
             }
         }
     }
+
+    @Override
+    public Integer getMaxLayerPlaytime(Program program){
+        if (null == program || null == program.getLayersIds()) {
+            return 0;
+        }
+        String layerIds = program.getLayersIds();
+        List<Layer> layerList = new ArrayList<>();
+        List<Integer> layerTotalTimeList = new ArrayList<>();
+        Integer maxLayerPlaytime = 0;
+        if (StringUtilsXD.isNotEmpty(layerIds)) {
+            String[] layersIdArray = layerIds.split(",");
+            for (String layerId : layersIdArray) {
+                Layer layer = layerService.selectLayerById(layerId);
+                Integer layerTotalTime = 0;
+                if (null != layer) {
+                    String sourceIds = layer.getSourcesIds();
+                    if (StringUtilsXD.isNotEmpty(sourceIds)) {
+                        List<PlaySource> playSourceList = new ArrayList<>();
+                        String[] sourceIdArray = sourceIds.split(",");
+                        for (String sourceId : sourceIdArray) {
+                            PlaySource playSource = playSourceService.selectBySourceIdAndLayerId(sourceId, layerId);
+                            if (null != playSource) {
+                                playSource.setLeft(playSource.getTheLeft());
+                                playSourceList.add(playSource);
+                                if(null != playSource.getTimeSpan()){
+                                    layerTotalTime += playSource.getTimeSpan();
+                                }
+                            }
+                        }
+                        layer.setSources(playSourceList);
+                    }
+                    layerList.add(layer);
+                    layerTotalTimeList.add(layerTotalTime);
+                }
+            }
+            program.setLayers(layerList);
+            maxLayerPlaytime = Collections.max(layerTotalTimeList);
+        }
+        return maxLayerPlaytime;
+    }
 }
