@@ -82,4 +82,5 @@ public class Source implements Serializable {
     Long updateTime;//修改时间
     Integer userid;//用户id
     String uuid;//仅为前端使用，随机值
+    Integer passStatus; //审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
 }

@@ -43,4 +43,6 @@ public class Live {
      * 修改时间
      */
     private Long updateTime;
+
+    Integer passStatus; //审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
 }

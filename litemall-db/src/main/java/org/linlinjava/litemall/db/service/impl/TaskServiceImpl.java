@@ -80,6 +80,7 @@ public class TaskServiceImpl implements TaskService {
         task.set_id(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
+            task.setPassStatus(1);
             task.setCreateTime(cuttentTime);
             task.setUpdateTime(cuttentTime);
             task.setCmdId(UUID.randomUUID().toString().replace("-", ""));

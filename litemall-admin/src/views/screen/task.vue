@@ -24,6 +24,9 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
+      <el-table-column align="center" label="审核状态" prop="passStatus">
+        <template slot-scope="scope">{{ scope.row.passStatus | formatPassStatus }}</template>
+      </el-table-column>
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
@@ -78,6 +81,32 @@ import { clearPlayerTask, selectOnlineDevice } from '@/api/screenDevice'
 import { playTask } from '@/api/task'
 import _ from 'lodash'
 
+const defaultPassStatusOptions = [
+  {
+    label: '',
+    value: ''
+  },
+  {
+    label: '未审核',
+    value: 1
+  },
+  {
+    label: '一审过待二审',
+    value: 2
+  },
+  {
+    label: '一审不过',
+    value: 3
+  }, {
+    label: '二审过',
+    value: 4
+  },
+  {
+    label: '二审不过',
+    value: 5
+  }
+]
+
 export default {
   name: 'Task',
   components: { Pagination },
@@ -98,6 +127,14 @@ export default {
         s = s < 10 ? ('0' + s) : s
         return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
       }
+    },
+    formatPassStatus(type) {
+      for (let i = 0; i < defaultPassStatusOptions.length; i++) {
+        if (type === defaultPassStatusOptions[i].value) {
+          return defaultPassStatusOptions[i].label
+        }
+      }
+      return ''
     }
   },
   data() {

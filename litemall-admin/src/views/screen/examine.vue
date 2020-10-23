@@ -125,7 +125,7 @@ const defaultTypeOptions = [
     value: ''
   },
   {
-    label: '节目',
+    label: '任务',
     value: 1
   },
   {

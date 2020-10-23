@@ -75,6 +75,7 @@ public class SourceServiceImpl implements SourceService {
         source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
+            source.setPassStatus(1);
             source.setCreateTime(cuttentTime);
             source.setUpdateTime(cuttentTime);
             source.setTheLeft(source.getLeft());

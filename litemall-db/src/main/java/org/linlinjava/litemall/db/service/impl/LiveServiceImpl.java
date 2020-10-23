@@ -60,6 +60,7 @@ public class LiveServiceImpl implements LiveService {
         live.setId(UUID.randomUUID().toString().replace("-", ""));
         try {
             long cuttentTime = DateUtil.getDateline();
+            live.setPassStatus(1);
             live.setCreateTime(cuttentTime);
             live.setUpdateTime(cuttentTime);
             n = liveMapper.insertSelective(live);

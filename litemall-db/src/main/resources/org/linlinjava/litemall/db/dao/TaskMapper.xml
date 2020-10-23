@@ -11,9 +11,10 @@
     <result column="createTime" jdbcType="BIGINT" property="createTime" />
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
     <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="pass_status" jdbcType="INTEGER" property="passStatus" />
   </resultMap>
   <sql id="Base_Column_List">
-    _id, name, _department, executeDate, cmdId, itemsIds, createTime, updateTime, userid
+    _id, name, _department, executeDate, cmdId, itemsIds, createTime, updateTime, userid, pass_status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -55,6 +56,9 @@
       <if test="userid != null">
         userid,
       </if>
+      <if test="passStatus != null">
+        pass_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="_id != null">
@@ -83,6 +87,9 @@
       </if>
       <if test="userid != null">
         #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="passStatus != null">
+        #{passStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -113,6 +120,9 @@
       <if test="userid != null">
         userid = #{userid,jdbcType=INTEGER},
       </if>
+      <if test="passStatus != null">
+        pass_status = #{passStatus,jdbcType=INTEGER},
+      </if>
     </set>
     where _id = #{_id,jdbcType=VARCHAR}
   </update>
@@ -131,7 +141,6 @@
     <if test="task != null and task.name != null and task.name != '' " >
       and name LIKE concat(concat('%',#{task.name}),'%')
     </if>
-    and _id in(SELECT examine.detail_id from examine where examine.pass_status = 4)
     order by updateTime desc ,createTime desc
   </select>
   <select id="selectTaskByName" parameterType="java.lang.String" resultMap="BaseResultMap">

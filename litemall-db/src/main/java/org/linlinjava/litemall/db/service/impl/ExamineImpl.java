@@ -50,7 +50,7 @@ public class ExamineImpl implements ExamineService {
                         examine1.setPassStatus2(examine1.getPassStatus());
                         examine1.setPassStatus1(null);
                     }
-                    //人员名称 1节目，2直播，3资源
+                    //1任务，2直播，3资源
                     if(examine1.getType() == 1){
                         Task task = taskService.selectTaskById(examine1.getDetailId());
                         if(null != task && null != task.getUserid()) {
@@ -136,6 +136,26 @@ public class ExamineImpl implements ExamineService {
                 examine.setRejectReason2("");
             }
             n = examineMapper.updateByPrimaryKeySelective(examine);
+            //人员名称 1任务，2直播，3资源
+            if(examine.getType() == 1){
+                Task task = taskService.selectTaskById(examine.getDetailId());
+                if(null != task) {
+                    task.setPassStatus(examine.getPassStatus());
+                    taskService.updateTaskById(task);
+                }
+            }else if(examine.getType() == 2){
+                Live live = liveService.selectLiveById(examine.getDetailId());
+                if(null != live) {
+                    live.setPassStatus(examine.getPassStatus());
+                    liveService.updateLiveById(live);
+                }
+            }else if(examine.getType() == 3){
+                Source source = sourceService.selectSourceById(examine.getDetailId());
+                if(null != source) {
+                    source.setPassStatus(examine.getPassStatus());
+                    sourceService.updateSourceById(source);
+                }
+            }
         } catch (Exception e) {
             logger.error("updateExamineById error and msg={}", e);
         }

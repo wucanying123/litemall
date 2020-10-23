@@ -10,7 +10,7 @@ public class Examine {
     private String id;
 
     /**
-     * 类型：1节目，2直播，3资源
+     * 类型：1任务，2直播，3资源
      */
     private Integer type;
 
