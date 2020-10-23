@@ -1436,7 +1436,7 @@ export default {
               this.specialEffectsHandle(obj, el)
               if (obj.smtype == 'Video') {
                 const video = el.querySelector(' video')
-                const img = el.querySelector(' div')
+                const img = el.querySelector('div')
 
                 // 当前滑块起始帧
                 const startFrame = obj.startX / (this.pubSecondWidth / this.pubFrame)
@@ -1729,6 +1729,8 @@ export default {
         }
       }
 
+      this.updateSource(elObj)
+
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
         e = e || event
@@ -2020,7 +2022,7 @@ export default {
           }
           console.log('移动画布')
           this.sourceSynchro()
-          // const sliderParent = smEL.querySelector(' div')
+          // const sliderParent = smEL.querySelector('div')
           const currentTracklayer = smEL.getAttribute('tracklayer')
           console.log(this.currentSource)
           console.log(this.program.layers[1])
@@ -2169,6 +2171,7 @@ export default {
       return uuid.join('')
     },
     updateSource(elObj) {
+      console.log('是否变更', elObj)
       this.sourceDivVisiable = true
       this.urlDivVisiable = false
       this.textDivVisiable = false
@@ -2210,7 +2213,7 @@ export default {
       if (sourceUid != null) {
         const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
-          const img = smEL.querySelector(' div')
+          const img = smEL.querySelector('div')
           console.log('同步画布宽高', this.currentSlider, smEL, img)
           let widthFlag = smEL.style.width
           let heightFlag
