@@ -333,20 +333,23 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteItem(this.$route.query.taskId, row._id)
-        .then(response => {
-          this.$notify.success({
-            title: '成功',
-            message: '删除成功'
+      this.$confirm('确定删除吗？').then(_ => {
+        deleteItem(this.$route.query.taskId, row._id)
+          .then(response => {
+            this.$notify.success({
+              title: '成功',
+              message: '删除成功'
+            })
+            this.getList()
           })
-          this.getList()
-        })
-        .catch(response => {
-          this.$notify.error({
-            title: '失败',
-            message: response.data.errmsg
+          .catch(response => {
+            this.$notify.error({
+              title: '失败',
+              message: response.data.errmsg
+            })
           })
-        })
+      }).catch(_ => {
+      })
     },
     handleSearch() {
       this.listQueryProgram = {

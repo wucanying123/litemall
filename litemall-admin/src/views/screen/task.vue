@@ -205,20 +205,23 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteTask(row._id)
-        .then(response => {
-          this.$notify.success({
-            title: '成功',
-            message: '删除成功'
+      this.$confirm('确定删除吗？').then(_ => {
+        deleteTask(row._id)
+          .then(response => {
+            this.$notify.success({
+              title: '成功',
+              message: '删除成功'
+            })
+            this.getList()
           })
-          this.getList()
-        })
-        .catch(response => {
-          this.$notify.error({
-            title: '失败',
-            message: response.data.errmsg
+          .catch(response => {
+            this.$notify.error({
+              title: '失败',
+              message: response.data.errmsg
+            })
           })
-        })
+      }).catch(_ => {
+      })
     },
     handleclearTask() {
       if (this.multipleSelection == null || this.multipleSelection.length === 0) {
