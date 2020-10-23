@@ -42,9 +42,9 @@ export function deleteSource(sourceId) {
   })
 }
 
-export function selectDefaultMultiText(data) {
+export function selectDefaultMultiLineText(data) {
   return request({
-    url: '/screen/source/selectDefaultMultiText',
+    url: '/screen/source/selectDefaultMultiLineText',
     method: 'get',
     data
   })

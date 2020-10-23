@@ -58,20 +58,20 @@
             <i class="el-icon-document" />多行文本
           </template>
           <div
-            :id="defaultMultiText.uuid"
-            :sourceId="defaultMultiText.sourceId"
+            :id="defaultMultiLineText.uuid"
+            :sourceId="defaultMultiLineText.sourceId"
             ondblclick="deleteTrackSourceMaterial(event)"
             class="sliderBlock"
             style="background-color: #009393;text-align: left;"
-            smtype="MultiText"
-            :text="defaultMultiText.html"
+            smtype="MultiLineText"
+            :text="defaultMultiLineText.html"
             direction="left"
             draggable="true"
             onmouseup="mouseRelease()"
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            {{ defaultMultiText.name }}
+            {{ defaultMultiLineText.name }}
           </div>
         </el-submenu>
         <el-submenu index="4">
@@ -716,7 +716,7 @@ html{
 </style>
 
 <script>
-import { selectDefaultWebURL, selectDefaultMultiText, listSource } from '@/api/source'
+import { selectDefaultWebURL, selectDefaultMultiLineText, listSource } from '@/api/source'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
@@ -759,7 +759,7 @@ const defaultTypeOptions = [
   // },
   // {
   //   label: '多行文本',
-  //   value: 'MultiText'
+  //   value: 'MultiLineText'
   // }
 ]
 
@@ -843,7 +843,7 @@ export default {
       },
       pictureList: [],
       videoList: [],
-      defaultMultiText: { id: undefined, uuid: undefined, html: undefined },
+      defaultMultiLineText: { id: undefined, uuid: undefined, html: undefined },
       defaultWebURL: { id: undefined, uuid: undefined },
 
       timeLinePackageDOM: null,
@@ -1027,7 +1027,7 @@ export default {
   created() {
     this.defaultPictureList()
     this.defaultVideoList()
-    this.getDefaultMultiText()
+    this.getDefaultMultiLineText()
     this.getDefaultWebURL()
     if (this.$route.query.id == null) {
       return
@@ -1178,11 +1178,11 @@ export default {
         this.videoList = []
       })
     },
-    getDefaultMultiText() {
-      selectDefaultMultiText().then(response => {
-        this.defaultMultiText = response.data.data
+    getDefaultMultiLineText() {
+      selectDefaultMultiLineText().then(response => {
+        this.defaultMultiLineText = response.data.data
       }).catch(() => {
-        this.defaultMultiText = undefined
+        this.defaultMultiLineText = undefined
       })
     },
     getDefaultWebURL() {
@@ -1668,8 +1668,8 @@ export default {
           }
         }
         if (newPlaySource == null) {
-          if (smtype == 'MultiText') {
-            newPlaySource = this.defaultMultiText
+          if (smtype == 'MultiLineText') {
+            newPlaySource = this.defaultMultiLineText
             newPlaySource.id = sourceUid
           }
         }
@@ -1719,7 +1719,7 @@ export default {
       if (smtype != null) {
         if (smtype == 'WebURL') {
           this.urlDivVisiable = true
-        } else if (smtype == 'MultiText') {
+        } else if (smtype == 'MultiLineText') {
           this.textDivVisiable = true
         }
       }
@@ -1868,7 +1868,7 @@ export default {
         // img.setAttribute('id', 'sm_' + id)
         // img.setAttribute('tracklayer', sliderParent.getAttribute('tracklayer'))
         smEL.appendChild(img)
-      } else if (smtype == 'MultiText') {
+      } else if (smtype == 'MultiLineText') {
         const rollText = document.createElement('div')
         rollText.setAttribute('class', 'rollText')
         rollText.setAttribute('direction', elObj.getAttribute('direction'))
@@ -1956,7 +1956,7 @@ export default {
           const smtype = this.currentSource._type
           if (smtype == 'WebURL') {
             this.urlDivVisiable = true
-          } else if (smtype == 'MultiText') {
+          } else if (smtype == 'MultiLineText') {
             this.textDivVisiable = true
           }
         }
@@ -2181,10 +2181,10 @@ export default {
       const currentTracklayer = elObj.style.zIndex
       const sourceUid = elObj.getAttribute('id')
       const smtype = elObj.getAttribute('smtype')
-      if (smtype == 'MultiText') {
+      if (smtype == 'MultiLineText') {
         this.textDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
-          this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiText' }
+          this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiLineText' }
           console.log('新建')
         }
       }
@@ -2234,7 +2234,7 @@ export default {
               widthFlag = this.program.width
               heightFlag = this.program.height
             }
-          } else if (smtype == 'MultiText') {
+          } else if (smtype == 'MultiLineText') {
             temp = smEL
             if (widthFlag != null && widthFlag.length > 0) {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)

@@ -199,7 +199,7 @@ const defaultTypeOptions = [
   // },
   // {
   //   label: '多行文本',
-  //   value: 'MultiText'
+  //   value: 'MultiLineText'
   // }
 ]
 

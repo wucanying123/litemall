@@ -6,7 +6,7 @@
 //        "backgroundColor":"rgba(0,0,0,1)",
 //            //多行文本素材id，可为空，可设置值
 //            "id":"",
-//            "name":"MultiText",
+//            "name":"MultiLineText",
 //            //素材为多行文本类型，必须为MultiLineText，大小写敏感
 //            "_type":"MultiLineText",
 //            //翻页等待时长，单位秒

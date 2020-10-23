@@ -153,13 +153,13 @@ public class SourceController {
 
 
     @ApiOperation(value = "获取默认构造多行文本")
-    @GetMapping("/selectDefaultMultiText")
-    public ResponseUtil selectDefaultMultiText() {
+    @GetMapping("/selectDefaultMultiLineText")
+    public ResponseUtil selectDefaultMultiLineText() {
         ResponseUtil responseUtil = new ResponseUtil();
         Source source = new Source();
         source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
         source.setUuid(UUID.randomUUID().toString().replace("-", ""));
-        source.set_type("MultiText");
+        source.set_type("MultiLineText");
         source.setName("多行文本");
         source.setHtml("内容");
         source.setMaxPlayTime(10);
