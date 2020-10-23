@@ -1584,6 +1584,18 @@ export default {
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
       console.log('点击滑条')
       console.log(this.currentSlider)
+      if (event != null && event.dataTransfer != null) {
+        const newId = event.dataTransfer.getData('id')
+        const divList = document.querySelectorAll('.sliderBlock')
+        if (divList != null) {
+          for (let i = 0; i < divList.length; i++) {
+            if (newId == divList[i].id) {
+              const target = divList[i]
+              this.updateSource(target)
+            }
+          }
+        }
+      }
       this.sourceDivVisiable = true
     },
     sourceChange() {
@@ -1728,8 +1740,6 @@ export default {
           this.textDivVisiable = true
         }
       }
-
-      this.updateSource(elObj)
 
       // 滑块鼠标悬停时，更换相关指针图标
       elObj.onmousemove = (e) => {
@@ -2171,7 +2181,7 @@ export default {
       return uuid.join('')
     },
     updateSource(elObj) {
-      console.log('是否变更', elObj)
+      console.log('变更', elObj)
       this.sourceDivVisiable = true
       this.urlDivVisiable = false
       this.textDivVisiable = false
@@ -2179,9 +2189,13 @@ export default {
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
       const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
-      const currentTracklayer = elObj.style.zIndex
+      let currentTracklayer = elObj.style.zIndex
+      if (currentTracklayer == null || currentTracklayer == '') {
+        currentTracklayer = this.currentSlider.getAttribute('tracklayer')
+      }
       const sourceUid = elObj.getAttribute('id')
       const smtype = elObj.getAttribute('smtype')
+      // console.log('变更',currentTracklayer,sourceUid,smtype)
       if (smtype == 'MultiLineText') {
         this.textDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
@@ -2288,6 +2302,11 @@ export default {
               }
             }
           }
+        } else {
+          this.currentSource.top = 0
+          this.currentSource.left = 0
+          this.currentSource.width = this.program.width
+          this.currentSource.height = this.program.height
         }
       }
       this.sourceSynchro()
