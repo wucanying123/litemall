@@ -403,7 +403,7 @@
                             class="color_con"
                             :style="{background:currentSource.backgroundColor}"
                             @click="handleShowColor"
-                          >颜色
+                          >选择颜色
                           </div>
                           <div v-show="colorShow">
                             <sketch-picker v-model="currentSource.backgroundColor" @input="updateValue" />
