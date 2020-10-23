@@ -43,6 +43,7 @@
             :smurl="source.url"
             class="sliderBlock"
             style="background-color: #F08080;text-align: left;"
+            :style="{width: pubSecondWidth * source.maxPlayTime + 'px'}"
             :smtype="source._type"
             draggable="true"
             onmouseup="mouseRelease()"
