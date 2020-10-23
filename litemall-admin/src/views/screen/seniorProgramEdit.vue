@@ -266,7 +266,28 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="入场特效">
-                    <el-input id="currentSourceEntryEffect" v-model="currentSource.entryEffect" @change="sourceChange" />
+                    <el-select v-model="currentSource.entryEffect" placeholder="请选择">
+                      <el-option :value="'None'" label="无" />
+                      <el-option :value="'ALPHA_IN'" label="淡入" />
+                      <el-option :value="'ALPHA_OUT'" label="淡出" />
+                      <el-option :value="'RANDOM'" label="随机" />
+                      <el-option :value="'MOVING_LEFT'" label="连续左移" />
+                      <el-option :value="'MOVING_RIGHT'" label="连续右移" />
+                      <el-option :value="'MOVING_TOP'" label="连续上移" />
+                      <el-option :value="'MOVING_BOTTOM'" label="连续下移" />
+                      <el-option :value="'ZOOM_IN'" label="放大" />
+                      <el-option :value="'ZOOM_OUT'" label="缩小" />
+                      <el-option :value="'ROTATE_RIGHT'" label="向右旋转" />
+                      <el-option :value="'ROTATE_LEFT'" label="向左旋转" />
+                      <el-option :value="'ZOOM_IN_LEFT_BOTTOM'" label="左下角放大" />
+                      <el-option :value="'ZOOM_IN_LEFT_TOP'" label="左上角放大" />
+                      <el-option :value="'ZOOM_IN_RIGHT_TOP'" label="右上角放大" />
+                      <el-option :value="'ZOOM_IN_RIGHT_BOTTOM'" label="右下角放大" />
+                      <el-option :value="'ZOOM_OUT_LEFT_BOTTOM'" label="左下角缩小" />
+                      <el-option :value="'ZOOM_OUT_LEFT_TOP'" label="左上角缩小" />
+                      <el-option :value="'ZOOM_OUT_RIGHT_TOP'" label="右上角缩小" />
+                      <el-option :value="'ZOOM_OUT_RIGHT_BOTTOM'" label="右下角缩小" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -278,12 +299,42 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="出场特效">
-                    <el-input id="currentSourceExitEffect" v-model="currentSource.exitEffect" @change="sourceChange" />
+                    <el-select v-model="currentSource.exitEffect" placeholder="请选择">
+                      <el-option :value="'None'" label="无" />
+                      <el-option :value="'ALPHA_IN'" label="淡入" />
+                      <el-option :value="'ALPHA_OUT'" label="淡出" />
+                      <el-option :value="'RANDOM'" label="随机" />
+                      <el-option :value="'MOVING_LEFT'" label="连续左移" />
+                      <el-option :value="'MOVING_RIGHT'" label="连续右移" />
+                      <el-option :value="'MOVING_TOP'" label="连续上移" />
+                      <el-option :value="'MOVING_BOTTOM'" label="连续下移" />
+                      <el-option :value="'ZOOM_IN'" label="放大" />
+                      <el-option :value="'ZOOM_OUT'" label="缩小" />
+                      <el-option :value="'ROTATE_RIGHT'" label="向右旋转" />
+                      <el-option :value="'ROTATE_LEFT'" label="向左旋转" />
+                      <el-option :value="'ZOOM_IN_LEFT_BOTTOM'" label="左下角放大" />
+                      <el-option :value="'ZOOM_IN_LEFT_TOP'" label="左上角放大" />
+                      <el-option :value="'ZOOM_IN_RIGHT_TOP'" label="右上角放大" />
+                      <el-option :value="'ZOOM_IN_RIGHT_BOTTOM'" label="右下角放大" />
+                      <el-option :value="'ZOOM_OUT_LEFT_BOTTOM'" label="左下角缩小" />
+                      <el-option :value="'ZOOM_OUT_LEFT_TOP'" label="左上角缩小" />
+                      <el-option :value="'ZOOM_OUT_RIGHT_TOP'" label="右上角缩小" />
+                      <el-option :value="'ZOOM_OUT_RIGHT_BOTTOM'" label="右下角缩小" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="出场时间(秒)">
-                    <el-input id="currentSourceExitEffectTimeSpan" v-model="currentSource.exitEffectTimeSpan" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceExitEffectTimeSpan"
+                      v-model="currentSource.exitEffectTimeSpan"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -300,12 +351,31 @@
                 <el-row>
                   <el-col :span="12">
                     <el-form-item label="翻页间隔(秒)">
-                      <el-input id="currentSourceSpeed" v-model="currentSource.speed" @change="sourceChange" />
+                      <el-input
+                        id="currentSourceSpeed"
+                        v-model="currentSource.speed"
+                        type="number"
+                        min="0"
+                        step="1"
+                        size="2"
+                        on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                        @change="sourceChange"
+                      />
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
                     <el-form-item label="默认行高">
-                      <el-input id="currentSourceLineHeight" v-model="currentSource.lineHeight" @change="sourceChange" />
+                      <el-input
+                        id="currentSourceLineHeight"
+                        v-model="currentSource.lineHeight"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        size="2"
+                        on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                        @change="sourceChange"
+                      />
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -330,6 +400,7 @@
                 </el-row>
                 <el-row>
                   <el-form-item label="内容" prop="html">
+                    <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
                     <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" />
                   </el-form-item>
                 </el-row>
@@ -824,7 +895,7 @@ export default {
 
       textDivVisiable: false,
 
-      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
+      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: false, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -834,8 +905,7 @@ export default {
           'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
         ],
         toolbar: [
-          'searchreplace bold italic underline strikethrough alignleft aligncenter alignright indent removeformat subscript superscript code',
-          'hr bullist numlist charmap preview emoticons forecolor backcolor fullscreen'
+          'code forecolor backcolor bold italic underline strikethrough alignleft aligncenter alignright indent  hr bullist numlist charmap emoticons fullscreen removeformat preview'
         ]
       },
       color: '#000',
@@ -1517,9 +1587,7 @@ export default {
         if (this.currentSource.height != null && document.getElementById('currentSourceHeight') != null) { document.getElementById('currentSourceHeight').value = this.currentSource.height }
         if (this.currentSource.playTime != null && document.getElementById('currentSourcePlayTime') != null) { document.getElementById('currentSourcePlayTime').value = this.currentSource.playTime }
         if (this.currentSource.timeSpan != null && document.getElementById('currentSourceTimeSpan') != null) { document.getElementById('currentSourceTimeSpan').value = this.currentSource.timeSpan }
-        if (this.currentSource.entryEffect != null && document.getElementById('currentSourceEntryEffect') != null) { document.getElementById('currentSourceEntryEffect').value = this.currentSource.entryEffect }
         if (this.currentSource.entryEffectTimeSpan != null && document.getElementById('currentSourceEntryEffectTimeSpan') != null) { document.getElementById('currentSourceEntryEffectTimeSpan').value = this.currentSource.entryEffectTimeSpan }
-        if (this.currentSource.exitEffect != null && document.getElementById('currentSourceExitEffect') != null) { document.getElementById('currentSourceExitEffect').value = this.currentSource.exitEffect }
         if (this.currentSource.exitEffectTimeSpan != null && document.getElementById('currentSourceExitEffectTimeSpan') != null) { document.getElementById('currentSourceExitEffectTimeSpan').value = this.currentSource.exitEffectTimeSpan }
         if (this.currentSource.url != null && document.getElementById('currentSourceUrl') != null) { document.getElementById('currentSourceUrl').value = this.currentSource.url }
         if (this.currentSource.speed != null && document.getElementById('currentSourceSpeed') != null) { document.getElementById('currentSourceSpeed').value = this.currentSource.speed }
