@@ -2331,9 +2331,7 @@ export default {
     },
     updateValue(val) {
       this.color = 'rgba(' + val.rgba.r + ',' + val.rgba.g + ',' + val.rgba.b + ',' + val.rgba.a + ')'
-      console.log('颜色选择', this.color)
       this.currentSource.backgroundColor = this.color
-      console.log('this.currentSource', this.currentSource)
     }
   }
 }
