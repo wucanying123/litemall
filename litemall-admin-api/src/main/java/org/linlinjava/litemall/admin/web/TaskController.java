@@ -204,8 +204,7 @@ public class TaskController {
     @ApiOperation(value = "快速创建任务")
     @PostMapping(value = "/insertQuickTask")
     public ResponseUtil<Task> insertQuickTask(@RequestParam(value = "programName") String programName,
-                                              @RequestParam(value = "programId") String programId,
-                                              @RequestParam(value = "itemVersion") Integer itemVersion) {
+                                              @RequestParam(value = "programId") String programId) {
         logger.info("insertQuickTask and programId:{}", programId);
         ResponseUtil<Task> responseUtil = new ResponseUtil<>();
         try {
@@ -218,7 +217,7 @@ public class TaskController {
             Subject currentUser = SecurityUtils.getSubject();
             LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
             Integer userId = admin.getId();
-            int n = taskService.insertQuickTask(taskName, programId, userId, itemVersion);
+            int n = taskService.insertQuickTask(taskName, programId, userId);
             if (n == 1) {
                 responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
             }

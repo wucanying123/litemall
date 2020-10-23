@@ -16,7 +16,8 @@ public class Program implements Serializable {
     String _department;//部门id，不使用AIPS平台时不重要，可任意设置
     String _role;//角色id，不使用AIPS平台时不重要，可任意设置
     String _user;//用户，不使用AIPS平台时不重要，可任意设置
-    Integer __v;//节目版本类型，默认0不用修改，会被播放程序改写
+    Integer __v;//节目版本类型，默认0不用修改，会被播放程序改写  0为高级节目，2为简易节目(简易节目素材只能是Video或Image，不能指定特效，默认显示坐标0，0，素材宽高默认与节目宽高相同)
+
     List<Layer> layers;//layer对应AIPS平台节目编辑中的时间轴，用于内容分层显示，实际显示效果可参考平台节目预览
     Long createTime;//创建时间
 

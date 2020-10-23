@@ -181,6 +181,9 @@
     <if test="program != null and program.name != null and program.name != '' " >
       and name LIKE concat(concat('%',#{program.name}),'%')
     </if>
+    <if test="program != null and program.__v != null" >
+      and __v = #{ program.__v,jdbcType=INTEGER}
+    </if>
     order by updateTime desc ,createTime desc
   </select>
 </mapper>

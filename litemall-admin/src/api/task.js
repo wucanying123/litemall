@@ -16,14 +16,13 @@ export function createTask(data) {
   })
 }
 
-export function insertQuickTask(programName, programId, itemVersion) {
+export function insertQuickTask(programName, programId) {
   return request({
     url: '/screen/task/insertQuickTask',
     method: 'post',
     params: {
       programName: programName,
-      programId: programId,
-      itemVersion: itemVersion
+      programId: programId
     }
   })
 }

@@ -63,7 +63,7 @@ public interface TaskService {
      * @auther IngaWu
      * @currentdate:2020年9月22日
      */
-    int insertQuickTask(String taskName,String programId,Integer userId,Integer itemVersion);
+    int insertQuickTask(String taskName,String programId,Integer userId);
 
     /**
      * @Description: 通过任务名称查看任务详情

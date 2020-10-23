@@ -4,6 +4,9 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container">
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入名称" />
+      <el-select v-model="listQuery.__v" clearable style="width: 200px" class="filter-item" placeholder="请选择类型">
+        <el-option v-for="_type in typeOptions" :key="_type.value" :label="_type.label" :value="_type.value" />
+      </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加到审核</el-button>
     </div>
@@ -12,18 +15,26 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
       <el-table-column align="center" label="名称" prop="name" />
+      <el-table-column align="center" label="节目类型" prop="__v">
+        <template slot-scope="scope">{{ scope.row.__v | formatType }}</template>
+      </el-table-column>
       <el-table-column align="width" label="节目宽" prop="width" />
       <el-table-column align="height" label="节目高" prop="height" />
-
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="800" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdateSenior(scope.row)">高级编辑</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <div v-if="scope.row.__v == 2">
+            <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑简易</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          </div>
+          <div v-if="scope.row.__v == 0">
+            <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdateSenior(scope.row)">编辑高级</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -33,6 +44,12 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
+        <el-form-item label="节目类型" prop="__v">
+          <el-select v-model="dataForm.__v" placeholder="请选择">
+            <el-option :value="2" label="简易" />
+            <el-option :value="0" label="高级" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" />
         </el-form-item>
@@ -83,7 +100,22 @@
 import { listProgram, createProgram, updateProgram, deleteProgram } from '@/api/program'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
-import { insertQuickTask } from '@/api/task' // Secondary package based on el-pagination
+import { insertQuickTask } from '@/api/task'
+
+const defaultTypeOptions = [
+  {
+    label: '',
+    value: ''
+  },
+  {
+    label: '简易',
+    value: 2
+  },
+  {
+    label: '高级',
+    value: 0
+  }
+]
 
 export default {
   name: 'Program',
@@ -105,6 +137,14 @@ export default {
         s = s < 10 ? ('0' + s) : s
         return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
       }
+    },
+    formatType(type) {
+      for (let i = 0; i < defaultTypeOptions.length; i++) {
+        if (type === defaultTypeOptions[i].value) {
+          return defaultTypeOptions[i].label
+        }
+      }
+      return ''
     }
   },
   data() {
@@ -115,14 +155,16 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined
+        name: undefined,
+        __v: undefined
       },
       dataForm: {
         id: undefined,
         name: undefined,
         width: undefined,
         height: undefined,
-        updateTime: undefined
+        updateTime: undefined,
+        __v: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -131,6 +173,9 @@ export default {
         create: '创建'
       },
       rules: {
+        __v: [
+          { required: true, message: '节目类型不能为空', trigger: 'blur' }
+        ],
         name: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
@@ -141,7 +186,8 @@ export default {
           { required: true, message: '节目高不能为空', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      typeOptions: Object.assign({}, defaultTypeOptions)
     }
   },
   computed: {
@@ -267,7 +313,7 @@ export default {
       })
     },
     handleCreateTask(row) {
-      insertQuickTask(row.name, row._id, 2)
+      insertQuickTask(row.name, row._id)
         .then(response => {
           this.$notify.success({
             title: '成功',

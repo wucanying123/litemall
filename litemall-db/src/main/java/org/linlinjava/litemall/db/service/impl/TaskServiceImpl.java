@@ -36,6 +36,8 @@ public class TaskServiceImpl implements TaskService {
     private ItemMapper itemMapper;
     @Autowired
     private ScheduleMapper scheduleMapper;
+    @Autowired
+    private ProgramService programService;
 
 
     private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -125,8 +127,7 @@ public class TaskServiceImpl implements TaskService {
                     String itemId = item.get_id();
                     if (null == item.get_id()) {
                         Program program = item.get_program();
-                        Integer itemVersion = item.getVersion();
-                        item = createItemByProgramId(program.get_id(),itemVersion);
+                        item = createItemByProgramId(program.get_id());
                         itemId = item.get_id();
                     }
                     itemIdList.add(itemId);
@@ -145,13 +146,14 @@ public class TaskServiceImpl implements TaskService {
         return n;
     }
 
-    private Item createItemByProgramId(String programId,Integer itemVersion) {
+    private Item createItemByProgramId(String programId) {
+        Program program = programService.selectProgramById(programId);
         Item item = new Item();
         item.setProgramId(programId);
-        if(null == itemVersion) {
-            item.setVersion(2);
+        if(program!= null && program.get__v()!=null) {
+            item.setVersion(program.get__v());
         }else {
-            item.setVersion(itemVersion);
+            item.setVersion(0);
         }
         item.setRepeatTimes(1);
         item.setPriority(0);
@@ -193,13 +195,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public int insertQuickTask(String taskName,String programId, Integer userId,Integer itemVersion) {
+    public int insertQuickTask(String taskName,String programId, Integer userId) {
         int n = 0;
         try {
             Task task = new Task();
             task.setUserid(userId);
             task.setName(taskName);
-            Item item = createItemByProgramId(programId,itemVersion);
+            Item item = createItemByProgramId(programId);
             String itemIdStr = item.get_id();
             task.setItemsIds(itemIdStr);
             n = insertTask(task);
