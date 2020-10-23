@@ -292,7 +292,16 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="入场时间(秒)">
-                    <el-input id="currentSourceEntryEffectTimeSpan" v-model="currentSource.entryEffectTimeSpan" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceEntryEffectTimeSpan"
+                      v-model="currentSource.entryEffectTimeSpan"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -390,7 +399,7 @@
                     <el-form-item label="背景色">
                       <!--                      <el-input id="currentSourceBackgroundColor" v-model="currentSource.backgroundColor" @change="sourceChange" />-->
                       <section>
-                        <div id="currentSourceBackgroundColor" class="color_con" :style="{background:color}" @click="handleShowColor" @change="sourceChange">选择颜色</div>
+                        <div id="currentSourceBackgroundColor" class="color_con" :style="{background:color}" @click="handleShowColor">选择颜色</div>
                         <div v-show="colorShow">
                           <sketch-picker v-model="color" @input="updateValue" />
                         </div>
@@ -908,7 +917,7 @@ export default {
           'code forecolor backcolor bold italic underline strikethrough alignleft aligncenter alignright indent  hr bullist numlist charmap emoticons fullscreen removeformat preview'
         ]
       },
-      color: '#000',
+      color: 'rgba(0,0,0,1)',
       // 颜色选择器
       colorShow: false,
       colors: {
@@ -2291,10 +2300,26 @@ export default {
         this.colorShow = true
       }
     },
+    // 将hex颜色转成rgb
+    hexToRgba(hex, opacity) {
+      const RGBA = 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')'
+      return RGBA
+    },
+    // 将rgb颜色转成hex
+    colorRGB2Hex(color) {
+      const rgb = color.split(',')
+      const r = parseInt(rgb[0].split('(')[1])
+      const g = parseInt(rgb[1])
+      const b = parseInt(rgb[2].split(')')[0])
+
+      const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+      return hex
+    },
     updateValue(val) {
-      console.log('颜色选择', val) // 输出参数如下图1-1
-      this.color = val.hex
-      console.log('颜色', this.color) // 输出参数如下图1-1
+      this.color = 'rgba(' + val.rgba.r + ',' + val.rgba.g + ',' + val.rgba.b + ',' + val.rgba.a + ')'
+      console.log('颜色选择', this.color)
+      this.currentSource.backgroundColor = this.color
+      console.log('this.currentSource', this.currentSource)
     }
   }
 }
