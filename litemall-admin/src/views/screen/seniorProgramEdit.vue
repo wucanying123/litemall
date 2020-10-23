@@ -397,13 +397,27 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item label="背景色">
-                      <!--                      <el-input id="currentSourceBackgroundColor" v-model="currentSource.backgroundColor" @change="sourceChange" />-->
-                      <section>
-                        <div id="currentSourceBackgroundColor" class="color_con" :style="{background:color}" @click="handleShowColor">选择颜色</div>
-                        <div v-show="colorShow">
-                          <sketch-picker v-model="color" @input="updateValue" />
-                        </div>
-                      </section>
+                      <div v-if="this.currentSource && this.currentSource.backgroundColor">
+                        <section>
+                          <div
+                            class="color_con"
+                            :style="{background:currentSource.backgroundColor}"
+                            @click="handleShowColor"
+                          >颜色
+                          </div>
+                          <div v-show="colorShow">
+                            <sketch-picker v-model="currentSource.backgroundColor" @input="updateValue" />
+                          </div>
+                        </section>
+                      </div>
+                      <div v-else>
+                        <section>
+                          <div class="color_con" :style="{background:color}" @click="handleShowColor">选择颜色</div>
+                          <div v-show="colorShow">
+                            <sketch-picker v-model="color" @input="updateValue" />
+                          </div>
+                        </section>
+                      </div>
                     </el-form-item>
                   </el-col>
                 </el-row>
