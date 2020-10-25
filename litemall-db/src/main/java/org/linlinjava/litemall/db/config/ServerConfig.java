@@ -1,4 +1,4 @@
-package org.linlinjava.litemall.core.storage.config;
+package org.linlinjava.litemall.db.config;
 
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;

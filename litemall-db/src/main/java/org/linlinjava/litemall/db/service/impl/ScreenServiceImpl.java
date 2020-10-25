@@ -1,6 +1,7 @@
 package org.linlinjava.litemall.db.service.impl;//package org.linlinjava.litemall.db.service.impl;
 
 import net.sf.json.JSONObject;
+import org.linlinjava.litemall.db.config.ServerConfig;
 import org.linlinjava.litemall.db.dao.*;
 import org.linlinjava.litemall.db.domain.*;
 import org.linlinjava.litemall.db.service.LiveService;
@@ -40,6 +41,8 @@ public class ScreenServiceImpl implements ScreenService {
     private PlaySourceMapper playSourceMapper;
     @Autowired
     private PlaySourceService playSourceService;
+    @Autowired
+    private ServerConfig serverConfig;
 
     private static Logger logger = LoggerFactory.getLogger(ScreenServiceImpl.class);
 
@@ -526,6 +529,8 @@ public class ScreenServiceImpl implements ScreenService {
         command.setId(UUID.randomUUID().toString().replace("-", ""));
         command.setTask(task);
         command.setTaskId(taskId);
+        String notificationURL = serverConfig.getUrl() + "/admin/screen/task/nocice";
+        command.setNotificationURL(notificationURL);
         requestData.setCommand(command);
         for (String cardId : selectCardIds) {
             String result = HttpUtil.postJsonObject(Constant.URL + cardId, requestData);

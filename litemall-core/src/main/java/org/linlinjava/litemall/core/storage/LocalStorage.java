@@ -3,7 +3,7 @@ package org.linlinjava.litemall.core.storage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.linlinjava.litemall.core.storage.config.ServerConfig;
+import org.linlinjava.litemall.db.config.ServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
