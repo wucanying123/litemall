@@ -1932,7 +1932,7 @@ export default {
       if (smtype == 'Image') {
         smEL.setAttribute('crossorigin', 'anonymous')
         smEL.style.background = 'url(' + smurl + ') no-repeat'
-        smEL.style.backgroundSize = '50% 50%'
+        smEL.style.backgroundSize = '100% 100%'
       } else if (smtype == 'Video') {
         const video = document.createElement('video')
         video.setAttribute('crossOrigin', 'anonymous')
