@@ -226,12 +226,32 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="距左">
-                    <el-input id="currentSourceLeft" v-model="currentSource.left" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceLeft"
+                      v-model="currentSource.left"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                      @input="inputChange()"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="距顶">
-                    <el-input id="currentSourceTop" v-model="currentSource.top" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceTop"
+                      v-model="currentSource.top"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                      @input="inputChange()"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -241,25 +261,61 @@
                     <el-input
                       id="currentSourceWidth"
                       v-model="currentSource.width"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
                       @change="sourceChange"
+                      @input="inputChange()"
                     />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="高度">
-                    <el-input id="currentSourceHeight" v-model="currentSource.height" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceHeight"
+                      v-model="currentSource.height"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                      @input="inputChange()"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="开始">
-                    <el-input id="currentSourcePlayTime" v-model="currentSource.playTime" @change="sourceChange" />
+                    <el-input
+                      id="currentSourcePlayTime"
+                      v-model="currentSource.playTime"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                      @input="inputChange()"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="持续">
-                    <el-input id="currentSourceTimeSpan" v-model="currentSource.timeSpan" @change="sourceChange" />
+                    <el-input
+                      id="currentSourceTimeSpan"
+                      v-model="currentSource.timeSpan"
+                      type="number"
+                      min="0"
+                      step="1"
+                      size="2"
+                      on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+                      @change="sourceChange"
+                      @input="inputChange()"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -1595,6 +1651,10 @@ export default {
         }
       }
       this.sourceDivVisiable = true
+    },
+    // 解决输入框无法变更值
+    inputChange() {
+      this.$forceUpdate()
     },
     sourceChange() {
       console.log('改变资源')
