@@ -28,7 +28,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleClearTask">停止节目</el-button>
       <el-container />
       <el-container>
-        <div style="width: 500px; margin-left:35%;">
+        <div style="width: 500px; margin-left:35%;">播放任务进度：
           <el-progress :text-inside="true" :stroke-width="20" :percentage="progressBar.progress" status="success" />
         </div>
       </el-container>

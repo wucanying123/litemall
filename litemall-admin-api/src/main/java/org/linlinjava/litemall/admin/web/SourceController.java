@@ -176,6 +176,7 @@ public class SourceController {
         source.setUuid(UUID.randomUUID().toString().replace("-", ""));
         source.set_type("WebURL");
         source.setName("网址");
+        source.setUrl("http://");
         source.setMaxPlayTime(10);
         responseUtil.setData(source);
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
