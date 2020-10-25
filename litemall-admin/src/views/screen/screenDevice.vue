@@ -22,7 +22,7 @@
       <el-table-column align="center" label="修改时间" prop="updateTime" width="180">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="550" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="650" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
           <el-button type="primary" size="mini" @click="handleClearTask(scope.row)">停止节目</el-button>

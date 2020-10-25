@@ -28,15 +28,15 @@
       <el-table-column align="center" label="审核状态" prop="passStatus">
         <template slot-scope="scope">{{ scope.row.passStatus | formatPassStatus }}</template>
       </el-table-column>
-      <el-table-column align="center" label="直播地址" prop="url" />
+      <el-table-column align="center" width="400px" label="直播地址" prop="url" />
       <el-table-column align="center" label="宽" prop="width" />
       <el-table-column align="center" label="高" prop="height" />
       <el-table-column align="center" label="修改时间" prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="500" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放直播</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
