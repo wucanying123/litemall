@@ -755,8 +755,8 @@ html{
 }
 /*画面块*/
 .pictureBlock{
-  width:100%;
-  height:100%;
+  width:50%;
+  height:50%;
   display:none;
   position:absolute;
   overflow:hidden;
@@ -1412,10 +1412,7 @@ export default {
       const sliderParent = event.target
       // 当前选择第几个轨道
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
-      console.log(currentTracklayer)
       this.program.layers.splice(currentTracklayer - 1, 1)
-      console.log('删除轨道')
-      console.log(this.program)
     },
     addTime(second) {
       if (second == 0) {
@@ -1454,7 +1451,6 @@ export default {
       for (let i = 0; i < this.pubTimelineStorages.length; i++) {
         const obj = this.pubTimelineStorages[i]
         if (thar.id == obj.id) {
-          console.log('本次删除', thar)
           smEL.remove()
           thar.remove()
           this.pubTimelineStorages.splice(i, 1)
@@ -1467,8 +1463,6 @@ export default {
           this.program.layers[currentTracklayer - 1].sources.splice(j, 1)
         }
       }
-      console.log('删除元素后')
-      console.log(this.program)
       // 阻止父类div做出事件响应
       this.stopPropagation()
     },
@@ -1562,7 +1556,6 @@ export default {
       setTimeout(() => {
         // 当前偏移位置X
         const currentOffsetX = this.pubProgressBarRangePerTime * this.progressBarDOM.value
-        // console.log("偏移",this.pubProgressBarRangePerTime,this.progressBarDOM.value)
 
         // 先全部隐藏
         this.frameHandle(1)
@@ -1636,8 +1629,7 @@ export default {
       this.sliderPressHold = true
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
-      console.log('点击滑条')
-      console.log(this.currentSlider)
+      console.log('点击滑条', this.currentSlider)
       if (event != null && event.dataTransfer != null) {
         const newId = event.dataTransfer.getData('id')
         const divList = document.querySelectorAll('.sliderBlock')
@@ -1657,19 +1649,33 @@ export default {
       this.$forceUpdate()
     },
     sourceChange() {
-      console.log('改变资源')
+      // console.log('改变资源')
       let currentTracklayer = this.currentSlider.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
         currentTracklayer = this.currentSlider.getAttribute('tracklayer')
       }
-      if (this.currentSource != null && currentTracklayer != null) {
+      if (this.currentSource == null || this.currentSource.id == null) {
+        return
+      }
+      if (currentTracklayer != null) {
         for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
           if (this.currentSource.id != null && this.currentSource.id === this.program.layers[currentTracklayer - 1].sources[j].id) {
             this.program.layers[currentTracklayer - 1].sources[j] = this.currentSource
           }
         }
       }
-      // console.log(this.program)
+      // 滑块
+      const eL = document.getElementById(this.currentSource.id)
+      const timeSpan = this.currentSource.timeSpan
+      const offsetY = this.pubSecondWidth * timeSpan
+      eL.style.width = offsetY + 'px'
+      // 画布
+      const smEL = document.getElementById('sm_' + this.currentSource.id)
+      smEL.style.left = this.currentSource.left + 'px'
+      smEL.style.top = this.currentSource.top + 'px'
+      smEL.style.width = this.currentSource.width + 'px'
+      smEL.style.height = this.currentSource.height + 'px'
+      console.log('改变样式', eL, smEL)
     },
     // 当前资源同步，解决绑定值失效
     sourceSynchro(newPlaySource) {
@@ -1720,7 +1726,7 @@ export default {
         alert('不能重叠')
         return
       }
-      console.log(this.currentSlider)
+      // console.log(this.currentSlider)
       const currentTracklayer = sliderParent.getAttribute('tracklayer')
       const sourceUid = this.currentSlider.getAttribute('id')
       const sourceId = this.currentSlider.getAttribute('sourceId')
@@ -1778,7 +1784,6 @@ export default {
       this.sliderOperationHandle(id, sliderParent, offsetX)
     },
     sliderOperationHandle(id, sliderParent, offsetX) {
-      console.log('添加后', id)
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
@@ -1833,7 +1838,6 @@ export default {
         } else if (x > oBoxL + (oBoxW / 2) && x < oBoxL + oBoxW) {
           positionType = 'right'
         }
-        console.log('滑块down', elObj.offsetLeft, elObj.offsetWidth)
         this.updateSource(elObj)
 
         document.onmousemove = (e) => {
@@ -1864,8 +1868,6 @@ export default {
               this.currentSource.playTime = playTime
               this.currentSource.timeSpan = timeSpan
               this.sourceSynchro()
-              // console.log("开始时间2",elObj.offsetLeft,playTime,timeSpan)
-
               thar.updatePubTimelineStoragesData(elObj)
             }
           }
@@ -1930,7 +1932,7 @@ export default {
       if (smtype == 'Image') {
         smEL.setAttribute('crossorigin', 'anonymous')
         smEL.style.background = 'url(' + smurl + ') no-repeat'
-        smEL.style.backgroundSize = '100% 100%'
+        smEL.style.backgroundSize = '50% 50%'
       } else if (smtype == 'Video') {
         const video = document.createElement('video')
         video.setAttribute('crossOrigin', 'anonymous')
@@ -2002,11 +2004,8 @@ export default {
           currentsmELBrowserY = e.clientY - (smEL.style.top == '' ? 0 : parseInt(smEL.style.top))
         }
 
-        console.log('按下画布')
         const sliderParent = e.target
-        console.log('画面', sliderParent)
-        console.log(sliderParent.style.width, sliderParent.style.height)
-
+        console.log('按下画布', sliderParent)
         const currentTracklayer = smEL.getAttribute('tracklayer')
         let sourceUid = smEL.getAttribute('id')
 
@@ -2035,7 +2034,6 @@ export default {
             this.textDivVisiable = true
           }
         }
-        console.log('再测试', this.currentSource)
         this.sourceSynchro()
 
         document.onmousemove = (e) => {
@@ -2048,7 +2046,6 @@ export default {
           const right = thar.videoPackageDOM.clientWidth - (left + parseInt(smEL.clientWidth))
           const width = parseInt(smEL.clientWidth)
           const height = parseInt(smEL.clientHeight)
-          // console.log(top, bottom, left, right)
           if (positionType == 'left') {
             const width = oBoxW + x - xx
             if (left < 0 || right < 0 || width < thar.renderBlocksBox.width) {
@@ -2090,10 +2087,7 @@ export default {
           }
           console.log('移动画布')
           this.sourceSynchro()
-          // const sliderParent = smEL.querySelector('div')
           const currentTracklayer = smEL.getAttribute('tracklayer')
-          console.log(this.currentSource)
-          console.log(this.program.layers[1])
           if (this.currentSource != null && currentTracklayer != null) {
             for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
               if (this.currentSource.id === this.program.layers[currentTracklayer - 1].sources[j].id) {
@@ -2105,8 +2099,6 @@ export default {
               }
             }
           }
-          console.log(this.currentSource)
-          console.log(this.program)
           return false
         }
 
@@ -2127,7 +2119,6 @@ export default {
     },
     drag(ev) {
       ev.dataTransfer.setData('id', ev.target.id)
-      console.log('ev.target.id', ev.target)
     },
     stopPropagation(e) {
       e = e || window.event
@@ -2141,7 +2132,6 @@ export default {
     imitateData() {
       this.addTime(this.maxLayerPlaytime)
       if (this.program.layers != null) {
-        console.log(this.program)
         // 轨道数
         const alltrackNum = this.program.layers.length
         for (let i = 0; i < alltrackNum - 1; i++) {
@@ -2150,8 +2140,6 @@ export default {
         const alreadySources = document.getElementById('alreadySources')
         let html = ''
         alreadySources.innerHTML = html
-        console.log(this.program.layers)
-        console.log(this.program.layers.length)
         for (let i = 0; i < this.program.layers.length; i++) {
           if (this.program.layers[i].sources != null) {
             for (let j = 0; j < this.program.layers[i].sources.length; j++) {
@@ -2210,7 +2198,6 @@ export default {
           }
         }
       }
-      // console.log('已存', alreadySources.innerHTML)
     },
     createColor16() {
       const r = Math.floor(Math.random() * 256)
@@ -2245,7 +2232,14 @@ export default {
       this.textDivVisiable = false
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
-      const playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+
+      let offsetLeftTemp
+      offsetLeftTemp = elObj.offsetLeft
+      const offsetX = (this.currentSliderBrowserX + parseInt(this.timeLinePackageDOM.scrollLeft)) - this.timeLinePackagePadddingLeftAndMarginLeft - this.currentSliderPressHoldOffsetX
+      if (offsetX != 53 && offsetX != 54) {
+        offsetLeftTemp = offsetX
+      }
+      const playTime = parseInt(offsetLeftTemp / pubSecondWidth)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       let currentTracklayer = elObj.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
@@ -2253,7 +2247,6 @@ export default {
       }
       const sourceUid = elObj.getAttribute('id')
       const smtype = elObj.getAttribute('smtype')
-      // console.log('变更',currentTracklayer,sourceUid,smtype)
       if (smtype == 'MultiLineText') {
         this.textDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
@@ -2277,7 +2270,6 @@ export default {
       } else {
         this.currentSource = {}
       }
-      console.log('此次', this.currentSource)
       this.currentSource.playTime = playTime
       this.currentSource.timeSpan = timeSpan
 
@@ -2286,7 +2278,7 @@ export default {
         const smEL = document.getElementById('sm_' + sourceUid)
         if (smEL != null) {
           const img = smEL.querySelector('div')
-          console.log('同步画布宽高', this.currentSlider, smEL, img)
+          // console.log('同步画布宽高', this.currentSlider, smEL, img)
           let widthFlag = smEL.style.width
           let heightFlag
           let temp
@@ -2302,8 +2294,8 @@ export default {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
               heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
             } else {
-              widthFlag = this.program.width
-              heightFlag = this.program.height
+              widthFlag = this.program.width * 0.5
+              heightFlag = this.program.height * 0.5
             }
           } else if (smtype == 'MultiLineText') {
             temp = smEL
@@ -2311,8 +2303,8 @@ export default {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
               heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
             } else {
-              widthFlag = this.program.width
-              heightFlag = this.program.height
+              widthFlag = this.program.width * 0.5
+              heightFlag = this.program.height * 0.5
             }
           } else if (smtype == 'WebURL') {
             temp = smEL
@@ -2320,8 +2312,8 @@ export default {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
               heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
             } else {
-              widthFlag = this.program.width
-              heightFlag = this.program.height
+              widthFlag = this.program.width * 0.5
+              heightFlag = this.program.height * 0.5
             }
           } else if (smtype == 'Video') {
             if (widthFlag != null && widthFlag.length > 0) {
@@ -2332,8 +2324,8 @@ export default {
               temp = img
               const tempWidth = temp.style.width
               if (tempWidth == '100%') {
-                widthFlag = this.program.width
-                heightFlag = this.program.height
+                widthFlag = this.program.width * 0.5
+                heightFlag = this.program.height * 0.5
               } else {
                 widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
                 heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
@@ -2345,7 +2337,7 @@ export default {
             const top = temp.style.top == '' ? 0 : parseInt(temp.style.top)
             const width = widthFlag
             const height = heightFlag
-            console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
+            // console.log(left, top, width, height, temp.clientWidth, temp.clientHeight)
             if (sourceUid != null && currentTracklayer != null && currentTracklayer != '') {
               for (let j = 0; j < this.program.layers[currentTracklayer - 1].sources.length; j++) {
                 if (this.program.layers[currentTracklayer - 1].sources[j] != null) {
@@ -2363,8 +2355,8 @@ export default {
         } else {
           this.currentSource.top = 0
           this.currentSource.left = 0
-          this.currentSource.width = this.program.width
-          this.currentSource.height = this.program.height
+          this.currentSource.width = this.program.width * 0.5
+          this.currentSource.height = this.program.height * 0.5
         }
       }
       this.sourceSynchro()
