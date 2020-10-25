@@ -182,7 +182,7 @@ public class SourceController {
         source.setUuid(UUID.randomUUID().toString().replace("-", ""));
         source.set_type("WebURL");
         source.setName("网址");
-        source.setUrl("http://");
+        source.setUrl("https://");
         source.setMaxPlayTime(10);
         source.setEntryEffect("None");
         source.setExitEffect("None");

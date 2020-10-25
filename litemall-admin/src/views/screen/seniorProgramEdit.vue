@@ -408,7 +408,7 @@
                   <el-col :span="24">
                     <el-form-item label="URL">
                       <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" @input="inputChange()" />
-                      <span style="color:red">以http开头</span>
+                      <span style="color:red">以https开头</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
