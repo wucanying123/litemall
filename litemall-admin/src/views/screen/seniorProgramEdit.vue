@@ -66,7 +66,7 @@
             style="background-color: #009393;text-align: left;"
             smtype="MultiLineText"
             :text="defaultMultiLineText.html"
-            direction="left"
+            direction="right"
             draggable="true"
             onmouseup="mouseRelease()"
             onmousedown="unboundTrackOnMousedown(event)"
