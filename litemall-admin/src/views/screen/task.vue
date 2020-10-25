@@ -27,10 +27,14 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleClearTask">停止节目</el-button>
       <el-container />
+      <el-container>
+        <div style="width: 500px; margin-left:35%;">
+          <el-progress :text-inside="true" :stroke-width="20" :percentage="progressBar.progress" status="success" />
+        </div>
+      </el-container>
     </div>
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
-
       <el-table-column align="center" label="名称" prop="name" />
       <el-table-column align="center" label="审核状态" prop="passStatus">
         <template slot-scope="scope">{{ scope.row.passStatus | formatPassStatus }}</template>
@@ -45,11 +49,6 @@
           </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑任务</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="播放任务进度" width="500" class-name="small-padding fixed-width">
-        <template>
-          <el-progress :text-inside="true" :stroke-width="20" :percentage="progressBar.progress" status="success" />
         </template>
       </el-table-column>
     </el-table>
@@ -325,6 +324,7 @@ export default {
         })
     },
     handlePlay(row) {
+      this.progressBar.progress = 0
       if (this.multipleSelection == null || this.multipleSelection.length === 0) {
         this.$message.error('请选择至少一个卡号')
         return
@@ -376,10 +376,13 @@ export default {
       // console.log("WebSocket连接成功状态码："+this.websocket.readyState);
     },
     setOnmessageMessage(event) {
+      this.progressBar.progress = 0
       // 服务器推送的消息
       console.log('服务端返回：' + event.data)
+      if (event.data != null && JSON.parse(event.data).progress) {
       // progressBar.progress就是绑定的进度值
-      this.progressBar.progress = parseInt(JSON.parse(event.data).progress)
+        this.progressBar.progress = parseInt(JSON.parse(event.data).progress)
+      }
     },
     setOncloseMessage() {
       // console.log("WebSocket连接关闭状态码："+this.websocket.readyState);
