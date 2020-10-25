@@ -271,7 +271,6 @@
                       <el-option :value="'None'" label="无" />
                       <el-option :value="'ALPHA_IN'" label="淡入" />
                       <el-option :value="'ALPHA_OUT'" label="淡出" />
-                      <el-option :value="'RANDOM'" label="随机" />
                       <el-option :value="'MOVING_LEFT'" label="连续左移" />
                       <el-option :value="'MOVING_RIGHT'" label="连续右移" />
                       <el-option :value="'MOVING_TOP'" label="连续上移" />
@@ -313,7 +312,6 @@
                       <el-option :value="'None'" label="无" />
                       <el-option :value="'ALPHA_IN'" label="淡入" />
                       <el-option :value="'ALPHA_OUT'" label="淡出" />
-                      <el-option :value="'RANDOM'" label="随机" />
                       <el-option :value="'MOVING_LEFT'" label="连续左移" />
                       <el-option :value="'MOVING_RIGHT'" label="连续右移" />
                       <el-option :value="'MOVING_TOP'" label="连续上移" />
