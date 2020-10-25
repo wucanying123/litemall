@@ -27,12 +27,12 @@
         <template slot-scope="scope">
           <div v-if="scope.row.__v == 2">
             <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
-            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑简易</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑简易节目</el-button>
             <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           </div>
           <div v-if="scope.row.__v == 0">
             <el-button v-if="scope.row.layersIds" type="primary" size="mini" @click="handleCreateTask(scope.row)">快速创建任务</el-button>
-            <el-button type="primary" size="mini" @click="handleUpdateSenior(scope.row)">编辑高级</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdateSenior(scope.row)">编辑高级节目</el-button>
             <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           </div>
         </template>
