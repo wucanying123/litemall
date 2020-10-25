@@ -25,7 +25,7 @@
       <el-table-column align="center" label="操作" width="550" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
-          <el-button type="primary" size="mini" @click="handleclearTask(scope.row)">停止节目</el-button>
+          <el-button type="primary" size="mini" @click="handleClearTask(scope.row)">停止节目</el-button>
           <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
           <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
           <el-button
@@ -337,7 +337,7 @@ export default {
           })
         })
     },
-    handleclearTask(row) {
+    handleClearTask(row) {
       clearPlayerTask({ selectCardIds: [row.cardId] })
         .then(response => {
           this.$notify.success({

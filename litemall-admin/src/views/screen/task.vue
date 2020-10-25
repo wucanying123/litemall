@@ -10,16 +10,24 @@
         <div slot="header" class="clearfix">
           <span>卡号列表</span>
         </div>
-        <el-table v-loading="listLoading" :data="cardList" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
+        <el-table
+          v-loading="listLoading"
+          :data="cardList"
+          element-loading-text="正在查询中。。。"
+          border
+          fit
+          highlight-current-row
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" width="55" />
           <el-table-column align="center" label="卡号" prop="value" />
         </el-table>
       </el-card>
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入搜索名称" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleclearTask">停止节目</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleClearTask">停止节目</el-button>
+      <el-container />
     </div>
-
     <!-- 查询结果 -->
     <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
@@ -31,20 +39,40 @@
         <template slot-scope="scope">{{ scope.row.updateTime | timestampToTime }}</template>
       </el-table-column>
       <el-table-column align="center" label="创建者" prop="userName" />
-      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="500" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.itemsIds" type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放任务</el-button>
+          <el-button v-if="scope.row.itemsIds" type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePlay(scope.row)">播放任务
+          </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑任务</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="播放任务进度" width="500" class-name="small-padding fixed-width">
+        <template>
+          <el-progress :text-inside="true" :stroke-width="20" :percentage="progressBar.progress" status="success" />
+        </template>
+      </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="dataForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:60px;">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="dataForm"
+        status-icon
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:60px;"
+      >
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" />
         </el-form-item>
@@ -64,6 +92,7 @@
   display: table;
   content: "";
 }
+
 .clearfix:after {
   clear: both
 }
@@ -164,7 +193,8 @@ export default {
       },
       downloadLoading: false,
       cardList: [],
-      cardId: undefined
+      cardId: undefined,
+      progressBar: { taskItemId: undefined, progress: undefined, commandId: undefined }
     }
   },
   computed: {
@@ -172,6 +202,15 @@ export default {
       return {
         'X-Litemall-Admin-Token': getToken()
       }
+    }
+  },
+  mounted() {
+    // WebSocket
+    if ('WebSocket' in window) {
+      this.websocket = new WebSocket('ws://localhost:8083/websocket')
+      this.initWebSocket()
+    } else {
+      alert('当前浏览器 Not support websocket')
     }
   },
   created() {
@@ -260,7 +299,7 @@ export default {
       }).catch(_ => {
       })
     },
-    handleclearTask() {
+    handleClearTask() {
       if (this.multipleSelection == null || this.multipleSelection.length === 0) {
         this.$message.error('请选择至少一个卡号')
         return
@@ -311,6 +350,45 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    initWebSocket() {
+      // 连接错误
+      this.websocket.onerror = this.setErrorMessage
+
+      // 连接成功
+      this.websocket.onopen = this.setOnopenMessage
+
+      // 收到消息的回调
+      this.websocket.onmessage = this.setOnmessageMessage
+
+      // 连接关闭的回调
+      this.websocket.onclose = this.setOncloseMessage
+
+      // 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+      window.onbeforeunload = this.onbeforeunload
+    },
+    setErrorMessage() {
+      // console.log(
+      // "WebSocket连接发生错误状态码："+this.websocket.readyState
+      // );
+    },
+    setOnopenMessage() {
+      // console.log("WebSocket连接成功状态码："+this.websocket.readyState);
+    },
+    setOnmessageMessage(event) {
+      // 服务器推送的消息
+      console.log('服务端返回：' + event.data)
+      // progressBar.progress就是绑定的进度值
+      this.progressBar.progress = parseInt(JSON.parse(event.data).progress)
+    },
+    setOncloseMessage() {
+      // console.log("WebSocket连接关闭状态码："+this.websocket.readyState);
+    },
+    onbeforeunload() {
+      this.closeWebSocket()
+    },
+    closeWebSocket() {
+      this.websocket.close()
     }
   }
 }

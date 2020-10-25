@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.linlinjava.litemall.admin.config.webSocket.WebSocketUtil;
 import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.db.domain.Item;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
@@ -232,6 +233,8 @@ public class TaskController {
     public Object demo(@RequestBody JSONObject json) throws Exception{
         try {
             System.out.println("输出："+json);
+            System.out.println("输出2："+json.toJSONString());
+            WebSocketUtil.sendInfo(json.toJSONString());
         }catch (Exception e){
             e.printStackTrace();
         }
