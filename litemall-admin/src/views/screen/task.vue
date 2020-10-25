@@ -28,7 +28,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-video-pause" @click="handleClearTask">停止节目</el-button>
       <el-container />
       <el-container>
-        <div style="width: 500px; margin-left:35%;">播放任务进度：
+        <div style="width: 500px; margin-left:35%;">发送任务进度：
           <el-progress :text-inside="true" :stroke-width="20" :percentage="progressBar.progress" status="success" />
         </div>
       </el-container>
@@ -299,6 +299,7 @@ export default {
       })
     },
     handleClearTask() {
+      this.progressBar.progress = 0
       if (this.multipleSelection == null || this.multipleSelection.length === 0) {
         this.$message.error('请选择至少一个卡号')
         return

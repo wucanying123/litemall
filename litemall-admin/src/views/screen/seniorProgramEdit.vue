@@ -214,7 +214,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="名称">
-                    <el-input id="currentSourceName" v-model="currentSource.name" @change="sourceChange" />
+                    <el-input id="currentSourceName" v-model="currentSource.name" @change="sourceChange" @input="inputChange()" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -322,7 +322,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="入场特效">
-                    <el-select v-model="currentSource.entryEffect" placeholder="请选择">
+                    <el-select v-model="currentSource.entryEffect" placeholder="请选择" @input="inputChange()">
                       <el-option :value="'None'" label="无" />
                       <el-option :value="'ALPHA_IN'" label="淡入" />
                       <el-option :value="'ALPHA_OUT'" label="淡出" />
@@ -356,6 +356,7 @@
                       size="2"
                       on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
                       @change="sourceChange"
+                      @input="inputChange()"
                     />
                   </el-form-item>
                 </el-col>
@@ -363,7 +364,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="出场特效">
-                    <el-select v-model="currentSource.exitEffect" placeholder="请选择">
+                    <el-select v-model="currentSource.exitEffect" placeholder="请选择" @input="inputChange()">
                       <el-option :value="'None'" label="无" />
                       <el-option :value="'ALPHA_IN'" label="淡入" />
                       <el-option :value="'ALPHA_OUT'" label="淡出" />
@@ -397,6 +398,7 @@
                       size="2"
                       on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
                       @change="sourceChange"
+                      @input="inputChange()"
                     />
                   </el-form-item>
                 </el-col>
@@ -405,7 +407,7 @@
                 <el-row>
                   <el-col :span="24">
                     <el-form-item label="URL">
-                      <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" />
+                      <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" @input="inputChange()" />
                       <span style="color:red">以http开头</span>
                     </el-form-item>
                   </el-col>
@@ -424,6 +426,7 @@
                         size="2"
                         on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
                         @change="sourceChange"
+                        @input="inputChange()"
                       />
                     </el-form-item>
                   </el-col>
@@ -439,13 +442,14 @@
                         size="2"
                         on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
                         @change="sourceChange"
+                        @input="inputChange()"
                       />
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="12">
-                    <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange">
+                    <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange" @input="inputChange()">
                       <el-select v-model="currentSource.center" placeholder="请选择">
                         <el-option :value="true" label="是" />
                         <el-option :value="false" label="否" />
@@ -479,7 +483,7 @@
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
-                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" />
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="inputChange()" />
                   </el-form-item>
                 </el-row>
               </div>
@@ -973,7 +977,7 @@ export default {
 
       textDivVisiable: false,
 
-      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: undefined, entryEffectTimeSpan: undefined, entryEffect: undefined, timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: false, createTime: undefined, updateTime: undefined, userid: undefined },
+      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: 'None', entryEffectTimeSpan: undefined, entryEffect: 'None', timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -2358,6 +2362,12 @@ export default {
           this.currentSource.width = this.program.width * 0.5
           this.currentSource.height = this.program.height * 0.5
         }
+      }
+      if (this.currentSource.entryEffect == null) {
+        this.currentSource.entryEffect = 'None'
+      }
+      if (this.currentSource.exitEffect == null) {
+        this.currentSource.exitEffect = 'None'
       }
       this.sourceSynchro()
     },

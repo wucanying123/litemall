@@ -162,7 +162,13 @@ public class SourceController {
         source.set_type("MultiLineText");
         source.setName("多行文本");
         source.setHtml("内容");
+        source.setCenter(true);
         source.setMaxPlayTime(10);
+        source.setSpeed(3);
+        source.setLineHeight(1.5f);
+        source.setEntryEffect("None");
+        source.setExitEffect("None");
+        source.setLineHeight(1.0f);
         responseUtil.setData(source);
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
@@ -178,6 +184,8 @@ public class SourceController {
         source.setName("网址");
         source.setUrl("http://");
         source.setMaxPlayTime(10);
+        source.setEntryEffect("None");
+        source.setExitEffect("None");
         responseUtil.setData(source);
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
