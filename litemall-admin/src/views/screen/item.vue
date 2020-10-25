@@ -34,7 +34,12 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="350" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleLink(scope.row)">编辑节目详情</el-button>
+          <div v-if="scope.row.version == 2">
+            <el-button type="primary" size="mini" @click="handleLink(scope.row)">编辑简易节目</el-button>
+          </div>
+          <div v-if="scope.row.version == 0">
+            <el-button type="primary" size="mini" @click="handleLink2(scope.row)">编辑高级节目</el-button>
+          </div>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="primary" size="mini" @click="handleSchedule(scope.row)">定时</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
@@ -442,6 +447,9 @@ export default {
     },
     handleLink(row) {
       this.$router.push({ path: '/screen/program-edit', query: { id: row.programId }})
+    },
+    handleLink2(row) {
+      this.$router.push({ path: '/screen/program-senior-edit', query: { id: row.programId }})
     }
   }
 }
