@@ -100,6 +100,7 @@
 
     <el-container>
       <div style="width: 100%;height: 100%;">
+        (请先点击首页左边的图标，隐藏左侧系统菜单栏  )
         <div id="package">
           (添加素材:左侧单击并拖拽素材到层上，删除素材:双击素材滑块，删除层:双击层滑块)
           <div id="leftMenuPackage">
