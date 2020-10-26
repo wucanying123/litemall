@@ -2244,7 +2244,10 @@ export default {
       if (offsetX != 53 && offsetX != 54) {
         offsetLeftTemp = offsetX
       }
-      const playTime = parseInt(offsetLeftTemp / pubSecondWidth)
+      let playTime = parseInt(offsetLeftTemp / pubSecondWidth)
+      if ((elObj.offsetLeft / pubSecondWidth) < 1) {
+        playTime = 0
+      }
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       let currentTracklayer = elObj.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
