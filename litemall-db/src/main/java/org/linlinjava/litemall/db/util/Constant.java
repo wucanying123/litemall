@@ -17,7 +17,6 @@ public class Constant {
     public static String UDP_HOSTNAME = "255.255.255.255";
     public static Integer UDP_PORT = 22222;
     public static String URL = LOCALHOST + ":" + WEBPORT + "/command/";
-    public static String PASSWORD = "999";
 
     /**
      * 服务端返回代码  code
