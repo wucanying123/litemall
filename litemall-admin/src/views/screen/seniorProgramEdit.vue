@@ -1637,7 +1637,7 @@ export default {
       console.log('点击滑条')
       // 增加轨道长度
       const futureLength = event.offsetX + parseInt(this.currentSlider.style.width)
-      if (futureLength > 0) {
+      if (futureLength > this.pubTotalWidth) {
         const needTime = Math.ceil((futureLength - this.pubTotalWidth) / this.pubSecondWidth)
         this.addTime(needTime)
       }
