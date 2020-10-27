@@ -1807,7 +1807,7 @@ export default {
       const thar = this
       const elObj = document.getElementById(id)
       // 克隆滑块
-      console.log('克隆', elObj)
+      console.log('添加后', elObj)
       if (elObj == null) { return }
       const elObjClone = elObj.cloneNode(true)
       elObjClone.setAttribute('id', this.createUuid(32, 16))
@@ -2254,17 +2254,18 @@ export default {
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
 
       const offsetX = (this.currentSliderBrowserX + parseInt(this.timeLinePackageDOM.scrollLeft)) - this.timeLinePackagePadddingLeftAndMarginLeft - this.currentSliderPressHoldOffsetX
+
       let playTime
       if (elObj.offsetLeft < pubSecondWidth) {
         playTime = 0
-        if (offsetX != 53 && offsetX != 54) {
+        if (elObj.offsetLeft == 4) {
           playTime = parseInt(offsetX / pubSecondWidth)
         }
       }
       if (elObj.offsetLeft > pubSecondWidth && elObj.offsetLeft > offsetX) {
         playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
       }
-      // console.log("开始时间位置",offsetX,elObj.offsetLeft,playTime)
+      // console.log("开始时间位置",offsetX,elObj.offsetLeft,playTime,"宽度",elObj.style.left)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       let currentTracklayer = elObj.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
