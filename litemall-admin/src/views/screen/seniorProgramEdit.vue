@@ -1639,7 +1639,7 @@ export default {
       const futureLength = event.offsetX + parseInt(this.currentSlider.style.width)
       if (futureLength > this.pubTotalWidth) {
         const needTime = Math.ceil((futureLength - this.pubTotalWidth) / this.pubSecondWidth)
-        this.addTime(needTime)
+        this.addTime(needTime + 10)
       }
       if (event != null && event.dataTransfer != null) {
         const newId = event.dataTransfer.getData('id')
