@@ -1634,7 +1634,13 @@ export default {
       this.sliderPressHold = true
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
-      console.log('点击滑条', this.currentSlider)
+      console.log('点击滑条')
+      // 增加轨道长度
+      const futureLength = event.offsetX + parseInt(this.currentSlider.style.width)
+      if (futureLength > 0) {
+        const needTime = Math.ceil((futureLength - this.pubTotalWidth) / this.pubSecondWidth)
+        this.addTime(needTime)
+      }
       if (event != null && event.dataTransfer != null) {
         const newId = event.dataTransfer.getData('id')
         const divList = document.querySelectorAll('.sliderBlock')
