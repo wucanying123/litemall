@@ -2253,16 +2253,18 @@ export default {
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
 
-      let offsetLeftTemp
-      offsetLeftTemp = elObj.offsetLeft
       const offsetX = (this.currentSliderBrowserX + parseInt(this.timeLinePackageDOM.scrollLeft)) - this.timeLinePackagePadddingLeftAndMarginLeft - this.currentSliderPressHoldOffsetX
-      if (offsetX != 53 && offsetX != 54) {
-        offsetLeftTemp = offsetX
-      }
-      let playTime = parseInt(offsetLeftTemp / pubSecondWidth)
-      if ((elObj.offsetLeft / pubSecondWidth) < 1) {
+      let playTime
+      if (elObj.offsetLeft < pubSecondWidth) {
         playTime = 0
+        if (offsetX != 53 && offsetX != 54) {
+          playTime = parseInt(offsetX / pubSecondWidth)
+        }
       }
+      if (elObj.offsetLeft > pubSecondWidth && elObj.offsetLeft > offsetX) {
+        playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+      }
+      // console.log("开始时间位置",offsetX,elObj.offsetLeft,playTime)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       let currentTracklayer = elObj.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
