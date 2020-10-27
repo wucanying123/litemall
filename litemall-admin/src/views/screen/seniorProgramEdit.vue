@@ -1634,7 +1634,8 @@ export default {
       this.sliderPressHold = true
       this.currentSlider = event.target
       this.currentSliderBrowserX = event.clientX - (this.currentSlider.style.left == '' ? 0 : parseInt(this.currentSlider.style.left))
-      console.log('点击滑条', this.currentSlider)
+      console.log('点击滑条')
+
       if (event != null && event.dataTransfer != null) {
         const newId = event.dataTransfer.getData('id')
         const divList = document.querySelectorAll('.sliderBlock')
@@ -1642,6 +1643,20 @@ export default {
           for (let i = 0; i < divList.length; i++) {
             if (newId == divList[i].id) {
               const target = divList[i]
+
+              let tempCurrentSliderWidth
+              if (target.style.width == null || target.style.width == '') {
+                tempCurrentSliderWidth = this.pubSecondWidth * 10
+              } else {
+                tempCurrentSliderWidth = parseInt(target.style.width)
+              }
+              // 增加轨道长度
+              const futureLength = event.offsetX + tempCurrentSliderWidth
+              if (futureLength > this.pubTotalWidth) {
+                console.log('比较', event.offsetX, tempCurrentSliderWidth, futureLength, this.pubTotalWidth)
+                const needTime = Math.ceil((futureLength - this.pubTotalWidth) / this.pubSecondWidth)
+                this.addTime(needTime + 3)
+              }
               this.updateSource(target)
             }
           }
