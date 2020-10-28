@@ -50,6 +50,14 @@ export function selectDefaultMultiLineText(data) {
   })
 }
 
+export function selectDefaultMultiLineTextV2(data) {
+  return request({
+    url: '/screen/source/selectDefaultMultiLineTextV2',
+    method: 'get',
+    data
+  })
+}
+
 export function selectDefaultWebURL(data) {
   return request({
     url: '/screen/source/selectDefaultWebURL',

@@ -4,7 +4,7 @@
       width="220px"
       style="background-color: rgb(238, 241, 246)"
     >
-      <el-menu :default-openeds="['1','2','3','4']">
+      <el-menu :default-openeds="['1','2','3','4','5']">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-picture" />图片
@@ -77,6 +77,27 @@
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">
+            <i class="el-icon-document" />多行文本图片
+          </template>
+          <div
+            :id="defaultMultiLineTextV2.uuid"
+            :sourceId="defaultMultiLineTextV2.sourceId"
+            ondblclick="deleteTrackSourceMaterial(event)"
+            class="sliderBlock"
+            style="background-color: #6A6AFF;text-align: left;"
+            smtype="MultiLineTextV2"
+            :text="defaultMultiLineTextV2.html"
+            direction="right"
+            draggable="true"
+            onmouseup="mouseRelease()"
+            onmousedown="unboundTrackOnMousedown(event)"
+            ondragstart="drag(event)"
+          >
+            {{ defaultMultiLineTextV2.name }}
+          </div>
+        </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
             <i class="el-icon-news" />网址
           </template>
           <div
@@ -84,7 +105,7 @@
             :sourceId="defaultWebURL.sourceId"
             ondblclick="deleteTrackSourceMaterial(event)"
             class="sliderBlock"
-            style="background-color:#6A6AFF;text-align: left;"
+            style="background-color:#FF6633;text-align: left;"
             smtype="WebURL"
             draggable="true"
             onmouseup="mouseRelease()"
@@ -459,7 +480,7 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item label="背景色">
-                      <div v-if="this.currentSource && this.currentSource.backgroundColor">
+                      <div v-if="currentSource && currentSource.backgroundColor">
                         <section>
                           <div
                             class="color_con"
@@ -779,7 +800,7 @@ html{
 </style>
 
 <script>
-import { selectDefaultWebURL, selectDefaultMultiLineText, listSource } from '@/api/source'
+import { selectDefaultWebURL, selectDefaultMultiLineText, selectDefaultMultiLineTextV2, listSource } from '@/api/source'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
@@ -823,6 +844,10 @@ const defaultTypeOptions = [
   // {
   //   label: '多行文本',
   //   value: 'MultiLineText'
+  // },
+  // {
+  //   label: '多行文本图片',
+  //   value: 'MultiLineTextV2'
   // }
 ]
 
@@ -907,6 +932,7 @@ export default {
       pictureList: [],
       videoList: [],
       defaultMultiLineText: { id: undefined, uuid: undefined, html: undefined },
+      defaultMultiLineTextV2: { id: undefined, uuid: undefined, html: undefined },
       defaultWebURL: { id: undefined, uuid: undefined },
 
       timeLinePackageDOM: null,
@@ -1099,6 +1125,7 @@ export default {
     this.defaultPictureList()
     this.defaultVideoList()
     this.getDefaultMultiLineText()
+    this.getDefaultMultiLineTextV2()
     this.getDefaultWebURL()
     if (this.$route.query.id == null) {
       return
@@ -1254,6 +1281,13 @@ export default {
         this.defaultMultiLineText = response.data.data
       }).catch(() => {
         this.defaultMultiLineText = undefined
+      })
+    },
+    getDefaultMultiLineTextV2() {
+      selectDefaultMultiLineTextV2().then(response => {
+        this.defaultMultiLineTextV2 = response.data.data
+      }).catch(() => {
+        this.defaultMultiLineTextV2 = undefined
       })
     },
     getDefaultWebURL() {
@@ -1809,6 +1843,12 @@ export default {
           }
         }
         if (newPlaySource == null) {
+          if (smtype == 'MultiLineTextV2') {
+            newPlaySource = this.defaultMultiLineTextV2
+            newPlaySource.id = sourceUid
+          }
+        }
+        if (newPlaySource == null) {
           if (smtype == 'WebURL') {
             newPlaySource = this.defaultWebURL
             newPlaySource.id = sourceUid
@@ -1854,6 +1894,8 @@ export default {
         if (smtype == 'WebURL') {
           this.urlDivVisiable = true
         } else if (smtype == 'MultiLineText') {
+          this.textDivVisiable = true
+        } else if (smtype == 'MultiLineTextV2') {
           this.textDivVisiable = true
         }
       }
@@ -2005,6 +2047,12 @@ export default {
         rollText.setAttribute('direction', elObj.getAttribute('direction'))
         rollText.innerText = elObj.getAttribute('text')
         smEL.appendChild(rollText)
+      } else if (smtype == 'MultiLineTextV2') {
+        const rollText = document.createElement('div')
+        rollText.setAttribute('class', 'rollText')
+        rollText.setAttribute('direction', elObj.getAttribute('direction'))
+        rollText.innerText = elObj.getAttribute('text')
+        smEL.appendChild(rollText)
       } else if (smtype == 'WebURL') {
         const rollText = document.createElement('div')
         rollText.setAttribute('class', 'rollText')
@@ -2085,6 +2133,8 @@ export default {
           if (smtype == 'WebURL') {
             this.urlDivVisiable = true
           } else if (smtype == 'MultiLineText') {
+            this.textDivVisiable = true
+          } else if (smtype == 'MultiLineTextV2') {
             this.textDivVisiable = true
           }
         }
@@ -2313,6 +2363,12 @@ export default {
           this.currentSource = { id: sourceUid, name: '多行文本', _type: 'MultiLineText' }
         }
       }
+      if (smtype == 'MultiLineTextV2') {
+        this.textDivVisiable = true
+        if (this.currentSource == null || this.currentSource.id != sourceUid) {
+          this.currentSource = { id: sourceUid, name: '多行文本图片', _type: 'MultiLineTextV2' }
+        }
+      }
       if (smtype == 'WebURL') {
         this.urlDivVisiable = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
@@ -2358,6 +2414,15 @@ export default {
               heightFlag = this.program.height * 0.5
             }
           } else if (smtype == 'MultiLineText') {
+            temp = smEL
+            if (widthFlag != null && widthFlag.length > 0) {
+              widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)
+              heightFlag = temp.style.height == '' ? 0 : parseInt(temp.style.height)
+            } else {
+              widthFlag = this.program.width * 0.5
+              heightFlag = this.program.height * 0.5
+            }
+          } else if (smtype == 'MultiLineTextV2') {
             temp = smEL
             if (widthFlag != null && widthFlag.length > 0) {
               widthFlag = temp.style.width == '' ? 0 : parseInt(temp.style.width)

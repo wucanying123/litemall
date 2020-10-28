@@ -3,7 +3,7 @@ package org.linlinjava.litemall.db.domain;
 public enum PlaySourceType {
     /*
      * 素材类型:Video视频，Image图片，AnalogClock时钟，DigitalClock数字时钟，
-     *        Countdown倒计时，Flash，Weather天气预报，MultiLineText多行文本
+     *        Countdown倒计时，Flash，Weather天气预报，MultiLineText多行文本，MultiLineTextV2多行文本图片
      */
 
     Video("视频"),
@@ -20,7 +20,9 @@ public enum PlaySourceType {
 
     Weather("天气预报"),
 
-    MultiLineText("多行文本");
+    MultiLineText("多行文本"),
+
+    MultiLineTextV2("多行文本图片");
 
     private String description;
 

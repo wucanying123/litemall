@@ -173,6 +173,27 @@ public class SourceController {
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
 
+    @ApiOperation(value = "获取默认构造多行文本图片")
+    @GetMapping("/selectDefaultMultiLineTextV2")
+    public ResponseUtil selectDefaultMultiLineTextV2() {
+        ResponseUtil responseUtil = new ResponseUtil();
+        Source source = new Source();
+        source.setSourceId(UUID.randomUUID().toString().replace("-", ""));
+        source.setUuid(UUID.randomUUID().toString().replace("-", ""));
+        source.set_type("MultiLineTextV2");
+        source.setName("多行文本图片");
+        source.setHtml("内容");
+        source.setCenter(true);
+        source.setMaxPlayTime(10);
+        source.setSpeed(3);
+        source.setLineHeight(1.5f);
+        source.setEntryEffect("None");
+        source.setExitEffect("None");
+        source.setLineHeight(1.0f);
+        responseUtil.setData(source);
+        return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+    }
+
     @ApiOperation(value = "获取默认网址")
     @GetMapping("/selectDefaultWebURL")
     public ResponseUtil selectDefaultWebUrl() {

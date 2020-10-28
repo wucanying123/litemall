@@ -201,6 +201,10 @@ const defaultTypeOptions = [
   // {
   //   label: '多行文本',
   //   value: 'MultiLineText'
+  // },
+  // {
+  //   label: '多行文本图片',
+  //   value: 'MultiLineTextV2'
   // }
 ]
 
