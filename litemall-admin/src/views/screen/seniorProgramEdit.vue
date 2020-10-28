@@ -200,6 +200,8 @@
         label-width="100px"
         style="width: 800px; margin-left:50px;"
       >
+        <div id="imgContent" />
+
         <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
         <el-row>
           <el-col :span="12">
@@ -484,7 +486,8 @@
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
-                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="inputChange()" />
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="editorInputChange()" />
+                    <div id="currentSourceHtml2" />
                   </el-form-item>
                 </el-row>
               </div>
@@ -984,11 +987,18 @@ export default {
         language: 'zh_CN',
         convert_urls: false,
         height: 500,
+        // plugins: [
+        //   'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
+        // ],
+        // toolbar: [
+        //   'code forecolor backcolor bold italic underline strikethrough alignleft aligncenter alignright indent  hr bullist numlist charmap emoticons fullscreen removeformat preview'
+        // ]
         plugins: [
-          'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
+          'advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools importcss insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount'
         ],
         toolbar: [
-          'code forecolor backcolor bold italic underline strikethrough alignleft aligncenter alignright indent  hr bullist numlist charmap emoticons fullscreen removeformat preview'
+          'searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat subscript superscript code codesample',
+          'hr bullist numlist link image charmap preview anchor pagebreak insertdatetime media table emoticons forecolor backcolor fullscreen'
         ]
       },
       color: 'rgba(0,0,0,1)',
@@ -1668,11 +1678,36 @@ export default {
     inputChange() {
       this.$forceUpdate()
     },
+    editorInputChange() {
+      this.$forceUpdate()
+      document.getElementById('currentSourceHtml2').innerHTML = document.getElementById('currentSourceHtml').value
+      const htmlDom = document.getElementById('currentSourceHtml2')
+      html2canvas(htmlDom, {
+        allowTaint: false, // 允许污染
+        taintTest: true, // 在渲染前测试图片(没整明白有啥用)
+        useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
+      }).then(function(canvas) {
+        const content = canvas.toDataURL('image/jpeg', 1.0)
+        const img = new Image()
+        // img.src = 'data:image/jpeg;base64,' + content
+        img.src = content
+        document.getElementById('imgContent').innerHTML = ''
+        document.getElementById('imgContent').appendChild(img)
+        console.log('我的图片', content)
+      })
+    },
     sourceChange() {
-      // console.log('改变资源')
-      let currentTracklayer = this.currentSlider.style.zIndex
+      const eL = document.getElementById(this.currentSource.id)
+      console.log('改变资源')
+      let target
+      if (this.currentSlider != null) {
+        target = this.currentSlider
+      } else {
+        target = eL
+      }
+      let currentTracklayer = target.style.zIndex
       if (currentTracklayer == null || currentTracklayer == '') {
-        currentTracklayer = this.currentSlider.getAttribute('tracklayer')
+        currentTracklayer = target.getAttribute('tracklayer')
       }
       if (this.currentSource == null || this.currentSource.id == null) {
         return
@@ -1685,7 +1720,6 @@ export default {
         }
       }
       // 滑块
-      const eL = document.getElementById(this.currentSource.id)
       const timeSpan = this.currentSource.timeSpan
       const offsetY = this.pubSecondWidth * timeSpan
       eL.style.width = offsetY + 'px'
