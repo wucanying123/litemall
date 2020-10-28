@@ -221,6 +221,7 @@
         label-width="100px"
         style="width: 800px; margin-left:50px;"
       >
+        <div id="imgContent" />
         <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
         <el-row>
           <el-col :span="12">
@@ -509,7 +510,6 @@
                   </el-row>
                 </div>
                 <div v-show="textDivVisiableV2">
-                  <div id="imgContent" />
                   <el-row>
                     <el-col :span="12">
                       <el-form-item id="currentSoureCenterV2" label="垂直居中" @change="sourceChange" @input="inputChange()">

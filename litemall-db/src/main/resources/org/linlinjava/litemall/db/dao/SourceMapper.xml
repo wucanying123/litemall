@@ -58,6 +58,9 @@
     <result column="updateTime" jdbcType="BIGINT" property="updateTime" />
     <result column="userid" jdbcType="INTEGER" property="userid" />
     <result column="pass_status" jdbcType="INTEGER" property="passStatus" />
+    <result column="src" property="src" />
+    <result column="fixCenter" jdbcType="VARCHAR" property="fixCenter" />
+    <result column="moveDown" jdbcType="VARCHAR" property="moveDown" />
   </resultMap>
   <sql id="Base_Column_List">
     source_id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -66,7 +69,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime, userid, pass_status
+    city, code, createTime, updateTime, userid, pass_status, src, fixCenter, moveDown
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -249,6 +252,15 @@
       <if test="passStatus != null">
         pass_status,
       </if>
+     <if test="src != null">
+       src,
+      </if>
+     <if test="fixCenter != null">
+       fixCenter,
+      </if>
+      <if test="moveDown != null">
+        moveDown,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="sourceId != null">
@@ -419,6 +431,15 @@
       <if test="passStatus != null">
         #{passStatus,jdbcType=INTEGER},
       </if>
+      <if test="src != null">
+        #{src},
+      </if>
+      <if test="fixCenter != null">
+        #{fixCenter,jdbcType=BIT},
+      </if>
+      <if test="moveDown != null">
+        #{moveDown,jdbcType=BIT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.linlinjava.litemall.db.domain.Source">
@@ -588,6 +609,15 @@
       </if>
       <if test="passStatus != null">
         pass_status = #{passStatus,jdbcType=INTEGER},
+      </if>
+      <if test="src != null">
+        src = #{src},
+      </if>
+      <if test="fixCenter != null">
+        fixCenter = #{fixCenter,jdbcType=BIT},
+      </if>
+      <if test="moveDown != null">
+        moveDown = #{moveDown,jdbcType=BIT},
       </if>
     </set>
     where source_id = #{sourceId,jdbcType=VARCHAR}

@@ -60,7 +60,9 @@
     <result column="source_id" jdbcType="VARCHAR" property="sourceId" />
     <result column="layer_id" jdbcType="VARCHAR" property="layerId" />
     <result column="program_id" jdbcType="VARCHAR" property="programId" />
-    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="src" property="src" />
+    <result column="fixCenter" jdbcType="VARCHAR" property="fixCenter" />
+    <result column="moveDown" jdbcType="VARCHAR" property="moveDown" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -69,7 +71,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime, userid, source_id, layer_id, program_id, uuid
+    city, code, createTime, updateTime, userid, source_id, layer_id, program_id, src, fixCenter, moveDown
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -258,8 +260,8 @@
       <if test="programId != null">
         program_id,
       </if>
-      <if test="uuid != null">
-        uuid,
+      <if test="moveDown != null">
+        moveDown,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -437,8 +439,8 @@
       <if test="programId != null">
         #{programId,jdbcType=VARCHAR},
       </if>
-      <if test="uuid != null">
-        #{uuid,jdbcType=VARCHAR},
+      <if test="moveDown != null">
+        #{moveDown,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -616,8 +618,8 @@
       <if test="programId != null">
         program_id = #{programId,jdbcType=VARCHAR},
       </if>
-      <if test="uuid != null">
-        uuid = #{uuid,jdbcType=VARCHAR},
+      <if test="moveDown != null">
+        moveDown = #{moveDown,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
