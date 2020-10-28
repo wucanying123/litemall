@@ -63,6 +63,7 @@
     <result column="src" property="src" />
     <result column="fixCenter" jdbcType="VARCHAR" property="fixCenter" />
     <result column="moveDown" jdbcType="VARCHAR" property="moveDown" />
+    <result column="imgHeight" jdbcType="INTEGER" property="imgHeight" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, url, maxPlayTime, _type, md5, mime, size, enabled, enabledBy, mediaGroup,
@@ -71,7 +72,7 @@
     shade, opacity, showBg, bgColor, showHourScale, scaleHourColor, showMinScale, scaleMinColor,
     scaleStyle, showScaleNum, pinStyle, pinHourColor, pinMinColor, pinSecColor, showSecond,
     backgroundColor, speed, lineHeight, timezone, language, center, html, sUrl, sInterval,
-    city, code, createTime, updateTime, userid, source_id, layer_id, program_id, src, fixCenter, moveDown
+    city, code, createTime, updateTime, userid, source_id, layer_id, program_id, src, fixCenter, moveDown,imgHeight
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -260,8 +261,17 @@
       <if test="programId != null">
         program_id,
       </if>
+      <if test="src != null">
+        src,
+      </if>
+      <if test="fixCenter != null">
+        fixCenter,
+      </if>
       <if test="moveDown != null">
         moveDown,
+      </if>
+      <if test="imgHeight != null">
+        imgHeight,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -439,8 +449,17 @@
       <if test="programId != null">
         #{programId,jdbcType=VARCHAR},
       </if>
+      <if test="src != null">
+        #{src},
+      </if>
+      <if test="fixCenter != null">
+        #{fixCenter,jdbcType=BIT},
+      </if>
       <if test="moveDown != null">
         #{moveDown,jdbcType=BIT},
+      </if>
+      <if test="imgHeight != null">
+        #{imgHeight,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -618,8 +637,17 @@
       <if test="programId != null">
         program_id = #{programId,jdbcType=VARCHAR},
       </if>
+      <if test="src != null">
+        src = #{src},
+      </if>
+      <if test="fixCenter != null">
+        fixCenter = #{fixCenter,jdbcType=BIT},
+      </if>
       <if test="moveDown != null">
         moveDown = #{moveDown,jdbcType=BIT},
+      </if>
+      <if test="imgHeight != null">
+        imgHeight = #{imgHeight,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

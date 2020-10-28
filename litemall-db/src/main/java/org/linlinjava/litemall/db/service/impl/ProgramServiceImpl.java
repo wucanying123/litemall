@@ -219,6 +219,9 @@ public class ProgramServiceImpl implements ProgramService {
                     Integer allPlayTime = 0;
                     for (PlaySource playSource : sources) {
                         if(null != playSource) {
+                            if(null != playSource.get_type() && playSource.get_type().equals(PlaySourceType.MultiLineTextV2.name())){
+                                playSource.setImgHeight(60);
+                            }
                             //自动设置开始播放时间
                             if (null == playSource.getCreateTime()) {
                                 if(StringUtilsXD.isEmpty(playSource.getId())) {

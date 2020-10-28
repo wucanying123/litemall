@@ -1039,7 +1039,7 @@ export default {
 
       textDivVisiableV2: false,
 
-      currentSource: { moveDown: undefined, fixCenter: undefined, lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: 'None', entryEffectTimeSpan: undefined, entryEffect: 'None', timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
+      currentSource: { src: undefined, moveDown: undefined, fixCenter: undefined, lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: 'None', entryEffectTimeSpan: undefined, entryEffect: 'None', timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -1747,20 +1747,23 @@ export default {
     },
     editorInputChange() {
       this.$forceUpdate()
-      document.getElementById('currentSourceHtml2').innerHTML = document.getElementById('currentSourceHtml').value
-      const htmlDom = document.getElementById('currentSourceHtml2')
+      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: red">' + document.getElementById('currentSourceHtml').value + '</div>'
+      const htmlDom = document.getElementById('imgDiv')
       html2canvas(htmlDom, {
         allowTaint: false, // 允许污染
         taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-        useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
-      }).then(function(canvas) {
-        const content = canvas.toDataURL('image/jpeg', 1.0)
+        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
+        height: htmlDom.offsetHeight, // 下面解决当页面滚动之后生成图片出现白边问题
+        width: htmlDom.offsetWidth
+      }).then(canvas => {
+        const content = canvas.toDataURL('image/jpeg')
         const img = new Image()
         // img.src = 'data:image/jpeg;base64,' + content
         img.src = content
         document.getElementById('imgContent').innerHTML = ''
         document.getElementById('imgContent').appendChild(img)
-        console.log('我的图片', content)
+        console.log('我的图片', this.currentSource, content)
+        this.currentSource.src = content
       })
     },
     sourceChange() {
@@ -1820,6 +1823,8 @@ export default {
         if (this.currentSource.center != null && document.getElementById('currentSoureCenter') != null) { document.getElementById('currentSoureCenter').value = this.currentSource.center }
         if (this.currentSource.backgroundColor != null && document.getElementById('currentSourceBackgroundColor') != null) { document.getElementById('currentSourceBackgroundColor').value = this.currentSource.backgroundColor }
         if (this.currentSource.html != null && document.getElementById('currentSourceHtml') != null) { document.getElementById('currentSourceHtml').value = this.currentSource.html }
+        if (this.currentSource.fixCenter != null && document.getElementById('currentSoureCenterV2') != null) { document.getElementById('currentSoureCenterV2').value = this.currentSource.fixCenter }
+        if (this.currentSource.moveDown != null && document.getElementById('currentSoureMoveDown') != null) { document.getElementById('currentSoureMoveDown').value = this.currentSource.moveDown }
       }
     },
     updatePubTimelineStoragesData(thar) {

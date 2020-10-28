@@ -91,5 +91,5 @@ public class PlaySource implements Serializable {
     boolean fixCenter;//垂直居中
     boolean moveDown;//向下移动
     //--多行文本图片end---
-
+    Integer imgHeight;
 }
