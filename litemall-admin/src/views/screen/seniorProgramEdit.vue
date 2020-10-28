@@ -221,8 +221,6 @@
         label-width="100px"
         style="width: 800px; margin-left:50px;"
       >
-        <div id="imgContent" />
-
         <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
         <el-row>
           <el-col :span="12">
@@ -437,7 +435,7 @@
                   </el-col>
                 </el-row>
               </div>
-              <div v-show="textDivVisiable" v-if="currentSource" id="textDiv">
+              <div v-show="textDivVisiable" v-if="currentSource">
                 <el-row>
                   <el-col :span="12">
                     <el-form-item label="翻页间隔(秒)">
@@ -472,13 +470,7 @@
                   </el-col>
                 </el-row>
                 <el-row>
-                  <el-col :span="12">
-                    <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange" @input="inputChange()">
-                      <el-select v-model="currentSource.center" placeholder="请选择">
-                        <el-option :value="true" label="是" />
-                        <el-option :value="false" label="否" />
-                      </el-select>
-                    </el-form-item>
+                  <el-col>
                     <el-form-item label="背景色">
                       <div v-if="currentSource && currentSource.backgroundColor">
                         <section>
@@ -504,6 +496,45 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
+                <div v-show="!textDivVisiableV2">
+
+                  <el-row>
+                    <el-col>
+                      <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange" @input="inputChange()">
+                        <el-select v-model="currentSource.center" placeholder="请选择">
+                          <el-option :value="true" label="是" />
+                          <el-option :value="false" label="否" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </div>
+                <div v-show="textDivVisiableV2">
+                  <div id="imgContent" />
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item id="currentSoureCenterV2" label="垂直居中" @change="sourceChange" @input="inputChange()">
+                        <el-select v-model="currentSource.fixCenter" placeholder="请选择">
+                          <el-option :value="true" label="是" />
+                          <el-option :value="false" label="否" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item
+                        id="currentSoureMoveDown"
+                        label="向下移动"
+                        @change="sourceChange"
+                        @input="inputChange()"
+                      >
+                        <el-select v-model="currentSource.moveDown" placeholder="请选择">
+                          <el-option :value="true" label="是" />
+                          <el-option :value="false" label="否" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </div>
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
@@ -1007,7 +1038,9 @@ export default {
 
       textDivVisiable: false,
 
-      currentSource: { lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: 'None', entryEffectTimeSpan: undefined, entryEffect: 'None', timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
+      textDivVisiableV2: false,
+
+      currentSource: { moveDown: undefined, fixCenter: undefined, lineHeight: undefined, speed: undefined, backgroundColor: undefined, html: undefined, id: undefined, url: undefined, uuid: undefined, exitEffectTimeSpan: undefined, exitEffect: 'None', entryEffectTimeSpan: undefined, entryEffect: 'None', timeSpan: undefined, playTime: undefined, sourceId: undefined, name: undefined, maxPlayTime: undefined, _type: undefined, mime: undefined, size: undefined, enabled: undefined, fileExt: undefined, showBg: undefined, showHourScale: undefined, showMinScale: undefined, showScaleNum: undefined, showSecond: undefined, center: true, createTime: undefined, updateTime: undefined, userid: undefined },
 
       editorInit: {
         language: 'zh_CN',
@@ -1135,6 +1168,7 @@ export default {
     this.sourceDivVisiable = false
     this.urlDivVisiable = false
     this.textDivVisiable = false
+    this.textDivVisiableV2 = false
   },
   methods: {
     getProgram() {
@@ -1890,6 +1924,7 @@ export default {
       smtype = elObj.getAttribute('smtype')
       this.urlDivVisiable = false
       this.textDivVisiable = false
+      this.textDivVisiableV2 = false
       if (smtype != null) {
         if (smtype == 'WebURL') {
           this.urlDivVisiable = true
@@ -1897,6 +1932,7 @@ export default {
           this.textDivVisiable = true
         } else if (smtype == 'MultiLineTextV2') {
           this.textDivVisiable = true
+          this.textDivVisiableV2 = true
         }
       }
 
@@ -2128,6 +2164,7 @@ export default {
         this.sourceDivVisiable = true
         this.urlDivVisiable = false
         this.textDivVisiable = false
+        this.textDivVisiableV2 = false
         if (this.currentSource != null && this.currentSource._type != null) {
           const smtype = this.currentSource._type
           if (smtype == 'WebURL') {
@@ -2136,6 +2173,7 @@ export default {
             this.textDivVisiable = true
           } else if (smtype == 'MultiLineTextV2') {
             this.textDivVisiable = true
+            this.textDivVisiableV2 = true
           }
         }
         this.sourceSynchro()
@@ -2334,6 +2372,7 @@ export default {
       this.sourceDivVisiable = true
       this.urlDivVisiable = false
       this.textDivVisiable = false
+      this.textDivVisiableV2 = false
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
 
@@ -2365,6 +2404,7 @@ export default {
       }
       if (smtype == 'MultiLineTextV2') {
         this.textDivVisiable = true
+        this.textDivVisiableV2 = true
         if (this.currentSource == null || this.currentSource.id != sourceUid) {
           this.currentSource = { id: sourceUid, name: '多行文本图片', _type: 'MultiLineTextV2' }
         }

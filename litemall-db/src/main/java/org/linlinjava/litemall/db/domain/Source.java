@@ -83,4 +83,11 @@ public class Source implements Serializable {
     Integer userid;//用户id
     String uuid;//仅为前端使用，随机值
     Integer passStatus; //审核状态：1未审核，2一审过等待二审，3一审不过，4二审过，5二审不过
+
+
+    //--多行文本图片start---
+    String src;//base64图片编码
+    boolean fixCenter;//垂直居中
+    boolean moveDown;//向下移动
+    //--多行文本图片end---
 }

@@ -85,4 +85,11 @@ public class PlaySource implements Serializable {
     String layerId;//层id
     String programId;//节目id
     String uuid;//唯一标识
+
+    //--多行文本图片start---
+    String src;//base64图片编码
+    boolean fixCenter;//垂直居中
+    boolean moveDown;//向下移动
+    //--多行文本图片end---
+
 }

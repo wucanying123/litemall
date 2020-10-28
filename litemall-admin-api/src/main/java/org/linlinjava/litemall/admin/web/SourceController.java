@@ -165,7 +165,6 @@ public class SourceController {
         source.setCenter(true);
         source.setMaxPlayTime(10);
         source.setSpeed(3);
-        source.setLineHeight(1.5f);
         source.setEntryEffect("None");
         source.setExitEffect("None");
         source.setLineHeight(1.0f);
@@ -183,10 +182,10 @@ public class SourceController {
         source.set_type("MultiLineTextV2");
         source.setName("多行文本图片");
         source.setHtml("内容");
-        source.setCenter(true);
+        source.setFixCenter(true);
+        source.setMoveDown(false);
         source.setMaxPlayTime(10);
         source.setSpeed(3);
-        source.setLineHeight(1.5f);
         source.setEntryEffect("None");
         source.setExitEffect("None");
         source.setLineHeight(1.0f);
