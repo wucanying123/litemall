@@ -497,7 +497,6 @@
                   </el-col>
                 </el-row>
                 <div v-show="!textDivVisiableV2">
-
                   <el-row>
                     <el-col>
                       <el-form-item id="currentSoureCenter" label="垂直居中" @change="sourceChange" @input="inputChange()">
