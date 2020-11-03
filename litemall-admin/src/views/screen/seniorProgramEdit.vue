@@ -1768,6 +1768,9 @@ export default {
     },
     sourceChange() {
       const eL = document.getElementById(this.currentSource.id)
+      if (eL == null) {
+        return
+      }
       console.log('改变资源')
       let target
       if (this.currentSlider != null) {
@@ -2380,18 +2383,9 @@ export default {
       // 同步滑块开始时间和持续时间
       const pubSecondWidth = this.pubSecondWidth == null ? 40 : this.pubSecondWidth
 
-      const offsetX = (this.currentSliderBrowserX + parseInt(this.timeLinePackageDOM.scrollLeft)) - this.timeLinePackagePadddingLeftAndMarginLeft - this.currentSliderPressHoldOffsetX
-
+      // const offsetX = (this.currentSliderBrowserX + parseInt(this.timeLinePackageDOM.scrollLeft)) - this.timeLinePackagePadddingLeftAndMarginLeft - this.currentSliderPressHoldOffsetX
       let playTime
-      if (elObj.offsetLeft < pubSecondWidth) {
-        playTime = 0
-        if (elObj.offsetLeft == 4) {
-          playTime = parseInt(offsetX / pubSecondWidth)
-        }
-      }
-      if (elObj.offsetLeft > pubSecondWidth && elObj.offsetLeft > offsetX) {
-        playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
-      }
+      playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
       // console.log("开始时间位置",offsetX,elObj.offsetLeft,playTime,"宽度",elObj.style.left)
       const timeSpan = parseInt(elObj.offsetWidth / pubSecondWidth)
       let currentTracklayer = elObj.style.zIndex
@@ -2535,6 +2529,20 @@ export default {
         this.currentSource.exitEffect = 'None'
       }
       this.sourceSynchro()
+      // 解决开始时间不同步问题，模拟触发
+      setTimeout(() => {
+        playTime = parseInt(elObj.offsetLeft / pubSecondWidth)
+        this.currentSource.playTime = playTime
+        const currentSourcePlayTime = document.getElementById('currentSourcePlayTime')
+        if (currentSourcePlayTime != null) {
+          currentSourcePlayTime.value = playTime
+          if ('createEvent' in document) {
+            const evt = document.createEvent('HTMLEvents')
+            evt.initEvent('change', false, true)
+            currentSourcePlayTime.dispatchEvent(evt)
+          } else { currentSourcePlayTime.fireEvent('input') }
+        }
+      }, 100)
     },
     secondToDate(msd) {
       const theTime = parseInt(msd)// 秒
