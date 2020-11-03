@@ -527,7 +527,7 @@ public class ScreenServiceImpl implements ScreenService {
         Command command = new Command();
         command.set_type("PlayXixunTask");
         command.setId(UUID.randomUUID().toString().replace("-", ""));
-        System.out.println("我的id"+command.getId());
+//        System.out.println("我的id"+command.getId());
         command.setTask(task);
         command.setTaskId(taskId);
         String notificationURL = serverConfig.getUrl() + "/admin/screen/task/nocice";

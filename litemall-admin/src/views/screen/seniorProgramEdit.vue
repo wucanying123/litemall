@@ -1752,9 +1752,11 @@ export default {
       html2canvas(htmlDom, {
         allowTaint: false, // 允许污染
         taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
-        height: htmlDom.offsetHeight, // 下面解决当页面滚动之后生成图片出现白边问题
-        width: htmlDom.offsetWidth
+        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
+        // height: htmlDom.offsetHeight, // 下面解决当页面滚动之后生成图片出现白边问题
+        // width: htmlDom.offsetWidth
+        scrollY: 0,
+        scrollX: -55
       }).then(canvas => {
         const content = canvas.toDataURL('image/jpeg')
         const img = new Image()

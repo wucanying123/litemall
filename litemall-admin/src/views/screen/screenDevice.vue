@@ -65,10 +65,26 @@
         style="width: 400px; margin-left:60px;"
       >
         <el-form-item label="音量" prop="volume">
-          <el-input v-model="dataForm.volume" />
+          <el-input
+            v-model="dataForm.volume"
+            type="number"
+            min="0"
+            max="15"
+            step="1"
+            size="2"
+            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+          />
         </el-form-item>
         <el-form-item label="屏幕亮度" prop="brightness">
-          <el-input v-model="dataForm.brightness" />
+          <el-input
+            v-model="dataForm.brightness"
+            type="number"
+            min="0"
+            max="255"
+            step="1"
+            size="3"
+            on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+          />
         </el-form-item>
         <el-form-item label="屏幕状态" prop="screenOpenStatus">
           <el-radio-group v-model="dataForm.screenOpenStatus">
