@@ -2538,7 +2538,7 @@ export default {
           currentSourcePlayTime.value = playTime
           if ('createEvent' in document) {
             const evt = document.createEvent('HTMLEvents')
-            evt.initEvent('change', false, true)
+            evt.initEvent('input', false, true)
             currentSourcePlayTime.dispatchEvent(evt)
           } else { currentSourcePlayTime.fireEvent('input') }
         }
