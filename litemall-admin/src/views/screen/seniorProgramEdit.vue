@@ -1747,16 +1747,23 @@ export default {
     },
     editorInputChange() {
       this.$forceUpdate()
-      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: red">' + document.getElementById('currentSourceHtml').value + '</div>'
+      let bgColor
+      if (this.currentSource != null && this.currentSource.backgroundColor != null) {
+        bgColor = this.currentSource.backgroundColor
+      } else {
+        bgColor = this.color
+      }
+      console.log('背景颜色', bgColor)
+      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
       const htmlDom = document.getElementById('imgDiv')
       html2canvas(htmlDom, {
         allowTaint: false, // 允许污染
         taintTest: true, // 在渲染前测试图片(没整明白有啥用)
         useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
-        // height: htmlDom.offsetHeight, // 下面解决当页面滚动之后生成图片出现白边问题
+        // height: htmlDom.offsetHeight,
         // width: htmlDom.offsetWidth
         scrollY: 0,
-        scrollX: -55
+        scrollX: -25 // 解决白边
       }).then(canvas => {
         const content = canvas.toDataURL('image/jpeg')
         const img = new Image()
