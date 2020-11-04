@@ -1753,7 +1753,7 @@ export default {
       } else {
         bgColor = this.color
       }
-      console.log('背景颜色1', bgColor)
+      console.log('背景颜色', bgColor)
       document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
       const htmlDom = document.getElementById('imgDiv')
       html2canvas(htmlDom, {
