@@ -836,7 +836,7 @@ import { getToken } from '@/utils/auth'
 import { readProgram, updateSeniorProgramById } from '@/api/program'
 import Editor from '@tinymce/tinymce-vue'
 import { Sketch } from 'vue-color'
-import { htmlToBase64 } from '@/api/playSource'
+// import { htmlToBase64 } from '@/api/playSource'
 
 const defaultTypeOptions = [
   {
@@ -1746,56 +1746,59 @@ export default {
     inputChange() {
       this.$forceUpdate()
     },
-    // editorInputChange() {
-    //   this.$forceUpdate()
-    //   let bgColor
-    //   if (this.currentSource != null && this.currentSource.backgroundColor != null) {
-    //     bgColor = this.currentSource.backgroundColor
-    //   } else {
-    //     bgColor = this.color
-    //   }
-    //   console.log('背景颜色', bgColor)
-    //   document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + this.currentSource.html + '</div>'
-    //   const htmlDom = document.getElementById('imgDiv')
-    //   html2canvas(htmlDom, {
-    //     allowTaint: false, // 允许污染
-    //     taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-    //     useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
-    //     // height: htmlDom.offsetHeight,
-    //     // width: htmlDom.offsetWidth
-    //     scrollY: 0,
-    //     scrollX: -25 // 解决白边
-    //   }).then(canvas => {
-    //     const content = canvas.toDataURL('image/jpeg')
-    //     const img = new Image()
-    //     // img.src = 'data:image/jpeg;base64,' + content
-    //     img.src = content
-    //     document.getElementById('imgContent').innerHTML = ''
-    //     document.getElementById('imgContent').appendChild(img)
-    //     this.currentSource.src = content
-    //   })
-    // },
     editorInputChange() {
       this.$forceUpdate()
-
       let bgColor
       if (this.currentSource != null && this.currentSource.backgroundColor != null) {
         bgColor = this.currentSource.backgroundColor
       } else {
         bgColor = this.color
       }
-      const htmlContent = this.currentSource.html
-      bgColor = this.colorRGB2Hex(bgColor)
-      htmlToBase64(bgColor, htmlContent).then(response => {
-        const content = response.data.data
+      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + this.currentSource.html + '</div>'
+      const htmlDom = document.getElementById('imgDiv')
+      console.log('打印', htmlDom)
+
+      html2canvas(htmlDom, {
+        allowTaint: false, // 允许污染
+        taintTest: true, // 在渲染前测试图片(没整明白有啥用)
+        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
+        // height: htmlDom.offsetHeight,
+        // width: htmlDom.offsetWidth
+        scrollY: 0,
+        scrollX: -25 // 解决白边
+      }).then(canvas => {
+        const content = canvas.toDataURL('image/jpeg')
         const img = new Image()
-        img.src = 'data:image/jpeg;base64,' + content
+        // img.src = 'data:image/jpeg;base64,' + content
+        img.src = content
         document.getElementById('imgContent').innerHTML = ''
         document.getElementById('imgContent').appendChild(img)
         console.log('我的图片', this.currentSource, content)
-        this.currentSource.src = 'data:image/jpeg;base64,' + content
+        this.currentSource.src = content
       })
     },
+    // editorInputChange() {
+    //   this.$forceUpdate()
+    //
+    //   let bgColor
+    //   if (this.currentSource != null && this.currentSource.backgroundColor != null) {
+    //     bgColor = this.currentSource.backgroundColor
+    //   } else {
+    //     bgColor = this.color
+    //   }
+    //   const htmlContent = this.currentSource.html
+    //   bgColor = this.colorRGB2Hex(bgColor)
+    //   htmlToBase64(bgColor, htmlContent).then(response => {
+    //     const content = response.data.data
+    //     const img = new Image()
+    //     img.src = 'data:image/jpeg;base64,' + content
+    //     document.getElementById('imgContent').innerHTML = ''
+    //     document.getElementById('imgContent').appendChild(img)
+    //     console.log('我的图片', this.currentSource, content)
+    //     this.currentSource.src = 'data:image/jpeg;base64,' + content
+    //   })
+    // },
     sourceChange() {
       const eL = document.getElementById(this.currentSource.id)
       if (eL == null) {
@@ -2613,6 +2616,7 @@ export default {
     updateValue(val) {
       this.color = 'rgba(' + val.rgba.r + ',' + val.rgba.g + ',' + val.rgba.b + ',' + val.rgba.a + ')'
       this.currentSource.backgroundColor = this.color
+      this.editorInputChange()
     }
   }
 }
