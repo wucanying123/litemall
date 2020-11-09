@@ -1748,35 +1748,43 @@ export default {
     },
     editorInputChange() {
       this.$forceUpdate()
-      let bgColor
-      if (this.currentSource != null && this.currentSource.backgroundColor != null) {
-        bgColor = this.currentSource.backgroundColor
-      } else {
-        bgColor = this.color
-      }
-      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
-      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background: ' + bgColor + '">' + this.currentSource.html + '</div>'
-      const htmlDom = document.getElementById('imgDiv')
-      console.log('打印', htmlDom)
+      setTimeout(() => {
+        let bgColor
+        if (this.currentSource != null && this.currentSource.backgroundColor != null) {
+          bgColor = this.currentSource.backgroundColor
+        } else {
+          bgColor = this.color
+        }
+        document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+        const htmlDom = document.getElementById('imgDiv')
 
-      html2canvas(htmlDom, {
-        allowTaint: false, // 允许污染
-        taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
-        // height: htmlDom.offsetHeight,
-        // width: htmlDom.offsetWidth
-        scrollY: 0,
-        scrollX: -25 // 解决白边
-      }).then(canvas => {
-        const content = canvas.toDataURL('image/jpeg')
-        const img = new Image()
-        // img.src = 'data:image/jpeg;base64,' + content
-        img.src = content
-        document.getElementById('imgContent').innerHTML = ''
-        document.getElementById('imgContent').appendChild(img)
-        console.log('我的图片', this.currentSource, content)
-        this.currentSource.src = content
-      })
+        // let imgDiv = document.createElement("div");
+        // imgDiv.id = Math.random();
+        // imgDiv.style.background = bgColor;
+        // imgDiv.innerHTML = this.currentSource.html;
+        // document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML;
+        // let htmlDom = document.getElementById('currentSourceHtml2')
+
+        console.log('打印', htmlDom)
+        html2canvas(htmlDom, {
+          allowTaint: false, // 允许污染
+          taintTest: true, // 在渲染前测试图片(没整明白有啥用)
+          useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
+          // height: htmlDom.offsetHeight,
+          // width: htmlDom.offsetWidth
+          scrollY: 0,
+          scrollX: 0 // 解决白边
+        }).then(canvas => {
+          const content = canvas.toDataURL('image/jpeg')
+          const img = new Image()
+          // img.src = 'data:image/jpeg;base64,' + content
+          img.src = content
+          document.getElementById('imgContent').innerHTML = ''
+          document.getElementById('imgContent').appendChild(img)
+          console.log('我的图片', this.currentSource, content)
+          this.currentSource.src = content
+        })
+      }, 3000)
     },
     // editorInputChange() {
     //   this.$forceUpdate()
