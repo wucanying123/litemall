@@ -159,11 +159,12 @@ public class PlaySourceController {
      */
     @ApiOperation(value = "html转Base64")
     @PostMapping(value = "/htmlToBase64")
-    public ResponseUtil<String> htmlToBase64(String color,@RequestParam(value = "html") String html) {
+    public ResponseUtil<String> htmlToBase64(int width,int height,String color,@RequestParam(value = "html") String html) {
         ResponseUtil<String> responseUtil = new ResponseUtil<>();
         try {
+            height = height/3;
             String saveImageLocation = "C:/Users/Admin/Desktop/source/base64.jpg";
-            html = "<div style=\"background:"+color+";\">" + html +"</div>";
+            html = "<div style=\"background:"+color+";width:"+width+"px; height:"+height+"px\">" + html +"</div>";
             ImageUtil.html2Img(html, saveImageLocation);
             ImageUtil.cutImage(saveImageLocation,3);
             String base64Str = ImageUtil.getImageStr(saveImageLocation);

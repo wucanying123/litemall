@@ -1789,7 +1789,9 @@ export default {
     //   }
     //   const htmlContent = this.currentSource.html
     //   bgColor = this.colorRGB2Hex(bgColor)
-    //   htmlToBase64(bgColor, htmlContent).then(response => {
+    //   let width = this.currentSource.width
+    //   let height = this.currentSource.height
+    //   htmlToBase64(width, height,bgColor, htmlContent).then(response => {
     //     const content = response.data.data
     //     const img = new Image()
     //     img.src = 'data:image/jpeg;base64,' + content

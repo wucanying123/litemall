@@ -123,7 +123,6 @@ public class ImageUtil {
             imageGenerator.saveAsImage(saveImageLocation);
             BufferedImage sourceImg = ImageIO.read(new File(saveImageLocation));
 
-            sourceImg.getSubimage(10,10,sourceImg.getWidth()-20,sourceImg.getHeight()-20);
             //不需要转换位图的，下面三行可以不要
             BufferedImage sourceImg1 = ImageIO.read(new File(saveImageLocation));
             sourceImg = transform_Gray24BitMap(sourceImg1);

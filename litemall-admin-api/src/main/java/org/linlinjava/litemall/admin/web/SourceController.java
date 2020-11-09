@@ -182,13 +182,13 @@ public class SourceController {
         source.set_type("MultiLineTextV2");
         source.setName("多行文本图片");
         source.setHtml("内容");
-        source.setFixCenter(true);
+        source.setFixCenter(false);
         source.setMoveDown(false);
         source.setMaxPlayTime(10);
-        source.setSpeed(3);
+        source.setSpeed(16);
         source.setEntryEffect("None");
         source.setExitEffect("None");
-        source.setLineHeight(1.0f);
+        source.setLineHeight(1.4f);
         responseUtil.setData(source);
         return responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
     }
