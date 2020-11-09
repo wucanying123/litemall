@@ -9,6 +9,7 @@ import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.domain.PlaySource;
 import org.linlinjava.litemall.db.service.PlaySourceService;
 import org.linlinjava.litemall.db.util.Constant;
+import org.linlinjava.litemall.db.util.ImageUtil;
 import org.linlinjava.litemall.db.util.ResponseUtil;
 import org.linlinjava.litemall.db.util.StringUtilsXD;
 import org.slf4j.Logger;
@@ -144,6 +145,33 @@ public class PlaySourceController {
             }
         } catch (Exception e) {
             logger.error("deleteById and id={}", JSON.toJSONString(id), e);
+        }
+        return responseUtil;
+    }
+
+
+    /**
+     * @param html html
+     * @Description: html转Base64
+     * @Title: htmlToBase64
+     * @auther IngaWu
+     * @currentdate:2020年10月27日
+     */
+    @ApiOperation(value = "html转Base64")
+    @PostMapping(value = "/htmlToBase64")
+    public ResponseUtil<String> htmlToBase64(String color,@RequestParam(value = "html") String html) {
+        ResponseUtil<String> responseUtil = new ResponseUtil<>();
+        try {
+            String saveImageLocation = "C:/Users/Admin/Desktop/source/base64.jpg";
+            html = "<div style=\"background:"+color+";\">" + html +"</div>";
+            ImageUtil.html2Img(html, saveImageLocation);
+            ImageUtil.cutImage(saveImageLocation,3);
+            String base64Str = ImageUtil.getImageStr(saveImageLocation);
+            base64Str = StringUtilsXD.replaceBlank(base64Str);
+            responseUtil.setData(base64Str);
+            responseUtil.initCodeAndMsg(Constant.STATUS_SYS_00, Constant.RTNINFO_SYS_00);
+        } catch (Exception e) {
+            logger.error("htmlToBase64 and html={}", JSON.toJSONString(html), e);
         }
         return responseUtil;
     }

@@ -41,3 +41,14 @@ export function deletePlaySource(id) {
     }
   })
 }
+
+export function htmlToBase64(color, html) {
+  return request({
+    url: '/screen/playSource/htmlToBase64',
+    method: 'post',
+    params: {
+      color: color,
+      html: html
+    }
+  })
+}
