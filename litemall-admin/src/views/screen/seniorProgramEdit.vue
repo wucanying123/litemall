@@ -221,7 +221,7 @@
         label-width="100px"
         style="width: 800px; margin-left:50px;"
       >
-        <div id="imgContent" />
+
         <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
         <el-row>
           <el-col :span="12">
@@ -534,11 +534,12 @@
                     </el-col>
                   </el-row>
                 </div>
+                <div id="currentSourceHtml2" />
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
-                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="editorInputChange()" />
-                    <div id="currentSourceHtml2" />
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" />
+                    <el-button type="primary" size="mini" @click="handleHtml()">确定修改文本内容</el-button>
                   </el-form-item>
                 </el-row>
               </div>
@@ -686,6 +687,7 @@
           </el-button>
         </div>
       </el-dialog>
+      <div id="imgContent" />
     </div>
   </el-container>
 </template>
@@ -1747,7 +1749,7 @@ export default {
       this.$forceUpdate()
     },
     editorInputChange() {
-      this.$forceUpdate()
+      // this.$forceUpdate()
       setTimeout(() => {
         let bgColor
         if (this.currentSource != null && this.currentSource.backgroundColor != null) {
@@ -1755,36 +1757,39 @@ export default {
         } else {
           bgColor = this.color
         }
-        document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
-        const htmlDom = document.getElementById('imgDiv')
+        // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+        // const htmlDom = document.getElementById('imgDiv')
 
-        // let imgDiv = document.createElement("div");
-        // imgDiv.id = Math.random();
-        // imgDiv.style.background = bgColor;
-        // imgDiv.innerHTML = this.currentSource.html;
-        // document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML;
-        // let htmlDom = document.getElementById('currentSourceHtml2')
+        const imgDiv = document.createElement('div')
+        imgDiv.id = Math.random()
+        imgDiv.style.background = bgColor
+        imgDiv.innerHTML = this.currentSource.html
+        document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
+        const htmlDom = document.getElementById('currentSourceHtml2')
 
         console.log('打印', htmlDom)
         html2canvas(htmlDom, {
-          allowTaint: false, // 允许污染
-          taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-          useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
+          // allowTaint: false, // 允许污染
+          // taintTest: true, // 在渲染前测试图片(没整明白有啥用)
+          useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用)
           // height: htmlDom.offsetHeight,
-          // width: htmlDom.offsetWidth
-          scrollY: 0,
-          scrollX: 0 // 解决白边
+          // width: htmlDom.offsetWidth,
+          // scrollY: 0,
+          // scrollX: 0 // 解决白边
+
+          // backgroundColor:null,
         }).then(canvas => {
           const content = canvas.toDataURL('image/jpeg')
           const img = new Image()
           // img.src = 'data:image/jpeg;base64,' + content
           img.src = content
+          img.id = Math.random()
           document.getElementById('imgContent').innerHTML = ''
           document.getElementById('imgContent').appendChild(img)
-          console.log('我的图片', this.currentSource, content)
+          console.log('我的图片', document.getElementById('imgContent'), this.currentSource, content)
           this.currentSource.src = content
         })
-      }, 3000)
+      }, 1000)
     },
     // editorInputChange() {
     //   this.$forceUpdate()
@@ -2626,6 +2631,9 @@ export default {
     updateValue(val) {
       this.color = 'rgba(' + val.rgba.r + ',' + val.rgba.g + ',' + val.rgba.b + ',' + val.rgba.a + ')'
       this.currentSource.backgroundColor = this.color
+      // this.editorInputChange()
+    },
+    handleHtml() {
       this.editorInputChange()
     }
   }
