@@ -1758,6 +1758,7 @@ export default {
           bgColor = this.color
         }
         // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+        // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + '12345678' + '</div>'
         // const htmlDom = document.getElementById('imgDiv')
 
         const imgDiv = document.createElement('div')
