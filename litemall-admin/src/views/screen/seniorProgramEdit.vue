@@ -233,6 +233,8 @@
         </el-row>
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
+            <div id="currentSourceHtml2" style="float:left;position: absolute; left:-5500px;" />
+            <div id="imgContent" style="float:left;position: absolute; left:-6000px;" />
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
               <el-row>
                 <el-col :span="12">
@@ -534,12 +536,11 @@
                     </el-col>
                   </el-row>
                 </div>
-                <div id="currentSourceHtml2" />
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
-                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" />
-                    <el-button type="primary" size="mini" @click="handleHtml()">确定修改文本内容</el-button>
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="editorInputChange()" />
+                    <!--                    <el-button type="primary" size="mini" @click="handleHtml()">确定修改文本内容</el-button>-->
                   </el-form-item>
                 </el-row>
               </div>
@@ -687,7 +688,6 @@
           </el-button>
         </div>
       </el-dialog>
-      <div id="imgContent" />
     </div>
   </el-container>
 </template>
@@ -1750,47 +1750,49 @@ export default {
     },
     editorInputChange() {
       // this.$forceUpdate()
-      setTimeout(() => {
-        let bgColor
-        if (this.currentSource != null && this.currentSource.backgroundColor != null) {
-          bgColor = this.currentSource.backgroundColor
-        } else {
-          bgColor = this.color
-        }
-        // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
-        // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + '12345678' + '</div>'
-        // const htmlDom = document.getElementById('imgDiv')
+      const x = window.scrollX
+      const y = window.scrollY
+      window.scrollTo(0, 0)
+      let bgColor
+      if (this.currentSource != null && this.currentSource.backgroundColor != null) {
+        bgColor = this.currentSource.backgroundColor
+      } else {
+        bgColor = this.color
+      }
+      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + '12345678' + '</div>'
+      // const htmlDom = document.getElementById('imgDiv')
 
-        const imgDiv = document.createElement('div')
-        imgDiv.id = Math.random()
-        imgDiv.style.background = bgColor
-        imgDiv.innerHTML = this.currentSource.html
-        document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
-        const htmlDom = document.getElementById('currentSourceHtml2')
+      const imgDiv = document.createElement('div')
+      imgDiv.id = Math.random()
+      imgDiv.style.background = bgColor
+      imgDiv.innerHTML = this.currentSource.html
+      document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
+      const htmlDom = document.getElementById('currentSourceHtml2')
 
-        console.log('打印', htmlDom)
-        html2canvas(htmlDom, {
-          // allowTaint: false, // 允许污染
-          // taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-          useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用)
-          // height: htmlDom.offsetHeight,
-          // width: htmlDom.offsetWidth,
-          // scrollY: 0,
-          // scrollX: 0 // 解决白边
+      console.log('打印', htmlDom)
+      html2canvas(htmlDom, {
+        // allowTaint: false, // 允许污染
+        // taintTest: true, // 在渲染前测试图片(没整明白有啥用)
+        useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用)
+        // height: htmlDom.offsetHeight,
+        // width: htmlDom.offsetWidth,
+        // scrollY: 0,
+        // scrollX: 0 // 解决白边
 
-          // backgroundColor:null,
-        }).then(canvas => {
-          const content = canvas.toDataURL('image/jpeg')
-          const img = new Image()
-          // img.src = 'data:image/jpeg;base64,' + content
-          img.src = content
-          img.id = Math.random()
-          document.getElementById('imgContent').innerHTML = ''
-          document.getElementById('imgContent').appendChild(img)
-          console.log('我的图片', document.getElementById('imgContent'), this.currentSource, content)
-          this.currentSource.src = content
-        })
-      }, 1000)
+        // backgroundColor:null,
+      }).then(canvas => {
+        const content = canvas.toDataURL('image/jpeg')
+        const img = new Image()
+        // img.src = 'data:image/jpeg;base64,' + content
+        img.src = content
+        img.id = Math.random()
+        document.getElementById('imgContent').innerHTML = ''
+        document.getElementById('imgContent').appendChild(img)
+        console.log('我的图片', document.getElementById('imgContent'), this.currentSource, content)
+        this.currentSource.src = content
+      })
+      window.scrollTo(x, y)
     },
     // editorInputChange() {
     //   this.$forceUpdate()
