@@ -240,7 +240,7 @@
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div id="currentSourceHtml2" style="float:left;position: absolute; left:-5500px;" />
-            <div id="imgContent" />
+            <div id="imgContent" style="float:left;position: absolute; left:-6500px;" />
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
               <el-row>
                 <el-col :span="12">
