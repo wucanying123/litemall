@@ -240,7 +240,7 @@
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div id="currentSourceHtml2" style="float:left;position: absolute; left:-5500px;" />
-            <div id="imgContent" style="float:left;position: absolute; left:-6000px;" />
+            <div id="imgContent" />
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
               <el-row>
                 <el-col :span="12">
@@ -1786,26 +1786,25 @@ export default {
       } else {
         bgColor = this.color
       }
-      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
-      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + '12345678' + '</div>'
-      // const htmlDom = document.getElementById('imgDiv')
+      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background:' + bgColor + '">' + this.currentSource.html + '</div>'
+      const htmlDom = document.getElementById('imgDiv')
 
-      const imgDiv = document.createElement('div')
-      imgDiv.id = Math.random()
-      imgDiv.style.background = bgColor
-      imgDiv.innerHTML = this.currentSource.html
-      document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
-      const htmlDom = document.getElementById('currentSourceHtml2')
+      // const imgDiv = document.createElement('div')
+      // imgDiv.id = Math.random()
+      // imgDiv.style.background = bgColor
+      // imgDiv.innerHTML = this.currentSource.html
+      // document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
+      // const htmlDom = document.getElementById('currentSourceHtml2')
 
-      console.log('打印', htmlDom)
+      console.log('打印', bgColor, htmlDom)
       html2canvas(htmlDom, {
         // allowTaint: false, // 允许污染
         // taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-        useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用)
+        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
         // height: htmlDom.offsetHeight,
         // width: htmlDom.offsetWidth,
-        // scrollY: 0,
-        // scrollX: 0 // 解决白边
+        scrollY: 0,
+        scrollX: -23 // 解决白边
 
         // backgroundColor:null,
       }).then(canvas => {
