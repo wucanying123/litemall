@@ -211,7 +211,7 @@
         </div>
       </div>
     </el-container>
-    <el-container>
+    <div class="app-container">
       <el-form
         ref="program"
         :rules="rules"
@@ -219,7 +219,7 @@
         status-icon
         label-position="left"
         label-width="100px"
-        style="width: 1200px; margin-right: 50px"
+        style="width: 600px; margin-right: 5px"
       >
 
         <el-form-item label="节目名称" prop="name">
@@ -715,7 +715,7 @@
           </el-button>
         </div>
       </el-dialog>
-    </el-container>
+    </div>
   </el-container>
 </template>
 
@@ -729,7 +729,7 @@ html{
   height:100%;
 }
 #package{
-  width: 70%;
+  width: 90%;
   height: 800px;
   overflow: auto;
   border:1px red solid;
