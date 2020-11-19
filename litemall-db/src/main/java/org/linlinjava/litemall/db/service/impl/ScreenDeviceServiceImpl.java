@@ -151,6 +151,8 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
         return n;
     }
 
+
+    //更新为全部离线
     @Override
     public int updateOffLine() {
         int n = 0;
