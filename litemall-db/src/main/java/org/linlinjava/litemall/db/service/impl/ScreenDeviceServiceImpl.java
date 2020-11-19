@@ -92,13 +92,13 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
                 newScreenDevice.setVolume(volume);
             }
 
+            updateOffLine();
             if (null == screenDevice1) {//数据表中没有就新增
                 insertScreenDevice(newScreenDevice);
             } else {//数据表中有就修改为新的值
                 newScreenDevice.setId(screenDevice1.getId());
                 updateScreenDeviceById(newScreenDevice);
             }
-//            updateOffLineByCardId(cardId);
         }
     }
 
@@ -152,12 +152,12 @@ public class ScreenDeviceServiceImpl implements ScreenDeviceService {
     }
 
     @Override
-    public int updateOffLineByCardId(String cardId) {
+    public int updateOffLine() {
         int n = 0;
         try {
-            n = screenDeviceMapper.updateOffLineByCardId(cardId);
+            n = screenDeviceMapper.updateOffLine();
         } catch (Exception e) {
-            logger.error("updateScreenDeviceById error and msg={}", e);
+            logger.error("updateOffLine error and msg={}", e);
         }
         return n;
     }

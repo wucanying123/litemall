@@ -59,11 +59,11 @@ public interface ScreenDeviceService {
 
     /**
      * @Description: 修改其余卡号为离线状态
-     * @title updateOffLineByCardId
+     * @title updateOffLine
      * @author IngaWu
      * @currentdate:2020年9月16日
      */
-    int updateOffLineByCardId(String cardId);
+    int updateOffLine();
 
     /**
      * @Description: 删除屏幕设备

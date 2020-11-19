@@ -152,10 +152,9 @@
     from screen_device
     where card_id = #{cardId,jdbcType=VARCHAR}
   </select>
-  <update id="updateOffLineByCardId" parameterType="java.lang.String">
+  <update id="updateOffLine" parameterType="java.lang.String">
     update screen_device
     set
       online_status = 0
-    where card_id != #{cardId,jdbcType=VARCHAR}
   </update>
 </mapper>

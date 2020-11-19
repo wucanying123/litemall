@@ -16,7 +16,7 @@ public interface ScreenDeviceMapper {
 
     int updateByPrimaryKeySelective(ScreenDevice record);
 
-    int updateOffLineByCardId(@Param("cardId") String cardId);
+    int updateOffLine();
 
     List<ScreenDevice> selectScreenDevicePage(@Param("screenDevice") ScreenDevice screenDevice);
 }

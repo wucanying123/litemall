@@ -24,17 +24,19 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="650" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
-          <el-button type="primary" size="mini" @click="handleClearTask(scope.row)">停止任务</el-button>
-          <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
-          <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(scope.row)"
-          >编辑
-          </el-button>
-          <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
+          <span v-if="scope.row.onlineStatus == 1">
+            <el-button type="primary" size="mini" @click="handleScreenshot(scope.row)">截屏</el-button>
+            <el-button type="primary" size="mini" @click="handleClearTask(scope.row)">停止任务</el-button>
+            <el-button type="primary" size="mini" @click="stopLive(scope.row)">停止直播</el-button>
+            <el-button type="primary" size="mini" @click="handleclearScreen(scope.row)">清屏</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleUpdate(scope.row)"
+            >编辑
+            </el-button>
+            <el-button type="primary" size="mini" @click="handleReboot(scope.row)">重启</el-button>
+          </span>
           <el-button
             type="danger"
             size="mini"
