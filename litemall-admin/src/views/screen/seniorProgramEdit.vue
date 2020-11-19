@@ -240,7 +240,7 @@
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div id="currentSourceHtml2" style="float:left;position: absolute; left:-5500px;" />
-            <div id="imgContent" style="float:left;position: absolute; left:-6500px;" />
+            <div id="imgContent" />
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
               <el-row>
                 <el-col :span="12">
@@ -494,10 +494,9 @@
                       <div v-if="currentSource && currentSource.backgroundColor">
                         <section>
                           <div
-                            class="color_con"
                             :style="{background:currentSource.backgroundColor}"
                             @click="handleShowColor"
-                          >选择颜色
+                          >确定
                           </div>
                           <div v-show="colorShow">
                             <sketch-picker v-model="currentSource.backgroundColor" @input="updateValue" />
@@ -506,7 +505,7 @@
                       </div>
                       <div v-else>
                         <section>
-                          <div class="color_con" :style="{background:color}" @click="handleShowColor">选择颜色</div>
+                          <div class="color_con" :style="{background:color}" @click="handleShowColor">确定</div>
                           <div v-show="colorShow">
                             <sketch-picker v-model="color" @input="updateValue" />
                           </div>
@@ -1307,7 +1306,7 @@ export default {
       this.$router.push({ path: '/screen/program' })
     },
     handleConfirm() {
-      // this.program.layers[0].sources = this.playSourceList
+      this.editorInputChange()
       console.log(this.program)
       this.$refs['program'].validate(valid => {
         if (valid) {
@@ -2660,7 +2659,7 @@ export default {
     updateValue(val) {
       this.color = 'rgba(' + val.rgba.r + ',' + val.rgba.g + ',' + val.rgba.b + ',' + val.rgba.a + ')'
       this.currentSource.backgroundColor = this.color
-      // this.editorInputChange()
+      this.editorInputChange()
     },
     handleHtml() {
       this.editorInputChange()
