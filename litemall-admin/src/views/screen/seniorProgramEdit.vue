@@ -1,7 +1,7 @@
 <template>
   <el-container style="border: 1px solid #eee">
     <el-aside
-      width="11%"
+      width="220px"
       style="background-color: rgb(238, 241, 246)"
     >
       <el-menu :default-openeds="['1','2','3','4','5']">
@@ -26,7 +26,7 @@
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            <span style="font-size:10px">{{ source.name }}{{ source.fileExt }}</span>
+            {{ source.name }}{{ source.fileExt }}
           </div>
         </el-submenu>
         <el-submenu index="2">
@@ -50,7 +50,7 @@
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            <span style="font-size:10px">{{ source.name }}{{ source.fileExt }}</span>
+            {{ source.name }}{{ source.fileExt }}
           </div>
 
         </el-submenu>
@@ -72,7 +72,7 @@
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            <span style="font-size:10px">{{ defaultMultiLineText.name }}</span>
+            {{ defaultMultiLineText.name }}
           </div>
         </el-submenu>
         <el-submenu index="4">
@@ -93,7 +93,7 @@
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            <span style="font-size:10px">{{ defaultMultiLineTextV2.name }}</span>
+            {{ defaultMultiLineTextV2.name }}
           </div>
         </el-submenu>
         <el-submenu index="5">
@@ -112,7 +112,7 @@
             onmousedown="unboundTrackOnMousedown(event)"
             ondragstart="drag(event)"
           >
-            <span style="font-size:10px">{{ defaultWebURL.name }}</span>
+            {{ defaultWebURL.name }}
           </div>
         </el-submenu>
         <div id="alreadySources" style="display: none;" />
@@ -219,38 +219,27 @@
         status-icon
         label-position="left"
         label-width="100px"
-        style="width: 600px; margin-right: 5px"
+        style="width: 800px; margin-left:50px;"
       >
 
-        <el-form-item label="节目名称" prop="name">
-          <el-input v-model="program.name" />
-        </el-form-item>
+        <el-form-item label="节目名称" prop="name"><el-input v-model="program.name" /></el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="节目宽" prop="width">
-              <el-input v-model="program.width" readonly />
-            </el-form-item>
+            <el-form-item label="节目宽" prop="width"><el-input v-model="program.width" readonly />  </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="节目高" prop="height">
-              <el-input v-model="program.height" readonly />
-            </el-form-item>
+            <el-form-item label="节目高" prop="height"><el-input v-model="program.height" readonly />  </el-form-item>
           </el-col>
         </el-row>
         <el-tabs>
           <el-tab-pane label="所选素材信息" type="card">
             <div id="currentSourceHtml2" style="float:left;position: absolute; left:-5500px;" />
-            <div id="imgContent" style="float:left;position: absolute; left:-6500px;" />
+            <div id="imgContent" style="float:left;position: absolute; left:-6000px;" />
             <div v-show="sourceDivVisiable" v-if="currentSource" id="sourceDiv">
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="名称">
-                    <el-input
-                      id="currentSourceName"
-                      v-model="currentSource.name"
-                      @change="sourceChange"
-                      @input="inputChange()"
-                    />
+                    <el-input id="currentSourceName" v-model="currentSource.name" @change="sourceChange" @input="inputChange()" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -443,12 +432,7 @@
                 <el-row>
                   <el-col :span="24">
                     <el-form-item label="URL">
-                      <el-input
-                        id="currentSourceUrl"
-                        v-model="currentSource.url"
-                        @change="sourceChange"
-                        @input="inputChange()"
-                      />
+                      <el-input id="currentSourceUrl" v-model="currentSource.url" @change="sourceChange" @input="inputChange()" />
                       <span style="color:red">以https开头</span>
                     </el-form-item>
                   </el-col>
@@ -530,12 +514,7 @@
                 <div v-show="textDivVisiableV2">
                   <el-row>
                     <el-col :span="12">
-                      <el-form-item
-                        id="currentSoureCenterV2"
-                        label="垂直居中"
-                        @change="sourceChange"
-                        @input="inputChange()"
-                      >
+                      <el-form-item id="currentSoureCenterV2" label="垂直居中" @change="sourceChange" @input="inputChange()">
                         <el-select v-model="currentSource.fixCenter" placeholder="请选择">
                           <el-option :value="true" label="是" />
                           <el-option :value="false" label="否" />
@@ -560,13 +539,7 @@
                 <el-row>
                   <el-form-item label="内容" prop="html">
                     <p><span style="color:red">提示: 按Shift+回车换行，按回车换页</span></p>
-                    <editor
-                      id="currentSourceHtml"
-                      v-model="currentSource.html"
-                      :init="editorInit"
-                      @change="sourceChange"
-                      @input="editorInputChange()"
-                    />
+                    <editor id="currentSourceHtml" v-model="currentSource.html" :init="editorInit" @change="sourceChange" @input="editorInputChange()" />
                     <!--                    <el-button type="primary" size="mini" @click="handleHtml()">确定修改文本内容</el-button>-->
                   </el-form-item>
                 </el-row>
@@ -729,7 +702,7 @@ html{
   height:100%;
 }
 #package{
-  width: 90%;
+  width: 1000px;
   height: 800px;
   overflow: auto;
   border:1px red solid;
@@ -1786,25 +1759,26 @@ export default {
       } else {
         bgColor = this.color
       }
-      document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" style="background:' + bgColor + '">' + this.currentSource.html + '</div>'
-      const htmlDom = document.getElementById('imgDiv')
+      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + document.getElementById('currentSourceHtml').value + '</div>'
+      // document.getElementById('currentSourceHtml2').innerHTML = '<div id="imgDiv" background: ' + bgColor + '">' + '12345678' + '</div>'
+      // const htmlDom = document.getElementById('imgDiv')
 
-      // const imgDiv = document.createElement('div')
-      // imgDiv.id = Math.random()
-      // imgDiv.style.background = bgColor
-      // imgDiv.innerHTML = this.currentSource.html
-      // document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
-      // const htmlDom = document.getElementById('currentSourceHtml2')
+      const imgDiv = document.createElement('div')
+      imgDiv.id = Math.random()
+      imgDiv.style.background = bgColor
+      imgDiv.innerHTML = this.currentSource.html
+      document.getElementById('currentSourceHtml2').innerHTML = imgDiv.innerHTML
+      const htmlDom = document.getElementById('currentSourceHtml2')
 
-      console.log('打印', bgColor, htmlDom)
+      console.log('打印', htmlDom)
       html2canvas(htmlDom, {
         // allowTaint: false, // 允许污染
         // taintTest: true, // 在渲染前测试图片(没整明白有啥用)
-        useCORS: true, // 使用跨域(当allowTaint为true时这段代码没什么用)
+        useCORS: true // 使用跨域(当allowTaint为true时这段代码没什么用)
         // height: htmlDom.offsetHeight,
         // width: htmlDom.offsetWidth,
-        scrollY: 0,
-        scrollX: -23 // 解决白边
+        // scrollY: 0,
+        // scrollX: 0 // 解决白边
 
         // backgroundColor:null,
       }).then(canvas => {
