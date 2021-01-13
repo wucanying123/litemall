@@ -393,6 +393,10 @@ export default {
     },
     closeWebSocket() {
       this.websocket.close()
+    },
+    // 发送消息给服务器端
+    sendMessage(message) {
+      this.websocket.send(message)
     }
   }
 }
